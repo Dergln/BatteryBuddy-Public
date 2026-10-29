@@ -1,0 +1,26 @@
+name: Build released source
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.402'
+      - name: Restore product dependencies
+        run: dotnet restore .\BatteryBuddy.sln
+      - name: Build product source
+        run: dotnet build .\BatteryBuddy.sln -c Release --no-restore

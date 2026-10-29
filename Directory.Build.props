@@ -1,0 +1,22 @@
+<Project>
+  <!-- Gemeinsame Einstellungen für alle Projekte der Solution -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <!-- Warnungen als Fehler: so fallen Probleme früh auf -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Deterministic>true</Deterministic>
+    <!-- Public packages contain no local build paths, symbols or private revision identifiers. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <PathMap>$(MSBuildThisFileDirectory)=C:\_src\BatteryBuddy\</PathMap>
+    <Version>0.1.24.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <Company>BatteryBuddy</Company>
+    <Product>BatteryBuddy</Product>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
+</Project>

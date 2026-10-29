@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Die eigentliche Anwendung: Tray-Symbol, Konfigurationsfenster, Hintergrund-Abfrage. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>BatteryBuddy.App</RootNamespace>
+    <AssemblyName>BatteryBuddy</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\batterybuddy.ico</ApplicationIcon>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Product>BatteryBuddy</Product>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Die SDK erkennt nur "App.xaml" automatisch als Anwendungsdefinition. -->
+    <Page Remove="AppMain.xaml" />
+    <ApplicationDefinition Include="AppMain.xaml" />
+    <ProjectReference Include="..\BatteryBuddy.Core\BatteryBuddy.Core.csproj" />
+    <ProjectReference Include="..\BatteryBuddy.Providers\BatteryBuddy.Providers.csproj" />
+    <!-- Sprachdateien werden in die EXE eingebettet (keine Zusatzdateien nötig). -->
+    <EmbeddedResource Include="Languages\*.lang" LogicalName="Languages.%(Filename)%(Extension)" />
+    <!-- Programm-Symbol und Standardton ebenfalls eingebettet. -->
+    <EmbeddedResource Include="Assets\batterybuddy.ico" LogicalName="Assets.batterybuddy.ico" />
+    <EmbeddedResource Include="Assets\batterybuddy.png" LogicalName="Assets.batterybuddy.png" />
+    <EmbeddedResource Include="Assets\freesound.png" LogicalName="Assets.freesound.png" />
+    <EmbeddedResource Include="Assets\low-battery.wav" LogicalName="Assets.low-battery.wav" />
+    <EmbeddedResource Include="Assets\loading.png" LogicalName="Assets.loading.png" />
+    <EmbeddedResource Include="Assets\battery-confused.png" LogicalName="Assets.battery-confused.png" />
+    <EmbeddedResource Include="Assets\mouse.png" LogicalName="Assets.mouse.png" />
+    <EmbeddedResource Include="Assets\headphones.png" LogicalName="Assets.headphones.png" />
+    <EmbeddedResource Include="Assets\earbuds.png" LogicalName="Assets.earbuds.png" />
+    <EmbeddedResource Include="Assets\smartphone.png" LogicalName="Assets.smartphone.png" />
+    <EmbeddedResource Include="Assets\battery-charge.png" LogicalName="Assets.battery-charge.png" />
+    <EmbeddedResource Include="Assets\device-unknown.png" LogicalName="Assets.device-unknown.png" />
+    <EmbeddedResource Include="Assets\speaker.png" LogicalName="Assets.speaker.png" />
+    <EmbeddedResource Include="Assets\keyboard.png" LogicalName="Assets.keyboard.png" />
+    <EmbeddedResource Include="Assets\pen-tip.png" LogicalName="Assets.pen-tip.png" />
+    <EmbeddedResource Include="Assets\gamepad.png" LogicalName="Assets.gamepad.png" />
+    <EmbeddedResource Include="Assets\idea.png" LogicalName="Assets.idea.png" />
+    <EmbeddedResource Include="Assets\ai.png" LogicalName="Assets.ai.png" />
+    <EmbeddedResource Include="Assets\teamwork.png" LogicalName="Assets.teamwork.png" />
+    <EmbeddedResource Include="Assets\copyright.png" LogicalName="Assets.copyright.png" />
+    <EmbeddedResource Include="Assets\for-free.png" LogicalName="Assets.for-free.png" />
+    <EmbeddedResource Include="Assets\license.png" LogicalName="Assets.license.png" />
+    <EmbeddedResource Include="Assets\open-source.png" LogicalName="Assets.open-source.png" />
+    <EmbeddedResource Include="Assets\joke.png" LogicalName="Assets.joke.png" />
+    <EmbeddedResource Include="Assets\joke-orig.png" LogicalName="Assets.joke-orig.png" />
+    <EmbeddedResource Include="Assets\lol.png" LogicalName="Assets.lol.png" />
+    <EmbeddedResource Include="Assets\pill.png" LogicalName="Assets.pill.png" />
+    <EmbeddedResource Include="Assets\feel-good.png" LogicalName="Assets.feel-good.png" />
+    <EmbeddedResource Include="Assets\paypal.png" LogicalName="Assets.paypal.png" />
+    <EmbeddedResource Include="Assets\everybody.png" LogicalName="Assets.everybody.png" />
+    <EmbeddedResource Include="Assets\bug.png" LogicalName="Assets.bug.png" />
+    <EmbeddedResource Include="Assets\gplv3.png" LogicalName="Assets.gplv3.png" />
+    <EmbeddedResource Include="Assets\gpl-icon.png" LogicalName="Assets.gpl-icon.png" />
+    <InternalsVisibleTo Include="BatteryBuddy.App.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Nur Schnittstellen-Beschreibungen (WinRT-Metadaten) für echte Windows-Benachrichtigungen (Toasts).
+         Die eigentliche Funktion steckt in Windows 10/11 selbst; es wird keine Zusatzsoftware installiert. -->
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.2" />
+  </ItemGroup>
+
+</Project>

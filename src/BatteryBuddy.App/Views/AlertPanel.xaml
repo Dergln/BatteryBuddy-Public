@@ -1,0 +1,147 @@
+<UserControl x:Class="BatteryBuddy.App.Views.AlertPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Gemeinsame Warn-Einstellungen: wird für ein einzelnes Gerät UND für die globalen Standardwerte benutzt. -->
+    <UserControl.Resources>
+        <Style x:Key="ColorBox" TargetType="Border">
+            <Setter Property="Width" Value="14"/>
+            <Setter Property="Height" Value="14"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BB.Border}"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+    <StackPanel>
+        <StackPanel x:Name="SettingsFields">
+        <CheckBox x:Name="ShowInTray" Click="OnChanged" Margin="0,4,0,8"/>
+        <TextBlock x:Name="ThresholdHint" Foreground="{DynamicResource BB.Muted}" TextWrapping="Wrap"
+                   Margin="0,4,0,8" Visibility="Collapsed"/>
+        <DockPanel Margin="0,4">
+            <Border x:Name="YellowBox" Style="{StaticResource ColorBox}" DockPanel.Dock="Left"/>
+            <TextBlock x:Name="YellowLabel" Width="170" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+            <TextBlock x:Name="YellowValue" DockPanel.Dock="Right" Width="44" TextAlignment="Right" VerticalAlignment="Center"/>
+            <Slider x:Name="YellowSlider" Minimum="3" Maximum="99" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="OnSlider"/>
+        </DockPanel>
+        <DockPanel Margin="0,4">
+            <Border x:Name="RedBox" Style="{StaticResource ColorBox}" DockPanel.Dock="Left"/>
+            <TextBlock x:Name="RedLabel" Width="170" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+            <TextBlock x:Name="RedValue" DockPanel.Dock="Right" Width="44" TextAlignment="Right" VerticalAlignment="Center"/>
+            <Slider x:Name="RedSlider" Minimum="2" Maximum="98" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="OnSlider"/>
+        </DockPanel>
+        <DockPanel Margin="0,4">
+            <Border x:Name="CriticalBox" Style="{StaticResource ColorBox}" DockPanel.Dock="Left"/>
+            <TextBlock x:Name="CriticalLabel" Width="170" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+            <TextBlock x:Name="CriticalValue" DockPanel.Dock="Right" Width="44" TextAlignment="Right" VerticalAlignment="Center"/>
+            <Slider x:Name="CriticalSlider" Minimum="1" Maximum="97" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="OnSlider"/>
+        </DockPanel>
+
+        <!-- Rechts neben jeder Stufe: "Benachrichtigen für [x] Prüfintervalle" (Text vor/nach der Auswahl aus der Sprachdatei). -->
+        <StackPanel Margin="0,6,0,0">
+            <DockPanel Margin="0,1">
+                <Border x:Name="NotifyYellowBox" Style="{StaticResource ColorBox}" DockPanel.Dock="Left"/>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="12,0,0,0">
+                    <TextBlock x:Name="RepeatYellowPre" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="RepeatYellow" Width="54" Margin="5,0" SelectionChanged="OnRepeatChanged"/>
+                    <TextBlock x:Name="RepeatYellowPost" VerticalAlignment="Center"/>
+                </StackPanel>
+                <CheckBox x:Name="NotifyYellow" Click="OnChanged" VerticalAlignment="Center"/>
+            </DockPanel>
+            <DockPanel Margin="0,1">
+                <Border x:Name="NotifyRedBox" Style="{StaticResource ColorBox}" DockPanel.Dock="Left"/>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="12,0,0,0">
+                    <TextBlock x:Name="RepeatRedPre" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="RepeatRed" Width="54" Margin="5,0" SelectionChanged="OnRepeatChanged"/>
+                    <TextBlock x:Name="RepeatRedPost" VerticalAlignment="Center"/>
+                </StackPanel>
+                <CheckBox x:Name="NotifyRed" Click="OnChanged" VerticalAlignment="Center"/>
+            </DockPanel>
+            <DockPanel Margin="0,1">
+                <Border x:Name="NotifyCriticalBox" Style="{StaticResource ColorBox}" DockPanel.Dock="Left"/>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="12,0,0,0">
+                    <TextBlock x:Name="RepeatCriticalPre" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="RepeatCritical" Width="54" Margin="5,0" SelectionChanged="OnRepeatChanged"/>
+                    <TextBlock x:Name="RepeatCriticalPost" VerticalAlignment="Center"/>
+                </StackPanel>
+                <CheckBox x:Name="NotifyCritical" Click="OnChanged" VerticalAlignment="Center"/>
+            </DockPanel>
+        </StackPanel>
+
+        <TextBlock x:Name="WhenLabel" FontWeight="SemiBold" Margin="0,12,0,2"/>
+        <CheckBox x:Name="WhenStartup" Click="OnChanged"/>
+        <CheckBox x:Name="WhenLevel" Click="OnChanged" Margin="0,2,0,0"/>
+
+        <TextBlock x:Name="ViaLabel" FontWeight="SemiBold" Margin="0,12,0,2"/>
+        <CheckBox x:Name="ViaToast" Click="OnChanged"/>
+        <TextBlock x:Name="SoundHint" Foreground="{DynamicResource BB.Muted}" Margin="0,6,0,0" TextWrapping="Wrap"/>
+        <CheckBox x:Name="ViaSound" Click="OnSoundClicked"/>
+        <DockPanel Margin="0,2,0,0">
+            <CheckBox x:Name="ViaWindows" Click="OnSoundClicked" DockPanel.Dock="Left" MinWidth="200" VerticalAlignment="Center"/>
+            <ComboBox x:Name="WinSoundBox" HorizontalAlignment="Left" MinWidth="260" MaxWidth="360"
+                      SelectionChanged="OnWinSoundSelected" DropDownClosed="OnWinSoundClosed"/>
+        </DockPanel>
+        <CheckBox x:Name="ViaCustom" Click="OnSoundClicked" Margin="0,2,0,0"/>
+        <DockPanel x:Name="CustomRow" Margin="26,2,0,0">
+            <Button x:Name="BrowseButton" DockPanel.Dock="Right" Margin="6,0,0,0" Click="OnBrowse"/>
+            <TextBox x:Name="CustomPath" MaxLength="260" TextChanged="OnPathChanged" LostFocus="OnPathLostFocus"/>
+        </DockPanel>
+        <TextBlock x:Name="PathWarning" Foreground="{DynamicResource BB.Error}" Margin="26,2,0,0" TextWrapping="Wrap" Visibility="Collapsed"/>
+        </StackPanel>
+
+        <WrapPanel Margin="0,8,0,0">
+            <Button x:Name="TestButton" Margin="0,0,8,4" HorizontalAlignment="Left" Padding="14,4" Click="OnTest"/>
+            <Button x:Name="SimulationButton" Margin="0,0,8,4" HorizontalAlignment="Left" Padding="14,4" Click="OnSimulation"
+                    Visibility="Collapsed"/>
+        </WrapPanel>
+
+        <Border x:Name="SimulationPanel" BorderBrush="{DynamicResource BB.Border}" BorderThickness="1" Padding="8" Margin="0,4,0,0"
+                Visibility="Collapsed">
+            <StackPanel>
+                <DockPanel Margin="0,0,0,6">
+                    <Button x:Name="SimulationHideButton" DockPanel.Dock="Right" Padding="8,2" Click="OnHideSimulation"/>
+                    <TextBlock x:Name="SimulationHeader" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </DockPanel>
+                <TextBlock x:Name="SimulationHint" Foreground="{DynamicResource BB.Muted}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="82"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="88"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="SimulationStatusHeader" FontWeight="SemiBold" Foreground="{DynamicResource BB.Muted}"/>
+                    <TextBlock x:Name="SimulationPhaseHeader" Grid.Column="1" FontWeight="SemiBold" Foreground="{DynamicResource BB.Muted}"/>
+                    <TextBlock x:Name="SimulationThresholdHeader" Grid.Column="2" FontWeight="SemiBold" Foreground="{DynamicResource BB.Muted}" TextAlignment="Right"/>
+                    <TextBlock x:Name="SimulationEstimateHeader" Grid.Column="3" FontWeight="SemiBold" Foreground="{DynamicResource BB.Muted}" TextAlignment="Right"/>
+                </Grid>
+                <ItemsControl x:Name="SimulationSteps">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="82"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="88"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Status}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Border Width="12" Height="12" CornerRadius="2" Background="{Binding LevelBrush}" Margin="0,0,7,0"/>
+                                    <TextBlock Text="{Binding Phase}" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                                <TextBlock Grid.Column="2" Text="{Binding Threshold}" TextAlignment="Right" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="{Binding Estimate}" TextAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <WrapPanel x:Name="ActionButtons" Margin="0,14,0,0">
+            <Button x:Name="ResetButton" Padding="14,4" Margin="0,0,8,4" Click="OnReset"/>
+            <Button x:Name="RestoreButton" Padding="14,4" Margin="0,0,8,4" Click="OnRestore" Visibility="Collapsed"/>
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

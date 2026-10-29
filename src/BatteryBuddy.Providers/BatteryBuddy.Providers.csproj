@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Windows-spezifische Akku-Provider (P/Invoke auf SetupAPI, HID, XInput). Nur lesender Zugriff. -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>BatteryBuddy.Providers</RootNamespace>
+    <AssemblyName>BatteryBuddy.Providers</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <ProjectReference Include="..\BatteryBuddy.Core\BatteryBuddy.Core.csproj" />
+    <InternalsVisibleTo Include="BatteryBuddy.Providers.Tests" />
+  </ItemGroup>
+
+</Project>

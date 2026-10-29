@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Core: UI- und OS-freie Logik. netstandard2.0 läuft auf .NET Framework 4.8 und auf modernem .NET. -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>BatteryBuddy.Core</RootNamespace>
+    <AssemblyName>BatteryBuddy.Core</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="BatteryBuddy.Core.Tests" />
+  </ItemGroup>
+
+</Project>
