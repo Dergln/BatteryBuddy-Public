@@ -1,4 +1,4 @@
-# BatteryBuddy 1.0.3
+# BatteryBuddy 1.0.4
 
 The first official 1.0 release brings DeviceBuddy troubleshooting and improved keyboard accessibility.
 
@@ -14,6 +14,7 @@ The first official 1.0 release brings DeviceBuddy troubleshooting and improved k
 - Settings controls respond consistently to keyboard and Windows UI Automation changes.
 - Footer buttons share the selected light/dark theme. Save confirmation appears only above the footer and disappears after five seconds; errors remain readable.
 - Safer confirmation-dialog defaults and keyboard tray-menu positioning.
+- Choosing Exit from the tray while the unsaved-settings confirmation is open reuses that confirmation instead of causing an exception. Repeated exit requests remain safe; cancelling keeps the application open.
 
 ## Requirements and limitations
 

@@ -78,10 +78,10 @@ namespace BatteryBuddy.App
 
         private void ExitApp()
         {
-            _window?.Close();
-            if (_window != null)
-                return; // Nutzer hat in der Rückfrage "Abbrechen" gewählt: App läuft weiter.
-            Shutdown();
+            if (_window == null)
+                Shutdown();
+            else
+                _window.RequestApplicationExit(() => Shutdown());
         }
 
         protected override void OnExit(ExitEventArgs e)

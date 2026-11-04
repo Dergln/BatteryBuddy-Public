@@ -20,7 +20,7 @@ The app is currently **not digitally signed**. Windows SmartScreen may show a re
 To check the ZIP in PowerShell, compare the result with the release's `SHA256SUMS.txt`:
 
 ```powershell
-Get-FileHash .\BatteryBuddy-1.0.3-windows.zip -Algorithm SHA256
+Get-FileHash .\BatteryBuddy-1.0.4-windows.zip -Algorithm SHA256
 ```
 
 ## Features

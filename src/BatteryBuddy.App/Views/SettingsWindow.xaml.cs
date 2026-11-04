@@ -59,6 +59,8 @@ namespace BatteryBuddy.App.Views
         private string _panelDeviceId; // Für welches Gerät die Eingabefelder gerade gefüllt sind.
         private bool _simulationRunning;
         private bool _skipClosePrompt;
+        private bool _closingAttempt;
+        private Action _exitAfterClose;
         private CancellationTokenSource _simulationHideCancellation;
         private readonly DispatcherTimer _savedStatusTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
 
@@ -107,6 +109,10 @@ namespace BatteryBuddy.App.Views
             {
                 _simulationHideCancellation?.Cancel();
                 _savedStatusTimer.Stop();
+                var exit = _exitAfterClose;
+                _exitAfterClose = null;
+                if (exit != null)
+                    Dispatcher.BeginInvoke(exit);
             };
         }
 
@@ -689,25 +695,47 @@ namespace BatteryBuddy.App.Views
 
         private void OnClose(object sender, RoutedEventArgs e) => Close();
 
+        internal void RequestApplicationExit(Action exit)
+        {
+            if (exit == null)
+                throw new ArgumentNullException(nameof(exit));
+            _exitAfterClose = exit;
+            // ShowDialog pumps the dispatcher inside Closing; do not call Close again in that loop.
+            if (!_closingAttempt)
+                Close();
+        }
+
         /// <summary>Bei ungespeicherten Änderungen: speichern / verwerfen / im Fenster bleiben.</summary>
         protected override void OnClosing(CancelEventArgs e)
         {
-            base.OnClosing(e);
-            if (!_skipClosePrompt && _simulationRunning)
+            _closingAttempt = true;
+            try
             {
-                e.Cancel = true;
-                ShowStatus(Loc.Get("simulation.running"));
-                return;
-            }
-            if (!_dirty)
-                return;
+                base.OnClosing(e);
+                if (e.Cancel)
+                    return;
+                if (!_skipClosePrompt && _simulationRunning)
+                {
+                    e.Cancel = true;
+                    ShowStatus(Loc.Get("simulation.running"));
+                    return;
+                }
+                if (!_dirty)
+                    return;
 
-            var answer = ConfirmDialog.Ask(this, Loc.Get("app.name"), Loc.Get("close.unsaved"),
-                Loc.Get("close.save"), Loc.Get("close.discard"), Loc.Get("button.cancel"));
-            if (answer == null)
-                e.Cancel = true;
-            else if (answer == true && !SaveSettings())
-                e.Cancel = true; // Speichern gescheitert: Fenster offen lassen, damit nichts verloren geht.
+                var answer = ConfirmDialog.Ask(this, Loc.Get("app.name"), Loc.Get("close.unsaved"),
+                    Loc.Get("close.save"), Loc.Get("close.discard"), Loc.Get("button.cancel"));
+                if (answer == null)
+                    e.Cancel = true;
+                else if (answer == true && !SaveSettings())
+                    e.Cancel = true; // Speichern gescheitert: Fenster offen lassen, damit nichts verloren geht.
+            }
+            finally
+            {
+                _closingAttempt = false;
+                if (e.Cancel)
+                    _exitAfterClose = null;
+            }
         }
     }
 }
