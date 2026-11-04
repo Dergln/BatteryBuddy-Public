@@ -9,7 +9,7 @@ A free Windows tray app that monitors device batteries and warns you before they
 3. Run `BatteryBuddy.exe`. Keep the accompanying DLLs and configuration file in the same folder.
 4. Right-click its tray icon to open the menu or settings.
 
-<img width="750" height="720" alt="overview_1_devices" src="https://github.com/user-attachments/assets/8a937eeb-f599-470f-ba18-33aad84010e7" /> <img width="450" height="687" alt="overview_2_settings" src="https://github.com/user-attachments/assets/8078de1e-a49f-4e43-9d42-3e8781fdd346" />
+<img width="450" height="720" alt="overview_1_devices" src="https://github.com/user-attachments/assets/8a937eeb-f599-470f-ba18-33aad84010e7" /> <img width="450" height="687" alt="overview_2_settings" src="https://github.com/user-attachments/assets/8078de1e-a49f-4e43-9d42-3e8781fdd346" />
 
 ## Device recognition "best guess" helper
 
