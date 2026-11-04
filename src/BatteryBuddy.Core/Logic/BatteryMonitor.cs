@@ -17,12 +17,17 @@ namespace BatteryBuddy.Core.Logic
         public IReadOnlyList<string> FailedProviders { get; }
 
         public DateTimeOffset Time { get; }
+        public IReadOnlyList<DeviceDiagnostic> Diagnostics { get; }
+        public bool IsComplete { get; }
 
-        public MonitorSnapshot(IReadOnlyList<BatteryDevice> devices, IReadOnlyList<string> failedProviders, DateTimeOffset time)
+        public MonitorSnapshot(IReadOnlyList<BatteryDevice> devices, IReadOnlyList<string> failedProviders, DateTimeOffset time,
+            IReadOnlyList<DeviceDiagnostic> diagnostics = null, bool isComplete = true)
         {
             Devices = devices;
             FailedProviders = failedProviders;
             Time = time;
+            Diagnostics = diagnostics ?? new DeviceDiagnostic[0];
+            IsComplete = isComplete;
         }
     }
 
@@ -34,16 +39,18 @@ namespace BatteryBuddy.Core.Logic
     {
         private readonly IReadOnlyList<IBatteryProvider> _providers;
         private readonly TimeSpan _providerTimeout;
+        private readonly IDeviceDiagnosticSource _diagnosticSource;
         private readonly object _lock = new object();
         private Task<MonitorSnapshot> _running;
 
         /// <summary>Wird während einer Runde ausgelöst, sobald ein Provider fertig ist, aber noch andere laufen (Aufruf aus einem Hintergrundthread!).</summary>
         public event EventHandler<MonitorSnapshot> PartialSnapshot;
 
-        public BatteryMonitor(IEnumerable<IBatteryProvider> providers, TimeSpan providerTimeout)
+        public BatteryMonitor(IEnumerable<IBatteryProvider> providers, TimeSpan providerTimeout, IDeviceDiagnosticSource diagnosticSource = null)
         {
             _providers = (providers ?? throw new ArgumentNullException(nameof(providers))).ToList();
             _providerTimeout = providerTimeout > TimeSpan.Zero ? providerTimeout : TimeSpan.FromSeconds(20);
+            _diagnosticSource = diagnosticSource;
         }
 
         /// <summary>Startet eine Abfrage. Läuft schon eine, wird deren Ergebnis mitgenutzt (keine parallelen Doppel-Abfragen).</summary>
@@ -62,16 +69,30 @@ namespace BatteryBuddy.Core.Logic
         private async Task<MonitorSnapshot> RunAsync(CancellationToken cancellationToken)
         {
             // Fertige Ergebnisse je Provider (Position = Reihenfolge der Provider-Liste, null = noch offen).
-            var done = new ProviderResult[_providers.Count];
-            var tasks = _providers.Select(async (p, index) =>
+            var queries = _providers.Select(p => new Func<Task<ProviderResult>>(() =>
+                QueryAsync(p.Name, async ct => new ProviderResult
+                {
+                    Name = p.Name,
+                    Devices = await p.ReadAsync(ct).ConfigureAwait(false) ?? new BatteryDevice[0]
+                }, cancellationToken))).ToList();
+            if (_diagnosticSource != null)
+                queries.Add(() => QueryAsync(_diagnosticSource.Name, async ct => new ProviderResult
+                {
+                    Name = _diagnosticSource.Name,
+                    Diagnostics = await _diagnosticSource.ReadAsync(ct).ConfigureAwait(false)
+                        ?? throw new InvalidOperationException("Device discovery returned no scan result.")
+                }, cancellationToken));
+
+            var done = new ProviderResult[queries.Count];
+            var tasks = queries.Select(async (query, index) =>
             {
-                var result = await QueryProviderAsync(p, cancellationToken).ConfigureAwait(false);
+                var result = await query().ConfigureAwait(false);
                 MonitorSnapshot partial = null;
                 lock (done)
                 {
                     done[index] = result;
                     if (done.Any(r => r == null))
-                        partial = Merge(done.Where(r => r != null));
+                        partial = Merge(done.Where(r => r != null), false);
                 }
 
                 // Zwischenstand melden, damit schnelle Provider nicht auf den langsamsten (z. B. Logitech) warten müssen.
@@ -85,7 +106,7 @@ namespace BatteryBuddy.Core.Logic
         }
 
         // Doppelte Ids zusammenführen: Der erste Provider in der Liste gewinnt.
-        private static MonitorSnapshot Merge(IEnumerable<ProviderResult> results)
+        private static MonitorSnapshot Merge(IEnumerable<ProviderResult> results, bool isComplete = true)
         {
             var list = results.ToList();
             var byId = new Dictionary<string, BatteryDevice>();
@@ -96,7 +117,12 @@ namespace BatteryBuddy.Core.Logic
             }
 
             var failed = list.Where(r => r.Failed).Select(r => r.Name).ToList();
-            return new MonitorSnapshot(byId.Values.ToList(), failed, DateTimeOffset.Now);
+            var devices = byId.Values.ToList();
+            // Only final snapshots can exclude readings from slower battery providers reliably.
+            var diagnostics = isComplete
+                ? DeviceDiagnostic.WithoutBattery(list.SelectMany(r => r.Diagnostics), devices)
+                : new DeviceDiagnostic[0];
+            return new MonitorSnapshot(devices, failed, DateTimeOffset.Now, diagnostics, isComplete);
         }
 
         private sealed class ProviderResult
@@ -104,18 +130,19 @@ namespace BatteryBuddy.Core.Logic
             public string Name;
             public bool Failed;
             public IReadOnlyList<BatteryDevice> Devices = new BatteryDevice[0];
+            public IReadOnlyList<DeviceDiagnostic> Diagnostics = new DeviceDiagnostic[0];
         }
 
-        private async Task<ProviderResult> QueryProviderAsync(IBatteryProvider provider, CancellationToken cancellationToken)
+        private async Task<ProviderResult> QueryAsync(string name, Func<CancellationToken, Task<ProviderResult>> query, CancellationToken cancellationToken)
         {
-            var result = new ProviderResult { Name = provider.Name };
+            var result = new ProviderResult { Name = name };
             using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
             {
                 cts.CancelAfter(_providerTimeout);
                 try
                 {
                     // Task.Run: Auch ein Provider, der synchron blockiert, hält den Aufrufer nicht auf.
-                    var work = Task.Run(() => provider.ReadAsync(cts.Token), CancellationToken.None);
+                    var work = Task.Run(() => query(cts.Token), CancellationToken.None);
                     var finished = await Task.WhenAny(work, Task.Delay(_providerTimeout, cancellationToken)).ConfigureAwait(false);
 
                     if (finished != work)
@@ -128,7 +155,7 @@ namespace BatteryBuddy.Core.Logic
                         return result;
                     }
 
-                    result.Devices = (await work.ConfigureAwait(false)) ?? result.Devices;
+                    result = await work.ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {

@@ -4,6 +4,8 @@
         xmlns:v="clr-namespace:BatteryBuddy.App.Views"
         Width="780" Height="800" MinWidth="600" MinHeight="560"
         Background="{DynamicResource BB.Window}" Foreground="{DynamicResource BB.Text}"
+        FontFamily="{DynamicResource {x:Static SystemFonts.MessageFontFamilyKey}}"
+        FontSize="{DynamicResource {x:Static SystemFonts.MessageFontSizeKey}}"
         WindowStartupLocation="CenterScreen" UseLayoutRounding="True" SnapsToDevicePixels="True">
     <Window.Resources>
         <Style x:Key="Label" TargetType="TextBlock">
@@ -14,6 +16,7 @@
     <Grid Margin="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -121,7 +124,7 @@
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Margin="0,0,10,0">
                                 <TextBlock x:Name="DetailTitle" FontWeight="Bold" FontSize="14"/>
-                                <CheckBox x:Name="DevIgnore" Click="OnDeviceChanged"/>
+                                <CheckBox x:Name="DevIgnore" Checked="OnDeviceChanged" Unchecked="OnDeviceChanged"/>
                                 <StackPanel x:Name="DevOptions">
                                     <DockPanel Margin="0,4,0,8">
                                         <TextBlock x:Name="DevCategoryLabel" Width="192" VerticalAlignment="Center"/>
@@ -141,8 +144,8 @@
                 <ScrollViewer x:Name="SettingsScrollViewer" VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="12">
                         <TextBlock x:Name="GeneralHeader" FontWeight="Bold" FontSize="14"/>
-                        <CheckBox x:Name="Autostart" Margin="0,8,0,0" Click="OnGeneralChanged"/>
-                        <CheckBox x:Name="StartMenu" Click="OnGeneralChanged"/>
+                        <CheckBox x:Name="Autostart" Margin="0,8,0,0" Checked="OnGeneralChanged" Unchecked="OnGeneralChanged"/>
+                        <CheckBox x:Name="StartMenu" Checked="OnGeneralChanged" Unchecked="OnGeneralChanged"/>
 
                         <TextBlock x:Name="TrayBehaviorLabel" Style="{StaticResource Label}"/>
                         <WrapPanel x:Name="TrayBehaviorOptions">
@@ -180,7 +183,7 @@
                         <TextBlock x:Name="ActiveLabel" Style="{StaticResource Label}"/>
                         <DockPanel Margin="0,0,0,2">
                             <TextBlock x:Name="ActiveValue" DockPanel.Dock="Right" Width="64" TextAlignment="Right" VerticalAlignment="Center"/>
-                            <Slider x:Name="ActiveSlider" Minimum="5" Maximum="480" TickFrequency="5" IsSnapToTickEnabled="True" ValueChanged="OnActiveChanged"/>
+                            <Slider x:Name="ActiveSlider" Minimum="5" Maximum="480" TickFrequency="5" SmallChange="5" LargeChange="30" IsSnapToTickEnabled="True" ValueChanged="OnActiveChanged"/>
                         </DockPanel>
                         <TextBlock x:Name="ActiveHint" Foreground="{DynamicResource BB.Muted}" TextWrapping="Wrap"/>
 
@@ -214,23 +217,38 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
+            <TabItem x:Name="DeviceBuddyTab">
+                <v:DeviceBuddyView x:Name="DeviceBuddyContent"/>
+            </TabItem>
         </TabControl>
 
-        <DockPanel Grid.Row="1" Margin="0,10,0,0">
-            <Button x:Name="CloseButton" DockPanel.Dock="Right" Padding="18,5" Margin="8,0,0,0" IsCancel="True" Click="OnClose"/>
-            <Button x:Name="SaveButton" DockPanel.Dock="Right" Padding="18,5" IsDefault="True" Click="OnSave"/>
-            <Border x:Name="VersionInfo" DockPanel.Dock="Left" Height="{Binding ActualHeight, ElementName=SaveButton}"
-                    BorderBrush="{DynamicResource BB.Border}" BorderThickness="1" CornerRadius="4"
-                    Padding="6,2" Margin="0,0,6,0" Background="Transparent">
+        <TextBox x:Name="StatusDetails" Grid.Row="1" IsReadOnly="True" TextWrapping="Wrap"
+                 AutomationProperties.LiveSetting="Polite"
+                 MaxHeight="110" VerticalScrollBarVisibility="Auto" Margin="0,6,0,0"
+                 AutomationProperties.Name="{Binding Text, RelativeSource={RelativeSource Self}}">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Style.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+        <DockPanel Grid.Row="2" Margin="0,10,0,0" KeyboardNavigation.TabNavigation="Local">
+            <Button x:Name="CloseButton" KeyboardNavigation.TabIndex="5" DockPanel.Dock="Right" Padding="18,5" Margin="8,0,0,0" IsCancel="True" Click="OnClose"/>
+            <Button x:Name="SaveButton" KeyboardNavigation.TabIndex="4" DockPanel.Dock="Right" Padding="18,5" IsDefault="True" Click="OnSave"/>
+            <Button x:Name="VersionInfo" KeyboardNavigation.TabIndex="0" DockPanel.Dock="Left" Height="{Binding ActualHeight, ElementName=SaveButton}"
+                    Click="OnVersionInfo" Padding="6,2" Margin="0,0,6,0">
                 <TextBlock x:Name="VersionText" VerticalAlignment="Center" Foreground="{DynamicResource BB.Muted}"/>
-            </Border>
-            <Grid HorizontalAlignment="Left">
+            </Button>
+            <Grid HorizontalAlignment="Left" KeyboardNavigation.TabIndex="1" KeyboardNavigation.TabNavigation="Local">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="BugReportButton" Grid.Column="1" Height="{Binding ActualHeight, ElementName=SaveButton}"
-                        Background="Transparent"
+                <Button x:Name="BugReportButton" KeyboardNavigation.TabIndex="2" Grid.Column="1" Height="{Binding ActualHeight, ElementName=SaveButton}"
                         Padding="6,2" Margin="0,0,6,0" Click="OnBugReport">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Image x:Name="BugReportIcon" Width="18" Height="18" Stretch="Uniform"
@@ -240,33 +258,8 @@
                     </StackPanel>
                 </Button>
                 <!-- Keine zusaetzliche Fusszeilenhoehe: Bilder maximal 40 DIP, sonst passend zu den Buttons. -->
-                <v:OriginStrip x:Name="OriginInfo" Height="{Binding ActualHeight, ElementName=SaveButton}"
-                               MaxHeight="40" Margin="0,0,8,0">
-                    <v:OriginStrip.Style>
-                        <Style TargetType="v:OriginStrip">
-                            <!-- Speicherfehler und Simulationsstatus haben Vorrang vor dem Infobereich. -->
-                            <Setter Property="Visibility" Value="Hidden"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Text, ElementName=StatusText}" Value="">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </v:OriginStrip.Style>
-                </v:OriginStrip>
-                <TextBlock x:Name="StatusText" Text="" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
-                           ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <!-- Ein leeres Statusfeld darf weder Hover abfangen noch einen leeren Tooltip zeigen. -->
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                <v:OriginStrip x:Name="OriginInfo" KeyboardNavigation.TabIndex="0" Height="{Binding ActualHeight, ElementName=SaveButton}"
+                               MaxHeight="40" Margin="0,0,8,0"/>
             </Grid>
         </DockPanel>
     </Grid>

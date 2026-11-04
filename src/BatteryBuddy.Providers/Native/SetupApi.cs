@@ -52,6 +52,8 @@ namespace BatteryBuddy.Providers.Native
         public const uint DEVPROP_TYPE_FILETIME = 0x10;
         public const uint DEVPROP_TYPE_BOOLEAN = 0x11;
         public const uint DEVPROP_TYPE_STRING = 0x12;
+        public const uint DEVPROP_TYPE_STRING_LIST = 0x2012;
+        public const uint DEVPROP_TYPE_GUID = 0x0D;
 
         [DllImport("setupapi.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern IntPtr SetupDiGetClassDevsW(IntPtr classGuid, string enumerator, IntPtr hwndParent, uint flags);

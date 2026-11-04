@@ -83,6 +83,7 @@ namespace BatteryBuddy.Providers.Logitech
                 foreach (var p in ProbeChannel(channels[i], ct))
                 {
                     p.ChannelIndex = i;
+                    p.ConnectionId = (channels[i] as IHidDeviceIdentity)?.DeviceInstanceId;
                     result.Add(p);
                 }
             }
@@ -126,6 +127,7 @@ namespace BatteryBuddy.Providers.Logitech
                         if (fresh.Count > 0)
                         {
                             fresh[0].ChannelIndex = known.ChannelIndex;
+                            fresh[0].ConnectionId = (channels[known.ChannelIndex] as IHidDeviceIdentity)?.DeviceInstanceId;
                             fresh[0].SeenAt = DateTime.UtcNow;
                             _known[KeyOf(fresh[0])] = fresh[0];
                             found.Add(fresh[0]);
@@ -161,6 +163,7 @@ namespace BatteryBuddy.Providers.Logitech
             public int Slot;
             public int ChannelIndex;
             public DateTime SeenAt;
+            public string ConnectionId;
         }
 
         /// <summary>Fragt einen HID++-Kanal ab: erst als direktes Gerät, danach (Empfänger) die Slots 1–6.</summary>
@@ -217,7 +220,8 @@ namespace BatteryBuddy.Providers.Logitech
             {
                 var duplicate = probed.Count(x => x.Name == p.Name) > 1;
                 var id = "logi:" + p.Name + (duplicate ? ":" + p.Slot : string.Empty);
-                devices.Add(new BatteryDevice(id, p.Name, p.Category, p.Battery.Percent, p.Battery.Charging, "Logitech", new DateTimeOffset(DateTime.SpecifyKind(p.SeenAt, DateTimeKind.Utc))));
+                devices.Add(new BatteryDevice(id, p.Name, p.Category, p.Battery.Percent, p.Battery.Charging, "Logitech",
+                    new DateTimeOffset(DateTime.SpecifyKind(p.SeenAt, DateTimeKind.Utc)), p.ConnectionId));
             }
 
             return devices;

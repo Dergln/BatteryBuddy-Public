@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Automation;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Windows.Input;
 using BatteryBuddy.App.Services;
 using BatteryBuddy.Core.Logic;
 using BatteryBuddy.Core.Models;
@@ -64,16 +65,22 @@ namespace BatteryBuddy.App.Views
         public SettingsWindow(AppHost host, Action languageChanged)
         {
             InitializeComponent();
+            _savedStatusTimer.Tick += (s, e) => ShowStatus(string.Empty);
             ThemeService.StyleTitleBar(this);
             // Four numeric parts match the executable's file-version field shown in Windows properties.
             VersionText.Text = "v" + typeof(SettingsWindow).Assembly.GetName().Version.ToString(4);
             _host = host;
             _languageChanged = languageChanged;
             _work = host.Settings.Clone();
-            _savedStatusTimer.Tick += (s, e) => ShowStatus(string.Empty);
 
             _host.SnapshotUpdated += OnSnapshot;
-            Closed += (s, e) => _host.SnapshotUpdated -= OnSnapshot;
+            ThemeService.Changed += OnThemeChanged;
+            DeviceBuddyContent.RefreshRequested += (s, e) => _ = _host.RefreshAsync();
+            Closed += (s, e) =>
+            {
+                _host.SnapshotUpdated -= OnSnapshot;
+                ThemeService.Changed -= OnThemeChanged;
+            };
 
             DevAlerts.Changed += (s, e) => OnDeviceChanged(s, null);
             DevAlerts.ResetRequested += OnResetDevice;
@@ -105,6 +112,12 @@ namespace BatteryBuddy.App.Views
 
         private void OnSnapshot(object sender, EventArgs e) => ReloadRows();
 
+        private void OnThemeChanged(object sender, EventArgs e)
+        {
+            ReloadRows();
+            DefAlerts.RefreshSimulationColors();
+        }
+
         private void MarkDirty()
         {
             if (_loading)
@@ -115,9 +128,13 @@ namespace BatteryBuddy.App.Views
 
         private void ShowStatus(string text, bool saved = false)
         {
-            // Nur Erfolgsmeldungen laufen ab; neue Fehler/Simulationen duerfen kein alter Timer ausblenden.
             _savedStatusTimer.Stop();
-            StatusText.Text = text;
+            if (string.IsNullOrEmpty(text) && StatusDetails.IsKeyboardFocusWithin)
+                SaveButton.Focus();
+            StatusDetails.Text = text;
+            StatusDetails.SetResourceReference(Control.ForegroundProperty, saved ? "BB.Ok" : "BB.Text");
+            if (!string.IsNullOrEmpty(text))
+                AccessibleUi.Announce(StatusDetails);
             if (saved)
                 _savedStatusTimer.Start();
         }
@@ -137,6 +154,8 @@ namespace BatteryBuddy.App.Views
             FlowDirection = Loc.IsRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
             Title = Loc.Get("app.name");
             DevicesTab.Header = Loc.Get("tab.devices");
+            DeviceBuddyTab.Header = Loc.Get("tab.devicebuddy");
+            DeviceBuddyContent.SetTexts();
             SettingsTab.Header = Loc.Get("tab.settings");
             RefreshButton.Content = Loc.Get("devices.refresh");
             SelectHint.Text = Loc.Get("devices.select");
@@ -183,12 +202,15 @@ namespace BatteryBuddy.App.Views
             CloseButton.Content = Loc.Get("button.close");
             OriginInfo.SetTexts();
             FooterToolTips.Set(VersionInfo, FooterToolTips.Version(VersionText.Text));
+            AccessibleUi.Name(VersionInfo, Loc.Format("origin.versionCurrent", VersionText.Text));
+            AccessibleUi.Name(DeviceList, Loc.Get("tab.devices"));
 
             // Bedienhilfen: Screenreader lesen den Namen der Auswahlfelder vor.
             AutomationProperties.SetName(Interval, Loc.Get("settings.interval"));
             AutomationProperties.SetName(LanguageBox, Loc.Get("settings.language"));
             AutomationProperties.SetName(ThemeBox, Loc.Get("settings.theme"));
             AutomationProperties.SetName(DevCategory, Loc.Get("device.category"));
+            AutomationProperties.SetHelpText(ActiveSlider, Loc.Get("settings.trayActiveHint"));
         }
 
         // ---------- Tab "Einstellungen" ----------
@@ -306,6 +328,7 @@ namespace BatteryBuddy.App.Views
                         : step.Level == ChargeLevel.Critical ? "critical" : "green")),
                     Threshold = Loc.Format("simulation.percent", step.Percent),
                     Estimate = Loc.Format("simulation.seconds", estimateSeconds),
+                    Level = step.Level,
                     LevelBrush = brush
                 };
             }).ToList();
@@ -344,7 +367,7 @@ namespace BatteryBuddy.App.Views
                 if (currentStepIndex >= 0)
                     rows[currentStepIndex].Status = Loc.Get("simulation.failedStatus");
                 ShowStatus(Loc.Format("simulation.failed", ex.Message));
-                StatusText.SetResourceReference(TextBlock.ForegroundProperty, "BB.Error");
+                StatusDetails.SetResourceReference(Control.ForegroundProperty, "BB.Error");
             }
             finally
             {
@@ -398,6 +421,7 @@ namespace BatteryBuddy.App.Views
         private void SetSimulationUiEnabled(bool enabled)
         {
             DevicesTab.IsEnabled = enabled;
+            DeviceBuddyTab.IsEnabled = enabled;
             ContribTab.IsEnabled = enabled;
             Autostart.IsEnabled = enabled;
             StartMenu.IsEnabled = enabled;
@@ -422,6 +446,9 @@ namespace BatteryBuddy.App.Views
 
         private void ReloadRows()
         {
+            var focusedId = AccessibleUi.FocusedItemId<DeviceRow>(DeviceList, r => r.Id);
+            var listHadFocus = DeviceList.IsKeyboardFocusWithin;
+            DeviceBuddyContent.UpdateSnapshot(_host.Latest);
             var devices = _host.Latest?.Devices ?? new List<BatteryDevice>();
             var now = DateTimeOffset.Now;
             var rows = devices.Select(d =>
@@ -447,8 +474,12 @@ namespace BatteryBuddy.App.Views
                     Percent = d.Level ?? 0,
                     LevelText = levelText,
                     Brush = brush,
-                    Opacity = ds.Ignore ? 0.45 : inactive ? 0.7 : 1.0,
-                    Summary = DeviceNames.Display(d) + ", " + levelText + ", " + contact,
+                    Opacity = ThemeService.IsHighContrast ? 1 : ds.Ignore ? 0.45 : inactive ? 0.7 : 1.0,
+                    Summary = string.Join(", ", new[] { DeviceNames.Display(d), Loc.Get("category." + category),
+                        d.Level.HasValue ? Loc.Format("devices.level", d.Level.Value) : Loc.Get("devices.unknown"),
+                        d.IsCharging ? Loc.Get("tray.charging").Trim() : null,
+                        ds.Ignore ? Loc.Get("device.ignore") : null,
+                        Loc.Format("contact.tip", contact) }.Where(s => !string.IsNullOrWhiteSpace(s))),
                     ContactText = contact,
                     ContactTip = Loc.Format("contact.tip", contact),
                     CategoryName = Loc.Get("category." + category),
@@ -491,15 +522,29 @@ namespace BatteryBuddy.App.Views
             UpdatedText.Text = snap == null ? string.Empty : Loc.Format("devices.updated", snap.Time.LocalDateTime.ToString("T"));
             var failed = snap?.FailedProviders;
             FailedText.Visibility = failed != null && failed.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+            var previousFailure = FailedText.Text;
             FailedText.Text = failed != null && failed.Count > 0 ? Loc.Format("devices.failed", string.Join(", ", failed)) : string.Empty;
+            if (FailedText.Text.Length > 0 && FailedText.Text != previousFailure)
+                AccessibleUi.Announce(FailedText);
 
             ShowDetails();
+            AccessibleUi.RestoreListFocus<DeviceRow>(DeviceList, focusedId, r => r.Id, RefreshButton);
+            if (listHadFocus && rows.Count == 0)
+                RefreshButton.Focus();
         }
 
-        private void OnRefresh(object sender, RoutedEventArgs e) => _ = _host.RefreshAsync();
+        private async void OnRefresh(object sender, RoutedEventArgs e)
+        {
+            await _host.RefreshAsync();
+            ShowStatus(UpdatedText.Text + (FailedText.Text.Length > 0 ? Environment.NewLine + FailedText.Text : string.Empty));
+        }
 
         private void OnBugReport(object sender, RoutedEventArgs e)
             => ExternalLinkService.Open(new Uri("https://github.com/Dergln/BatteryBuddy-Public/issues", UriKind.Absolute));
+
+        private void OnVersionInfo(object sender, RoutedEventArgs e)
+            => AccessibleUi.OpenInformation(VersionInfo, AutomationProperties.GetName(VersionInfo),
+                AutomationProperties.GetHelpText(VersionInfo));
 
         /// <summary>Beschriftung für "letzter Kontakt": "&lt;5m", "&lt;2h" oder "&gt;24h" (Einheiten kommen aus den Sprachdateien).</summary>
         private static string FormatContact(TimeSpan age)
@@ -636,7 +681,7 @@ namespace BatteryBuddy.App.Views
             if (ok)
                 _dirty = false;
             ShowStatus(Loc.Get(ok ? "status.saved" : "status.saveFailed"), ok);
-            StatusText.SetResourceReference(TextBlock.ForegroundProperty, ok ? "BB.Ok" : "BB.Error");
+            StatusDetails.SetResourceReference(Control.ForegroundProperty, ok ? "BB.Ok" : "BB.Error");
             return ok;
         }
 

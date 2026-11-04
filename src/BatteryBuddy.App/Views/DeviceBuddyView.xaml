@@ -1,0 +1,101 @@
+<UserControl x:Class="BatteryBuddy.App.Views.DeviceBuddyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/BatteryBuddy;component/Themes/Controls.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" MaxHeight="270"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="0,0,0,12">
+            <StackPanel Margin="0,0,8,0">
+                <TextBlock x:Name="Heading" FontWeight="Bold" FontSize="16" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                <TextBlock TextWrapping="Wrap">
+                    <Run x:Name="IntroBefore"/><Run x:Name="IntroEmphasis" FontStyle="Italic"/><Run x:Name="IntroAfter"/>
+                </TextBlock>
+                <TextBlock x:Name="PurposeText" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                <TextBlock x:Name="ReportText" TextWrapping="Wrap" Margin="0,8,0,0"/>
+            </StackPanel>
+        </ScrollViewer>
+        <DockPanel Grid.Row="1" Margin="0,0,0,6">
+            <Button x:Name="RefreshButton" DockPanel.Dock="Right" Padding="14,4" Click="OnRefresh"/>
+            <TextBlock x:Name="UpdatedText" VerticalAlignment="Center" Foreground="{DynamicResource BB.Muted}" TextWrapping="Wrap"/>
+        </DockPanel>
+        <TextBlock x:Name="FailedText" Grid.Row="2" Foreground="{DynamicResource BB.Error}" TextWrapping="Wrap"
+                   Margin="0,0,0,6" Visibility="Collapsed"/>
+        <Grid Grid.Row="3">
+            <ScrollViewer x:Name="TableScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                <Grid MinWidth="660" Width="{Binding ViewportWidth, ElementName=TableScroll}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Margin="8,0,8,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="125"/>
+                            <ColumnDefinition Width="125"/>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="NameHeader" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="ConnectionHeader" Grid.Column="2" Margin="6,0" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="BatteryHeader" Grid.Column="3" Margin="6,0" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="HintHeader" Grid.Column="4" Margin="6,0" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                    </Grid>
+                    <ListView x:Name="DiagnosticList" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="AutomationProperties.Name" Value="{Binding Summary}"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="110"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Width="24" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                          ToolTip="{Binding CategoryName}" AutomationProperties.Name="{Binding CategoryName}">
+                                        <Image Source="{Binding CategoryImage}" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                        <TextBlock Text="{Binding Glyph}" FontFamily="Segoe MDL2 Assets" FontSize="20">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding CategoryImage}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" TextWrapping="Wrap"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding Connection}" TextWrapping="Wrap" Margin="6,0"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding Battery}" TextWrapping="Wrap" Margin="6,0"/>
+                                    <TextBlock Grid.Column="4" Text="{Binding Explanation}" TextWrapping="Wrap" Margin="6,0"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </ScrollViewer>
+            <TextBlock x:Name="EmptyText" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Margin="24" Foreground="{DynamicResource BB.Muted}" Visibility="Collapsed"/>
+        </Grid>
+    </Grid>
+</UserControl>

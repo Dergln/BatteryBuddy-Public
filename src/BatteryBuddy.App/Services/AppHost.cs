@@ -70,7 +70,7 @@ namespace BatteryBuddy.App.Services
                 new XInputBatteryProvider(),
                 new LogitechBatteryProvider()
             };
-            _monitor = new BatteryMonitor(providers, TimeSpan.FromSeconds(15));
+            _monitor = new BatteryMonitor(providers, TimeSpan.FromSeconds(15), new DeviceDiagnosticSource());
 
             // Nur beim allerersten Durchlauf zeigen wir Zwischenstände, und nur mit mindestens einem Gerät:
             // Ein Provider ohne Treffer (z. B. kein interner Akku am PC) soll nicht schon "nichts gefunden" auslösen.

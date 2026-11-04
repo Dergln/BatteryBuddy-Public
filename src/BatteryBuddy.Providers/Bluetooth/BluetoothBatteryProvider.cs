@@ -32,8 +32,8 @@ namespace BatteryBuddy.Providers.Bluetooth
             return Task.Run<IReadOnlyList<BatteryDevice>>(() =>
             {
                 var nodes = new List<PnpNode>();
-                nodes.AddRange(PnpEnumerator.Enumerate("BTHENUM"));
-                nodes.AddRange(PnpEnumerator.Enumerate("BTHLE"));
+                nodes.AddRange(PnpEnumerator.Enumerate("BTHENUM", cancellationToken));
+                nodes.AddRange(PnpEnumerator.Enumerate("BTHLE", cancellationToken));
                 return Build(nodes);
             }, cancellationToken);
         }

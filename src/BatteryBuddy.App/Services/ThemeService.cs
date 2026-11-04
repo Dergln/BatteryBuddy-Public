@@ -5,6 +5,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using BatteryBuddy.Core.Models;
 using Microsoft.Win32;
+using System.ComponentModel;
 
 namespace BatteryBuddy.App.Services
 {
@@ -18,10 +19,30 @@ namespace BatteryBuddy.App.Services
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int value, int size);
 
         public static bool IsDark { get; private set; }
+        public static bool IsHighContrast { get; private set; }
+        public static event EventHandler Changed;
+        private static string _theme;
+
+        static ThemeService()
+        {
+            SystemParameters.StaticPropertyChanged += OnSystemSettingChanged;
+        }
+
+        private static void OnSystemSettingChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(SystemParameters.HighContrast))
+                return;
+            var app = Application.Current;
+            if (app == null || app.Dispatcher.HasShutdownStarted)
+                return;
+            app.Dispatcher.InvokeAsync(() => Apply(_theme));
+        }
 
         /// <summary>Wendet "light", "dark" oder "" (= wie Windows) an.</summary>
         public static void Apply(string theme)
         {
+            _theme = theme;
+            IsHighContrast = SystemParameters.HighContrast;
             IsDark = theme == "dark" || (theme != "light" && !WindowsAppsUseLightTheme());
             var res = Application.Current.Resources;
 
@@ -32,14 +53,25 @@ namespace BatteryBuddy.App.Services
             Set(res, "BB.Control", IsDark ? "#3A3A3A" : "#FBFBFB");
             Set(res, "BB.ControlHover", IsDark ? "#4A4A4A" : "#E5F1FB");
             Set(res, "BB.ControlPressed", IsDark ? "#585858" : "#CCE4F7");
-            Set(res, "BB.Border", IsDark ? "#6A6A6A" : "#A6A6A6");
+            Set(res, "BB.Border", IsDark ? "#939393" : "#777777");
             Set(res, "BB.Accent", IsDark ? "#4CC2FF" : "#0067C0");
-            Set(res, "BB.Selected", IsDark ? "#3C5A73" : "#CCE4F7");
+            Set(res, "BB.Selected", IsDark ? "#283C4C" : "#CCE4F7");
             Set(res, "BB.Error", IsDark ? "#FF6B6B" : "#B00020");
             Set(res, "BB.Ok", IsDark ? "#6CE06C" : "#107C10");
+            if (IsHighContrast)
+                ApplyHighContrastPalette(res);
 
             foreach (Window w in Application.Current.Windows)
                 StyleTitleBar(w);
+            Changed?.Invoke(null, EventArgs.Empty);
+        }
+
+        internal static void ApplyHighContrastPalette(ResourceDictionary res)
+        {
+            foreach (var key in new[] { "BB.Window", "BB.Panel", "BB.Control", "BB.ControlHover", "BB.ControlPressed", "BB.Selected" })
+                res[key] = SystemColors.WindowBrush;
+            foreach (var key in new[] { "BB.Text", "BB.Muted", "BB.Border", "BB.Error", "BB.Ok", "BB.Accent" })
+                res[key] = SystemColors.WindowTextBrush;
         }
 
         private static void Set(ResourceDictionary res, string key, string hex)
@@ -97,13 +129,15 @@ namespace BatteryBuddy.App.Services
         /// <summary>Textfarbe einer Stufe, passend zum aktuellen Theme (im dunklen Theme heller, damit sie lesbar bleibt).</summary>
         public static Color Text(ChargeLevel level)
         {
+            if (ThemeService.IsHighContrast)
+                return SystemColors.WindowTextColor;
             switch (level)
             {
-                case ChargeLevel.Green: return ThemeService.IsDark ? Color.FromRgb(108, 224, 108) : Color.FromRgb(16, 124, 16);
-                case ChargeLevel.Yellow: return ThemeService.IsDark ? Color.FromRgb(255, 209, 64) : Color.FromRgb(176, 110, 0);
-                case ChargeLevel.Red: return ThemeService.IsDark ? Color.FromRgb(255, 99, 88) : Color.FromRgb(196, 43, 28);
-                case ChargeLevel.Critical: return ThemeService.IsDark ? Color.FromRgb(236, 70, 110) : Color.FromRgb(128, 0, 32);
-                default: return ThemeService.IsDark ? Color.FromRgb(170, 170, 170) : Color.FromRgb(110, 110, 110);
+                case ChargeLevel.Green: return ThemeService.IsDark ? Color.FromRgb(108, 224, 108) : Color.FromRgb(9, 101, 9);
+                case ChargeLevel.Yellow: return ThemeService.IsDark ? Color.FromRgb(255, 209, 64) : Color.FromRgb(140, 85, 0);
+                case ChargeLevel.Red: return ThemeService.IsDark ? Color.FromRgb(255, 156, 144) : Color.FromRgb(160, 32, 16);
+                case ChargeLevel.Critical: return ThemeService.IsDark ? Color.FromRgb(255, 140, 170) : Color.FromRgb(128, 0, 32);
+                default: return ThemeService.IsDark ? Color.FromRgb(170, 170, 170) : Color.FromRgb(90, 90, 90);
             }
         }
     }

@@ -44,13 +44,16 @@ namespace BatteryBuddy.Core.Models
         /// <summary>Name des Providers, der das Gerät gemeldet hat (nur zur Diagnose).</summary>
         public string Source { get; }
 
+        /// <summary>Optional Windows node identity, used only to match discovery evidence.</summary>
+        public string ConnectionId { get; }
+
         /// <summary>
         /// Wann das Gerät zuletzt wirklich geantwortet hat. Bei frisch gelesenen Geräten "jetzt"; bei zwischengespeicherten
         /// (z. B. schlafende Funkmaus) der Zeitpunkt der letzten echten Antwort.
         /// </summary>
         public DateTimeOffset LastContact { get; }
 
-        public BatteryDevice(string id, string name, DeviceCategory category, int? level, bool isCharging, string source, DateTimeOffset? lastContact = null)
+        public BatteryDevice(string id, string name, DeviceCategory category, int? level, bool isCharging, string source, DateTimeOffset? lastContact = null, string connectionId = null)
         {
             LastContact = lastContact ?? DateTimeOffset.Now;
             Id = Sanitize(id, MaxIdLength);
@@ -65,6 +68,7 @@ namespace BatteryBuddy.Core.Models
             Level = level.HasValue && level.Value >= 0 && level.Value <= 100 ? level : null;
             IsCharging = isCharging;
             Source = Sanitize(source, 40);
+            ConnectionId = Sanitize(connectionId, 512);
         }
 
         /// <summary>Entfernt Steuerzeichen (z. B. Zeilenumbrüche), trimmt und kürzt den Text.</summary>

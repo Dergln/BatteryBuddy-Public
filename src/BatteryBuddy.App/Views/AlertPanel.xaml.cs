@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using BatteryBuddy.App.Services;
 using BatteryBuddy.Core.Settings;
+using BatteryBuddy.Core.Models;
 using Microsoft.Win32;
 
 namespace BatteryBuddy.App.Views
@@ -14,6 +15,7 @@ namespace BatteryBuddy.App.Views
     public sealed class SimulationProgressRow : INotifyPropertyChanged
     {
         private string _status;
+        private Brush _levelBrush;
 
         public string Status
         {
@@ -30,7 +32,16 @@ namespace BatteryBuddy.App.Views
         public string Phase { get; set; }
         public string Threshold { get; set; }
         public string Estimate { get; set; }
-        public Brush LevelBrush { get; set; }
+        public ChargeLevel Level { get; set; }
+        public Brush LevelBrush
+        {
+            get => _levelBrush;
+            set
+            {
+                _levelBrush = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LevelBrush)));
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
     }
@@ -107,9 +118,13 @@ namespace BatteryBuddy.App.Views
             foreach (var t in new[] { RepeatYellowPre, RepeatRedPre, RepeatCriticalPre }) t.Text = pre;
             foreach (var t in new[] { RepeatYellowPost, RepeatRedPost, RepeatCriticalPost }) t.Text = post;
             var repeatName = repeat.Replace("{0}", "x");
-            foreach (var box in new[] { RepeatYellow, RepeatRed, RepeatCritical })
+            var repeatBoxes = new[] { RepeatYellow, RepeatRed, RepeatCritical };
+            var repeatLabels = new[] { NotifyYellow, NotifyRed, NotifyCritical };
+            for (var i = 0; i < repeatBoxes.Length; i++)
             {
-                AutomationProperties.SetName(box, repeatName);
+                var box = repeatBoxes[i];
+                AutomationProperties.SetName(box, repeatLabels[i].Content + ": " + repeatName);
+                AutomationProperties.SetHelpText(box, Loc.Get("notify.repeatHint"));
                 box.ToolTip = Loc.Get("notify.repeatHint");
             }
             WhenLabel.Text = Loc.Get("notify.when");
@@ -143,6 +158,8 @@ namespace BatteryBuddy.App.Views
             AutomationProperties.SetName(CriticalSlider, Loc.Get("device.criticalAt"));
             AutomationProperties.SetName(CustomPath, Loc.Get("notify.via.custom"));
             AutomationProperties.SetName(SimulationButton, Loc.Get("simulation.start"));
+            foreach (var slider in new[] { YellowSlider, RedSlider, CriticalSlider })
+                AutomationProperties.SetHelpText(slider, "%");
         }
 
         public void EnableSimulation(bool enabled)
@@ -152,6 +169,12 @@ namespace BatteryBuddy.App.Views
         {
             SimulationSteps.ItemsSource = rows;
             SimulationPanel.Visibility = Visibility.Visible;
+        }
+
+        internal void RefreshSimulationColors()
+        {
+            foreach (var row in SimulationSteps.Items.OfType<SimulationProgressRow>())
+                row.LevelBrush = Brush(LevelColors.Text(row.Level));
         }
 
         public void SetSimulationRunning(bool running)
@@ -267,7 +290,10 @@ namespace BatteryBuddy.App.Views
             RepeatRed.IsEnabled = NotifyRed.IsChecked == true;
             RepeatCritical.IsEnabled = NotifyCritical.IsChecked == true;
             var invalid = custom && CustomPath.Text.Trim().Length > 0 && AppSettings.SanitizeSoundPath(CustomPath.Text).Length == 0;
+            var wasInvalid = PathWarning.Visibility == Visibility.Visible;
             PathWarning.Visibility = invalid ? Visibility.Visible : Visibility.Collapsed;
+            if (invalid && !wasInvalid)
+                AccessibleUi.Announce(PathWarning);
         }
 
         /// <summary>Hält die Reihenfolge kritisch &lt; rot &lt; gelb ein: Der bewegte Regler schiebt die anderen mit.</summary>

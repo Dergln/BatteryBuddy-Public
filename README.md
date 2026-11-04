@@ -20,7 +20,7 @@ The app is currently **not digitally signed**. Windows SmartScreen may show a re
 To check the ZIP in PowerShell, compare the result with the release's `SHA256SUMS.txt`:
 
 ```powershell
-Get-FileHash .\BatteryBuddy-0.1.24-windows.zip -Algorithm SHA256
+Get-FileHash .\BatteryBuddy-1.0.3-windows.zip -Algorithm SHA256
 ```
 
 ## Features
@@ -29,6 +29,8 @@ Get-FileHash .\BatteryBuddy-0.1.24-windows.zip -Algorithm SHA256
 - Configurable per-device warning thresholds, Windows notifications and optional warning sounds.
 - Main tray icon plus optional per-category or per-device battery icons.
 - Last-contact indicators for inactive devices, device categories, light/dark themes and optional autostart.
+- **DeviceBuddy:** a read-only troubleshooting tab for connected peripherals without a recognized battery level. It shows Windows' reported connection and best-guess explanations, using the same nonblocking scans as battery monitoring. A wireless USB receiver may appear to Windows as a wired controller; this does not prove that the controller has no battery.
+- Keyboard-friendly navigation, stable device-list focus during refresh, named controls and Windows contrast-theme colors. Version and contributor buttons open persistent, selectable information dialogs; save confirmation appears separately for five seconds without hiding the footer. Automated accessibility checks do not constitute screen-reader or voice-control certification.
 - 38 interface languages, including right-to-left layouts for Arabic and Hebrew.
 - All functionality is unlocked. There is no paid Pro version; support is optional.
 

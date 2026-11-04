@@ -27,6 +27,11 @@ namespace BatteryBuddy.Providers.Native
         byte[] Read(int timeoutMs);
     }
 
+    internal interface IHidDeviceIdentity
+    {
+        string DeviceInstanceId { get; }
+    }
+
     /// <summary>Windows-HID-Zugriff über hid.dll/kernel32.dll (P/Invoke).</summary>
     internal static class HidNative
     {
@@ -203,14 +208,22 @@ namespace BatteryBuddy.Providers.Native
                 return null;
             }
 
-            return new OverlappedStream(handle, info.InputReportLength, info.OutputReportLength);
+            return new OverlappedStream(handle, info.InputReportLength, info.OutputReportLength, InstanceIdFromPath(info.Path));
+        }
+
+        internal static string InstanceIdFromPath(string path)
+        {
+            if (string.IsNullOrEmpty(path) || !path.StartsWith(@"\\?\", StringComparison.Ordinal))
+                return string.Empty;
+            var end = path.LastIndexOf("#{", StringComparison.Ordinal);
+            return end < 4 ? string.Empty : path.Substring(4, end - 4).Replace('#', '\\');
         }
 
         /// <summary>
         /// Lesen/Schreiben mit Zeitlimit. "Overlapped" = asynchrones Windows-I/O: Der Aufruf kehrt sofort zurück,
         /// wir warten auf ein Event und können bei Zeitüberschreitung sauber abbrechen (sonst bliebe der Thread hängen).
         /// </summary>
-        private sealed class OverlappedStream : IHidTransport
+        private sealed class OverlappedStream : IHidTransport, IHidDeviceIdentity
         {
             private readonly SafeFileHandle _handle;
             private readonly int _inLength;
@@ -218,11 +231,14 @@ namespace BatteryBuddy.Providers.Native
             private readonly IntPtr _event;
             private readonly object _lock = new object();
 
-            public OverlappedStream(SafeFileHandle handle, int inLength, int outLength)
+            public string DeviceInstanceId { get; }
+
+            public OverlappedStream(SafeFileHandle handle, int inLength, int outLength, string deviceInstanceId)
             {
                 _handle = handle;
                 _inLength = inLength;
                 _outLength = outLength;
+                DeviceInstanceId = deviceInstanceId;
                 _event = CreateEventW(IntPtr.Zero, true, false, null);
             }
 

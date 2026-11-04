@@ -360,8 +360,11 @@ namespace BatteryBuddy.App.Views
                 panel.Children.Add(CircleIcon(PersonGlyph()));
                 panel.Children.Add(Label("CC BY 3.0"));
                 panel.ToolTip = Loc.Get("contrib.license.ccby");
-                panel.Cursor = Cursors.Hand;
-                panel.MouseLeftButtonUp += (s, e) => OpenUrl(new Uri(CcByUrl));
+                var button = new Button { Content = panel, Padding = new Thickness(4), HorizontalAlignment = HorizontalAlignment.Left };
+                button.SetResourceReference(Control.ForegroundProperty, "BB.Text");
+                System.Windows.Automation.AutomationProperties.SetName(button, "CC BY 3.0 - " + Loc.Get("contrib.license.ccby"));
+                button.Click += (s, e) => OpenUrl(new Uri(CcByUrl));
+                return button;
             }
             else if (c.License == LicenseKind.PublicDomain)
             {

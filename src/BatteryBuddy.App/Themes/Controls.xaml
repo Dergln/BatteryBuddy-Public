@@ -3,7 +3,18 @@
     <!-- Gemeinsame Steuerelement-Vorlagen für helles und dunkles Theme.
          Alle Farben kommen per DynamicResource aus den "BB.*"-Pinseln (siehe ThemeService). -->
 
-    <Style TargetType="Button">
+    <Style x:Key="BB.KeyboardFocus" TargetType="Control">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="1" StrokeThickness="2" Stroke="{DynamicResource BB.Text}" StrokeDashArray="2 1" SnapsToDevicePixels="True"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="BB.Button" TargetType="Button">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource BB.KeyboardFocus}"/>
+        <Setter Property="MinHeight" Value="28"/>
         <Setter Property="Background" Value="{DynamicResource BB.Control}"/>
         <Setter Property="Foreground" Value="{DynamicResource BB.Text}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BB.Border}"/>
@@ -13,7 +24,7 @@
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="1" CornerRadius="3">
-                        <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsDefaulted" Value="True">
@@ -36,6 +47,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style TargetType="Button" BasedOn="{StaticResource BB.Button}"/>
 
     <Style TargetType="CheckBox">
         <Setter Property="Foreground" Value="{DynamicResource BB.Text}"/>
@@ -135,6 +147,7 @@
     </Style>
 
     <Style TargetType="ComboBox">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource BB.KeyboardFocus}"/>
         <Setter Property="Foreground" Value="{DynamicResource BB.Text}"/>
         <Setter Property="Background" Value="{DynamicResource BB.Control}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BB.Border}"/>
@@ -191,9 +204,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="TabControl">
                     <DockPanel>
-                        <TabPanel DockPanel.Dock="Top" IsItemsHost="True" Panel.ZIndex="1"/>
+                        <TabPanel DockPanel.Dock="Top" IsItemsHost="True" Panel.ZIndex="1" KeyboardNavigation.TabIndex="0" KeyboardNavigation.TabNavigation="Once"/>
                         <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
-                            <ContentPresenter ContentSource="SelectedContent"/>
+                            <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" KeyboardNavigation.TabIndex="1" KeyboardNavigation.TabNavigation="Local"/>
                         </Border>
                     </DockPanel>
                 </ControlTemplate>
@@ -202,6 +215,7 @@
     </Style>
 
     <Style TargetType="TabItem">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource BB.KeyboardFocus}"/>
         <Setter Property="Foreground" Value="{DynamicResource BB.Muted}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -235,6 +249,7 @@
     </Style>
 
     <Style TargetType="ListViewItem">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource BB.KeyboardFocus}"/>
         <Setter Property="Foreground" Value="{DynamicResource BB.Text}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -260,10 +275,13 @@
 
     <!-- Regler: schlanke Schiene, der Teil links vom Knopf ist in Akzentfarbe gefüllt. -->
     <Style TargetType="Slider">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource BB.KeyboardFocus}"/>
+        <Setter Property="SmallChange" Value="1"/>
+        <Setter Property="LargeChange" Value="5"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Slider">
-                    <Grid Height="22" Background="Transparent">
+                    <Grid Height="28" Background="Transparent">
                         <Border Height="4" CornerRadius="2" Background="{DynamicResource BB.Border}" VerticalAlignment="Center"/>
                         <Track x:Name="PART_Track">
                             <Track.DecreaseRepeatButton>
@@ -278,7 +296,7 @@
                                 </RepeatButton>
                             </Track.DecreaseRepeatButton>
                             <Track.Thumb>
-                                <Thumb Width="16" Height="16" Focusable="True">
+                                <Thumb Width="24" Height="24" Focusable="False" IsTabStop="False">
                                     <Thumb.Template>
                                         <ControlTemplate TargetType="Thumb">
                                             <Ellipse x:Name="knob" Fill="{DynamicResource BB.Accent}" Stroke="{DynamicResource BB.Window}" StrokeThickness="2"/>
@@ -370,12 +388,12 @@
     </ControlTemplate>
 
     <Style TargetType="ScrollBar">
-        <Setter Property="Width" Value="12"/>
+        <Setter Property="Width" Value="18"/>
         <Setter Property="Template" Value="{StaticResource BB.ScrollBar.Vertical}"/>
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Horizontal">
                 <Setter Property="Width" Value="Auto"/>
-                <Setter Property="Height" Value="12"/>
+                <Setter Property="Height" Value="18"/>
                 <Setter Property="Template" Value="{StaticResource BB.ScrollBar.Horizontal}"/>
             </Trigger>
         </Style.Triggers>

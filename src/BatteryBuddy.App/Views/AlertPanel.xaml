@@ -15,7 +15,7 @@
     </UserControl.Resources>
     <StackPanel>
         <StackPanel x:Name="SettingsFields">
-        <CheckBox x:Name="ShowInTray" Click="OnChanged" Margin="0,4,0,8"/>
+        <CheckBox x:Name="ShowInTray" Checked="OnChanged" Unchecked="OnChanged" Margin="0,4,0,8"/>
         <TextBlock x:Name="ThresholdHint" Foreground="{DynamicResource BB.Muted}" TextWrapping="Wrap"
                    Margin="0,4,0,8" Visibility="Collapsed"/>
         <DockPanel Margin="0,4">
@@ -39,49 +39,49 @@
 
         <!-- Rechts neben jeder Stufe: "Benachrichtigen für [x] Prüfintervalle" (Text vor/nach der Auswahl aus der Sprachdatei). -->
         <StackPanel Margin="0,6,0,0">
-            <DockPanel Margin="0,1">
+            <DockPanel Margin="0,1" KeyboardNavigation.TabNavigation="Local">
                 <Border x:Name="NotifyYellowBox" Style="{StaticResource ColorBox}" DockPanel.Dock="Left"/>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="12,0,0,0">
+                <StackPanel Orientation="Horizontal" KeyboardNavigation.TabIndex="1" DockPanel.Dock="Right" Margin="12,0,0,0">
                     <TextBlock x:Name="RepeatYellowPre" VerticalAlignment="Center"/>
-                    <ComboBox x:Name="RepeatYellow" Width="54" Margin="5,0" SelectionChanged="OnRepeatChanged"/>
+                    <ComboBox x:Name="RepeatYellow" KeyboardNavigation.TabIndex="1" Width="64" Margin="5,0" SelectionChanged="OnRepeatChanged"/>
                     <TextBlock x:Name="RepeatYellowPost" VerticalAlignment="Center"/>
                 </StackPanel>
-                <CheckBox x:Name="NotifyYellow" Click="OnChanged" VerticalAlignment="Center"/>
+                <CheckBox x:Name="NotifyYellow" KeyboardNavigation.TabIndex="0" Checked="OnChanged" Unchecked="OnChanged" VerticalAlignment="Center"/>
             </DockPanel>
-            <DockPanel Margin="0,1">
+            <DockPanel Margin="0,1" KeyboardNavigation.TabNavigation="Local">
                 <Border x:Name="NotifyRedBox" Style="{StaticResource ColorBox}" DockPanel.Dock="Left"/>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="12,0,0,0">
+                <StackPanel Orientation="Horizontal" KeyboardNavigation.TabIndex="1" DockPanel.Dock="Right" Margin="12,0,0,0">
                     <TextBlock x:Name="RepeatRedPre" VerticalAlignment="Center"/>
-                    <ComboBox x:Name="RepeatRed" Width="54" Margin="5,0" SelectionChanged="OnRepeatChanged"/>
+                    <ComboBox x:Name="RepeatRed" KeyboardNavigation.TabIndex="1" Width="64" Margin="5,0" SelectionChanged="OnRepeatChanged"/>
                     <TextBlock x:Name="RepeatRedPost" VerticalAlignment="Center"/>
                 </StackPanel>
-                <CheckBox x:Name="NotifyRed" Click="OnChanged" VerticalAlignment="Center"/>
+                <CheckBox x:Name="NotifyRed" KeyboardNavigation.TabIndex="0" Checked="OnChanged" Unchecked="OnChanged" VerticalAlignment="Center"/>
             </DockPanel>
-            <DockPanel Margin="0,1">
+            <DockPanel Margin="0,1" KeyboardNavigation.TabNavigation="Local">
                 <Border x:Name="NotifyCriticalBox" Style="{StaticResource ColorBox}" DockPanel.Dock="Left"/>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="12,0,0,0">
+                <StackPanel Orientation="Horizontal" KeyboardNavigation.TabIndex="1" DockPanel.Dock="Right" Margin="12,0,0,0">
                     <TextBlock x:Name="RepeatCriticalPre" VerticalAlignment="Center"/>
-                    <ComboBox x:Name="RepeatCritical" Width="54" Margin="5,0" SelectionChanged="OnRepeatChanged"/>
+                    <ComboBox x:Name="RepeatCritical" KeyboardNavigation.TabIndex="1" Width="64" Margin="5,0" SelectionChanged="OnRepeatChanged"/>
                     <TextBlock x:Name="RepeatCriticalPost" VerticalAlignment="Center"/>
                 </StackPanel>
-                <CheckBox x:Name="NotifyCritical" Click="OnChanged" VerticalAlignment="Center"/>
+                <CheckBox x:Name="NotifyCritical" KeyboardNavigation.TabIndex="0" Checked="OnChanged" Unchecked="OnChanged" VerticalAlignment="Center"/>
             </DockPanel>
         </StackPanel>
 
         <TextBlock x:Name="WhenLabel" FontWeight="SemiBold" Margin="0,12,0,2"/>
-        <CheckBox x:Name="WhenStartup" Click="OnChanged"/>
-        <CheckBox x:Name="WhenLevel" Click="OnChanged" Margin="0,2,0,0"/>
+        <CheckBox x:Name="WhenStartup" Checked="OnChanged" Unchecked="OnChanged"/>
+        <CheckBox x:Name="WhenLevel" Checked="OnChanged" Unchecked="OnChanged" Margin="0,2,0,0"/>
 
         <TextBlock x:Name="ViaLabel" FontWeight="SemiBold" Margin="0,12,0,2"/>
-        <CheckBox x:Name="ViaToast" Click="OnChanged"/>
+        <CheckBox x:Name="ViaToast" Checked="OnChanged" Unchecked="OnChanged"/>
         <TextBlock x:Name="SoundHint" Foreground="{DynamicResource BB.Muted}" Margin="0,6,0,0" TextWrapping="Wrap"/>
-        <CheckBox x:Name="ViaSound" Click="OnSoundClicked"/>
+        <CheckBox x:Name="ViaSound" Checked="OnSoundClicked" Unchecked="OnSoundClicked"/>
         <DockPanel Margin="0,2,0,0">
-            <CheckBox x:Name="ViaWindows" Click="OnSoundClicked" DockPanel.Dock="Left" MinWidth="200" VerticalAlignment="Center"/>
+            <CheckBox x:Name="ViaWindows" Checked="OnSoundClicked" Unchecked="OnSoundClicked" DockPanel.Dock="Left" MinWidth="200" VerticalAlignment="Center"/>
             <ComboBox x:Name="WinSoundBox" HorizontalAlignment="Left" MinWidth="260" MaxWidth="360"
                       SelectionChanged="OnWinSoundSelected" DropDownClosed="OnWinSoundClosed"/>
         </DockPanel>
-        <CheckBox x:Name="ViaCustom" Click="OnSoundClicked" Margin="0,2,0,0"/>
+        <CheckBox x:Name="ViaCustom" Checked="OnSoundClicked" Unchecked="OnSoundClicked" Margin="0,2,0,0"/>
         <DockPanel x:Name="CustomRow" Margin="26,2,0,0">
             <Button x:Name="BrowseButton" DockPanel.Dock="Right" Margin="6,0,0,0" Click="OnBrowse"/>
             <TextBox x:Name="CustomPath" MaxLength="260" TextChanged="OnPathChanged" LostFocus="OnPathLostFocus"/>

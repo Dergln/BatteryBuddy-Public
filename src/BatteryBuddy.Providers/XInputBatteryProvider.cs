@@ -26,6 +26,40 @@ namespace BatteryBuddy.Providers
         [DllImport("xinput1_4.dll", EntryPoint = "XInputGetBatteryInformation")]
         private static extern uint XInputGetBatteryInformation(uint userIndex, byte devType, out XINPUT_BATTERY_INFORMATION info);
 
+        [StructLayout(LayoutKind.Sequential, Size = 16)]
+        private struct XINPUT_STATE
+        {
+            public uint PacketNumber;
+        }
+
+        [DllImport("xinput1_4.dll", EntryPoint = "XInputGetState")]
+        private static extern uint XInputGetState(uint userIndex, out XINPUT_STATE state);
+
+        internal sealed class SlotReading
+        {
+            public uint Slot { get; set; }
+            public byte BatteryType { get; set; }
+            public byte BatteryLevel { get; set; }
+            public uint BatteryError { get; set; }
+        }
+
+        internal static IReadOnlyList<SlotReading> ReadConnectedSlots(CancellationToken cancellationToken)
+        {
+            var result = new List<SlotReading>();
+            for (uint slot = 0; slot < 4; slot++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var error = XInputGetState(slot, out _);
+                if (error == 1167) continue;
+                if (error != ErrorSuccess)
+                    throw new System.ComponentModel.Win32Exception((int)error, "XInput controller discovery failed.");
+                var batteryError = XInputGetBatteryInformation(slot, 0, out var info);
+                result.Add(new SlotReading { Slot = slot, BatteryType = info.BatteryType,
+                    BatteryLevel = info.BatteryLevel, BatteryError = batteryError });
+            }
+            return result;
+        }
+
         private const uint ErrorSuccess = 0;
         private const byte BatteryTypeWired = 1;      // Kabelcontroller: kein Akku
         private const byte BatteryTypeDisconnected = 0;

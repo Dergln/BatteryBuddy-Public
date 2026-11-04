@@ -19,6 +19,8 @@ namespace BatteryBuddy.App.Services
         private readonly Guid _guid;
         internal delegate bool NotifyIconCommand(uint message, ref NotifyIconData data);
         private readonly NotifyIconCommand _notify;
+        internal delegate int IconRectCommand(ref NotifyIconIdentifier identity, out NativeRect bounds);
+        private readonly IconRectCommand _getRect;
         private bool _added;
         private bool _visible;
         private Icon _icon;
@@ -28,13 +30,14 @@ namespace BatteryBuddy.App.Services
         public event EventHandler BalloonTipClosed;
         public ContextMenuStrip ContextMenuStrip { get; set; }
 
-        public NativeTrayIcon(string stableKey, NotifyIconCommand notify = null)
+        public NativeTrayIcon(string stableKey, NotifyIconCommand notify = null, IconRectCommand getRect = null)
         {
             if (string.IsNullOrWhiteSpace(stableKey))
                 throw new ArgumentException("A stable tray identity is required.", nameof(stableKey));
             _guid = CreateIdentity(stableKey, Application.ExecutablePath);
             // Tests exercise native windows without adding persistent entries to the user's Explorer history.
             _notify = notify ?? ShellNotifyIcon;
+            _getRect = getRect ?? ShellNotifyIconGetRect;
             CreateHandle(new CreateParams { Caption = "BatteryBuddy.Tray" });
         }
 
@@ -174,7 +177,21 @@ namespace BatteryBuddy.App.Services
                 return;
             // A foreground owner makes an outside click dismiss the menu, just like WinForms NotifyIcon.
             SetForegroundWindow(Handle);
-            ContextMenuStrip.Show(Cursor.Position);
+            var identity = new NotifyIconIdentifier
+            {
+                Size = (uint)Marshal.SizeOf<NotifyIconIdentifier>(),
+                Window = Handle,
+                Id = 1,
+                Guid = _guid
+            };
+            if (_getRect(ref identity, out var bounds) == 0)
+                ContextMenuStrip.Show(new Point(bounds.Left, bounds.Bottom));
+            else
+            {
+                Trace.TraceWarning("Windows could not locate the tray icon; positioning its menu on the current screen.");
+                var area = Screen.FromHandle(Handle).WorkingArea;
+                ContextMenuStrip.Show(new Point(area.Right - ContextMenuStrip.PreferredSize.Width, area.Bottom));
+            }
             PostMessage(Handle, 0, IntPtr.Zero, IntPtr.Zero);
         }
 
@@ -184,6 +201,24 @@ namespace BatteryBuddy.App.Services
             Remove();
             DestroyHandle();
         }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        internal struct NotifyIconIdentifier
+        {
+            public uint Size;
+            public IntPtr Window;
+            public uint Id;
+            public Guid Guid;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct NativeRect
+        {
+            public int Left, Top, Right, Bottom;
+        }
+
+        [DllImport("shell32.dll", EntryPoint = "Shell_NotifyIconGetRect")]
+        private static extern int ShellNotifyIconGetRect(ref NotifyIconIdentifier identity, out NativeRect bounds);
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         internal struct NotifyIconData

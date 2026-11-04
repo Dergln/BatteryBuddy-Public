@@ -264,7 +264,7 @@ namespace BatteryBuddy.App.Services
         private void OnThemeChanged(object sender, UserPreferenceChangedEventArgs e)
         {
             if (e.Category == UserPreferenceCategory.General || e.Category == UserPreferenceCategory.Color)
-                _ui.Post(s => Update(), null);
+                _ui.Post(s => { ThemeService.Apply(_host.Settings.Theme); Update(); }, null);
         }
 
         private static string Trim(string text, int max) => text.Length <= max ? text : text.Substring(0, max - 1) + "…";

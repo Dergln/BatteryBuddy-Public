@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using BatteryBuddy.Providers.Native;
 
 namespace BatteryBuddy.Providers.Bluetooth
@@ -21,6 +24,11 @@ namespace BatteryBuddy.Providers.Bluetooth
 
         /// <summary>Bluetooth Class of Device (Gerätetyp-Code).</summary>
         public uint? ClassOfDevice { get; set; }
+        public string ClassName { get; set; }
+        public string ParentId { get; set; }
+        public Guid? ContainerId { get; set; }
+        public string BusName { get; set; }
+        public string[] CompatibleIds { get; set; } = new string[0];
     }
 
     /// <summary>Liest PnP-Geräteknoten und deren Eigenschaften über die SetupAPI (nur lesend).</summary>
@@ -33,22 +41,32 @@ namespace BatteryBuddy.Providers.Bluetooth
         private static SetupApi.DEVPROPKEY _classOfDevice = new SetupApi.DEVPROPKEY("2BD67D8B-8BEB-48D5-87E0-6CDA3428040A", 4);
         private static SetupApi.DEVPROPKEY _friendlyName = new SetupApi.DEVPROPKEY("A45C254E-DF1C-4EFD-8020-67D146A850E0", 14);
         private static SetupApi.DEVPROPKEY _deviceDesc = new SetupApi.DEVPROPKEY("A45C254E-DF1C-4EFD-8020-67D146A850E0", 2);
+        private static SetupApi.DEVPROPKEY _className = new SetupApi.DEVPROPKEY("A45C254E-DF1C-4EFD-8020-67D146A850E0", 9);
+        private static SetupApi.DEVPROPKEY _compatibleIds = new SetupApi.DEVPROPKEY("A45C254E-DF1C-4EFD-8020-67D146A850E0", 4);
+        private static SetupApi.DEVPROPKEY _parent = new SetupApi.DEVPROPKEY("4340A6C5-93FA-4706-972C-7B648008A5A7", 8);
+        private static SetupApi.DEVPROPKEY _container = new SetupApi.DEVPROPKEY("8C7ED206-3F8A-4827-B3AB-AE9E1FAEFC6C", 2);
+        private static SetupApi.DEVPROPKEY _busName = new SetupApi.DEVPROPKEY("540B947E-8B40-45BC-A8A2-6A0B894CBDA2", 4);
 
         /// <summary>Liefert alle aktuell vorhandenen Geräteknoten eines Enumerators (z. B. "BTHENUM" oder "BTHLE").</summary>
-        public static List<PnpNode> Enumerate(string enumerator)
+        public static List<PnpNode> Enumerate(string enumerator, CancellationToken cancellationToken = default, bool includeIdentity = false)
         {
             var result = new List<PnpNode>();
             var set = SetupApi.SetupDiGetClassDevsW(IntPtr.Zero, enumerator, IntPtr.Zero, SetupApi.DIGCF_PRESENT | SetupApi.DIGCF_ALLCLASSES);
             if (set == SetupApi.InvalidHandle || set == IntPtr.Zero)
-                return result;
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "Windows device discovery could not start.");
 
             try
             {
                 for (uint i = 0; ; i++)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     var info = SetupApi.NewDevInfo();
                     if (!SetupApi.SetupDiEnumDeviceInfo(set, i, ref info))
-                        break; // ERROR_NO_MORE_ITEMS: fertig
+                    {
+                        var error = Marshal.GetLastWin32Error();
+                        if (error == 259) break;
+                        throw new Win32Exception(error, "Windows device discovery did not finish.");
+                    }
 
                     var id = new StringBuilder(260);
                     if (!SetupApi.SetupDiGetDeviceInstanceIdW(set, ref info, id, (uint)id.Capacity, out _))
@@ -78,6 +96,18 @@ namespace BatteryBuddy.Providers.Bluetooth
                     if (cod != null)
                         node.ClassOfDevice = BitConverter.ToUInt32(cod, 0);
 
+                    if (includeIdentity)
+                    {
+                        node.ClassName = ReadString(set, ref info, ref _className);
+                        node.ParentId = ReadString(set, ref info, ref _parent);
+                        node.BusName = ReadString(set, ref info, ref _busName);
+                        var container = ReadBytes(set, ref info, ref _container, SetupApi.DEVPROP_TYPE_GUID, 16);
+                        if (container != null && new Guid(container) != Guid.Empty)
+                            node.ContainerId = new Guid(container);
+                        node.CompatibleIds = (ReadText(set, ref info, ref _compatibleIds, SetupApi.DEVPROP_TYPE_STRING_LIST) ?? string.Empty)
+                            .Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+                    }
+
                     result.Add(node);
                 }
             }
@@ -100,10 +130,13 @@ namespace BatteryBuddy.Providers.Bluetooth
         }
 
         private static string ReadString(IntPtr set, ref SetupApi.SP_DEVINFO_DATA info, ref SetupApi.DEVPROPKEY key)
+            => ReadText(set, ref info, ref key, SetupApi.DEVPROP_TYPE_STRING);
+
+        private static string ReadText(IntPtr set, ref SetupApi.SP_DEVINFO_DATA info, ref SetupApi.DEVPROPKEY key, uint expectedType)
         {
-            var buffer = new byte[512];
+            var buffer = new byte[4096];
             if (!SetupApi.SetupDiGetDevicePropertyW(set, ref info, ref key, out var type, buffer, (uint)buffer.Length, out var required, 0)
-                || type != SetupApi.DEVPROP_TYPE_STRING || required < 2 || required > buffer.Length)
+                || type != expectedType || required < 2 || required > buffer.Length || required % 2 != 0)
                 return null;
 
             return Encoding.Unicode.GetString(buffer, 0, (int)required).TrimEnd('\0');
