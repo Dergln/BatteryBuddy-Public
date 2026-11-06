@@ -1,27 +1,29 @@
-# BatteryBuddy 1.0.4
-
-The first official 1.0 release brings DeviceBuddy troubleshooting and improved keyboard accessibility.
+# BatteryBuddy 1.0.5
 
 ## New
 
-- DeviceBuddy lists connected peripherals for which no battery level was recognized, with their reported connection type and friendly suggestions. Wireless receivers can appear as wired USB devices; another connection mode may expose more information.
-- All DeviceBuddy text is available in all 38 interface languages.
-- Version and contributor information is available through real buttons and persistent, selectable, scrollable dialogs, in addition to hover help.
-- Improved keyboard navigation, meaningful automation names, stable focus during device refresh and native Windows contrast-theme colors.
+- Optional integration with the separate [BatteryBuddy Stream Deck Plugin](https://github.com/Dergln/BatteryBuddy-Plugin-Elgato-Public).
+- Local, same-user, read-only battery snapshots: device names, percentages, charging status and effective threshold colours. No HTTP server or control commands.
+- Saving device thresholds immediately republishes the resolved colour, without waiting for another battery scan.
 
-## Improved
+## Reliability
 
-- Settings controls respond consistently to keyboard and Windows UI Automation changes.
-- Footer buttons share the selected light/dark theme. Save confirmation appears only above the footer and disappears after five seconds; errors remain readable.
-- Safer confirmation-dialog defaults and keyboard tray-menu positioning.
-- Choosing Exit from the tray while the unsaved-settings confirmation is open reuses that confirmation instead of causing an exception. Repeated exit requests remain safe; cancelling keeps the application open.
+- Reconnect and bounded versioned snapshots support plugin restarts.
+- A pipe shutdown cancellation race is fixed and covered by repeated shutdown/disconnect tests.
+- Stream Deck Mobile testing confirmed device selection, percentages and per-device threshold colour updates.
 
-## Requirements and limitations
+## Install or update
 
-Windows 10 or Windows 11 with .NET Framework 4.8 enabled. Extract the entire Windows ZIP and run `BatteryBuddy.exe`. No installer or administrator privileges are required.
+Windows 10 or Windows 11 with .NET Framework 4.8 enabled. Extract the entire
+`BatteryBuddy-1.0.5-windows.zip` and run `BatteryBuddy.exe`. No administrator rights
+are required. When updating, close BatteryBuddy and replace files in the same
+folder to preserve Windows tray visibility preferences.
 
-Battery readings depend on the device, connection mode and Windows driver. DeviceBuddy offers best guesses, not definitive hardware diagnoses. Translations are best-effort machine translations with editorial review. Accessibility improvements have automated regression coverage but are not screen-reader or voice-control certification.
+For Stream Deck, also install the plugin from its separate Releases page and
+select a device. BatteryBuddy must run as the same Windows user.
 
-The application is unsigned. Download only from this repository and compare the ZIP's SHA-256 with `SHA256SUMS.txt`; a checksum is not a digital signature.
+The app remains unsigned. Verify `SHA256SUMS.txt`; a checksum is not a digital
+signature. Device battery support depends on what the device and Windows expose.
 
-See [README.md](README.md), [LICENSE.md](LICENSE.md) and [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for usage, licensing and credits.
+See [README.md](README.md), [LICENSE.md](LICENSE.md) and
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

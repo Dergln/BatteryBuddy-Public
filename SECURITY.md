@@ -15,6 +15,7 @@ Ordinary bugs and translation corrections belong in [Issues](https://github.com/
 - No administrator privileges are required; autostart uses the current user's registry.
 - Battery queries use Windows APIs, Bluetooth and read-only HID++ battery requests, not firmware updates or device configuration commands.
 - Settings and embedded language resources are validated. A single-instance guard prevents parallel app instances.
+- The optional Stream Deck integration publishes status through a local, same-user, outbound-only named pipe. Remote clients are rejected; there are no commands back into BatteryBuddy. Device names, levels and effective display colours are visible to permitted local clients.
 
 ## Releases
 

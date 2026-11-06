@@ -12,6 +12,7 @@ namespace BatteryBuddy.App
     {
         private SingleInstance _single;
         private AppHost _host;
+        private StreamDeckPipePublisher _streamDeckPipe;
         private TrayController _tray;
         private DeviceChangeWatcher _watcher;
         private SettingsWindow _window;
@@ -38,6 +39,9 @@ namespace BatteryBuddy.App
             DispatcherUnhandledException += (s, ex) => { LogError(ex.Exception); ex.Handled = true; };
 
             _host = new AppHost(Path.Combine(DataFolder, "settings.json"));
+            _streamDeckPipe = new StreamDeckPipePublisher(LogError);
+            _streamDeckPipe.Start();
+            _host.SnapshotUpdated += PublishStreamDeckSnapshot;
             Services.Loc.Init(_host.Settings.Language);
             ThemeService.Apply(_host.Settings.Theme);
 
@@ -84,10 +88,25 @@ namespace BatteryBuddy.App
                 _window.RequestApplicationExit(() => Shutdown());
         }
 
+        private void PublishStreamDeckSnapshot(object sender, EventArgs e)
+        {
+            try
+            {
+                _streamDeckPipe?.Publish(_host.Latest, _host.Settings);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+
         protected override void OnExit(ExitEventArgs e)
         {
             _watcher?.Dispose();
             _tray?.Dispose();
+            if (_host != null)
+                _host.SnapshotUpdated -= PublishStreamDeckSnapshot;
+            _streamDeckPipe?.Dispose();
             _host?.Dispose();
             _single?.Dispose();
             base.OnExit(e);

@@ -26,7 +26,7 @@ The app is currently **not digitally signed**. Windows SmartScreen may show a re
 To check the ZIP in PowerShell, compare the result with the release's `SHA256SUMS.txt`:
 
 ```powershell
-Get-FileHash .\BatteryBuddy-1.0.4-windows.zip -Algorithm SHA256
+Get-FileHash .\BatteryBuddy-1.0.5-windows.zip -Algorithm SHA256
 ```
 
 ## Features
@@ -39,6 +39,7 @@ Get-FileHash .\BatteryBuddy-1.0.4-windows.zip -Algorithm SHA256
 - Keyboard-friendly navigation, stable device-list focus during refresh, named controls and Windows contrast-theme colors. Version and contributor buttons open persistent, selectable information dialogs; save confirmation appears separately for five seconds without hiding the footer. Automated accessibility checks do not constitute screen-reader or voice-control certification.
 - 38 interface languages, including right-to-left layouts for Arabic and Hebrew.
 - All functionality is unlocked. There is no paid Pro version; support is optional.
+- **Stream Deck:** display device percentages and threshold colours with the separate [BatteryBuddy Stream Deck Plugin](https://github.com/Dergln/BatteryBuddy-Plugin-Elgato-Public). Status travels through a local, same-user, read-only Windows named pipe, without an HTTP server. The plugin also works with Stream Deck Mobile.
 
 Some devices do not report battery percentages, report them only while connected, or require vendor-specific support. BatteryBuddy cannot obtain information that the device does not expose.
 
