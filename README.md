@@ -43,6 +43,17 @@ Get-FileHash .\BatteryBuddy-1.0.5-windows.zip -Algorithm SHA256
 
 Some devices do not report battery percentages, report them only while connected, or require vendor-specific support. BatteryBuddy cannot obtain information that the device does not expose.
 
+## Available plugins
+
+Extend BatteryBuddy with these separately installed plugins:
+
+| Plugin | What it does | Repository |
+| --- | --- | --- |
+| Elgato Stream Deck | Displays device battery percentages, charging status and threshold colours on Stream Deck or Stream Deck Mobile. | [BatteryBuddy Stream Deck Plugin](https://github.com/Dergln/BatteryBuddy-Plugin-Elgato-Public) |
+
+Each plugin's repository contains its requirements, installation instructions and
+release downloads.
+
 ## Local data and privacy
 
 Settings are stored in `%APPDATA%\BatteryBuddy\settings.json`; the same folder may contain `error.log`. BatteryBuddy does not send telemetry or upload device information. Clicking an external link opens your default browser and visits that external service.
