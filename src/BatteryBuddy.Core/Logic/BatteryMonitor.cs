@@ -105,14 +105,15 @@ namespace BatteryBuddy.Core.Logic
             return Merge(results);
         }
 
-        // Doppelte Ids zusammenführen: Der erste Provider in der Liste gewinnt.
+        // Only identical IDs are reconciled; provider order remains the deterministic priority.
         private static MonitorSnapshot Merge(IEnumerable<ProviderResult> results, bool isComplete = true)
         {
             var list = results.ToList();
             var byId = new Dictionary<string, BatteryDevice>();
             foreach (var device in list.SelectMany(r => r.Devices))
             {
-                if (!byId.ContainsKey(device.Id))
+                if (!byId.TryGetValue(device.Id, out var previous) ||
+                    (!previous.Level.HasValue && device.Level.HasValue))
                     byId[device.Id] = device;
             }
 

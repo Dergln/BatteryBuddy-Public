@@ -26,7 +26,7 @@ The app is currently **not digitally signed**. Windows SmartScreen may show a re
 To check the ZIP in PowerShell, compare the result with the release's `SHA256SUMS.txt`:
 
 ```powershell
-Get-FileHash .\BatteryBuddy-1.0.5-windows.zip -Algorithm SHA256
+Get-FileHash .\BatteryBuddy-1.0.12-windows.zip -Algorithm SHA256
 ```
 
 ## Features
@@ -36,12 +36,18 @@ Get-FileHash .\BatteryBuddy-1.0.5-windows.zip -Algorithm SHA256
 - Main tray icon plus optional per-category or per-device battery icons.
 - Last-contact indicators for inactive devices, device categories, light/dark themes and optional autostart.
 - **DeviceBuddy:** a read-only troubleshooting tab for connected peripherals without a recognized battery level. It shows Windows' reported connection and best-guess explanations, using the same nonblocking scans as battery monitoring. A wireless USB receiver may appear to Windows as a wired controller; this does not prove that the controller has no battery.
+- **DeviceList:** a wrapped, offline compatibility table with original protocol sources, license labels and caveats. Additional allowlisted headsets, mice, keyboards and controllers have experimental native status adapters, inspired by Halo Battery, HeadsetControl and their original references. No third-party executable is required. See the [protocol catalog and exact profiles](docs/protocols.md); a family entry is not a hardware test of every model.
+- **DeviceList sorting:** Windows system battery, Windows Bluetooth and XInput appear first by default, followed by the other families A-Z. Activate any column heading to sort the whole table A-Z; activate it again for Z-A. Sorting changes presentation, not battery-provider priority.
 - Keyboard-friendly navigation, stable device-list focus during refresh, named controls and Windows contrast-theme colors. Version and contributor buttons open persistent, selectable information dialogs; save confirmation appears separately for five seconds without hiding the footer. Automated accessibility checks do not constitute screen-reader or voice-control certification.
 - 38 interface languages, including right-to-left layouts for Arabic and Hebrew.
 - All functionality is unlocked. There is no paid Pro version; support is optional.
 - **Stream Deck:** display device percentages and threshold colours with the separate [BatteryBuddy Stream Deck Plugin](https://github.com/Dergln/BatteryBuddy-Plugin-Elgato-Public). Status travels through a local, same-user, read-only Windows named pipe, without an HTTP server. The plugin also works with Stream Deck Mobile.
 
 Some devices do not report battery percentages, report them only while connected, or require vendor-specific support. BatteryBuddy cannot obtain information that the device does not expose.
+Responsive devices are queried on each refresh. If a wireless device sleeps or
+disconnects while its receiver remains connected, the receiver may retain its last
+reading. Logitech's last-known fallback retains the original contact time for up
+to three hours; this is not a normal delay in receiving fresh values.
 
 ## Available plugins
 
@@ -86,4 +92,4 @@ For security vulnerabilities, use the [private reporting instructions](SECURITY.
 
 BatteryBuddy's own program code is licensed under [GNU GPL version 3](LICENSE.md). Copyright remains with [Dergln](https://github.com/Dergln). Private and commercial use are permitted under the applicable license terms.
 
-**Third-party artwork and audio retain their separate licenses; they are not relicensed under the GPL by this repository.** See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and the app's **Contributions** tab for individual sources, authors and terms. Graphics are included as functional resources of this application, not as a standalone graphics collection or a grant of independent asset-reuse rights.
+**Third-party artwork and audio retain their separate licenses; they are not relicensed under the GPL by this repository.** See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and the app's **Contributions** tab for individual sources, authors and terms. Protocol contributions and their source licenses are listed separately in **DeviceList** and the [protocol catalog](docs/protocols.md). Graphics are included as functional resources of this application, not as a standalone graphics collection or a grant of independent asset-reuse rights.

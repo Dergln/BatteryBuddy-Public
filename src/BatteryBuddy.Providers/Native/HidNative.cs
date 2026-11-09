@@ -15,6 +15,7 @@ namespace BatteryBuddy.Providers.Native
         public ushort Usage { get; set; }
         public int InputReportLength { get; set; }
         public int OutputReportLength { get; set; }
+        public int FeatureReportLength { get; set; }
     }
 
     /// <summary>Schnittstelle für den Datenaustausch mit einem HID-Gerät. Als Interface, damit Tests ein Fake-Gerät nutzen können.</summary>
@@ -32,6 +33,17 @@ namespace BatteryBuddy.Providers.Native
         string DeviceInstanceId { get; }
     }
 
+    internal interface IHidFeatureTransport
+    {
+        bool SetFeature(byte[] report, int timeoutMs);
+        byte[] GetFeature(byte reportId, int length, int timeoutMs);
+    }
+
+    internal interface IHidInputQueue
+    {
+        void FlushInput();
+    }
+
     /// <summary>Windows-HID-Zugriff über hid.dll/kernel32.dll (P/Invoke).</summary>
     internal static class HidNative
     {
@@ -43,6 +55,8 @@ namespace BatteryBuddy.Providers.Native
         private const uint FILE_FLAG_OVERLAPPED = 0x40000000;
         private const uint WAIT_OBJECT_0 = 0;
         private const int ERROR_IO_PENDING = 997;
+        private const uint IOCTL_HID_SET_FEATURE = 0x000B0191;
+        private const uint IOCTL_HID_GET_FEATURE = 0x000B0192;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct HIDD_ATTRIBUTES
@@ -79,6 +93,7 @@ namespace BatteryBuddy.Providers.Native
         [DllImport("hid.dll", SetLastError = true)] private static extern bool HidD_GetPreparsedData(SafeFileHandle handle, out IntPtr preparsedData);
         [DllImport("hid.dll", SetLastError = true)] private static extern bool HidD_FreePreparsedData(IntPtr preparsedData);
         [DllImport("hid.dll")] private static extern int HidP_GetCaps(IntPtr preparsedData, out HIDP_CAPS capabilities);
+        [DllImport("hid.dll", SetLastError = true)] private static extern bool HidD_FlushQueue(SafeFileHandle handle);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern SafeFileHandle CreateFileW(string fileName, uint access, uint share, IntPtr security, uint disposition, uint flags, IntPtr template);
@@ -88,6 +103,10 @@ namespace BatteryBuddy.Providers.Native
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool WriteFile(SafeFileHandle handle, IntPtr buffer, uint bytesToWrite, IntPtr bytesWritten, IntPtr overlapped);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool DeviceIoControl(SafeFileHandle handle, uint controlCode, IntPtr input, uint inputLength,
+            IntPtr output, uint outputLength, IntPtr bytesReturned, IntPtr overlapped);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool GetOverlappedResult(SafeFileHandle handle, IntPtr overlapped, out uint transferred, bool wait);
@@ -188,7 +207,8 @@ namespace BatteryBuddy.Providers.Native
                         UsagePage = caps.UsagePage,
                         Usage = caps.Usage,
                         InputReportLength = caps.InputReportByteLength,
-                        OutputReportLength = caps.OutputReportByteLength
+                        OutputReportLength = caps.OutputReportByteLength,
+                        FeatureReportLength = caps.FeatureReportByteLength
                     };
                 }
                 finally
@@ -208,7 +228,8 @@ namespace BatteryBuddy.Providers.Native
                 return null;
             }
 
-            return new OverlappedStream(handle, info.InputReportLength, info.OutputReportLength, InstanceIdFromPath(info.Path));
+            return new OverlappedStream(handle, info.InputReportLength, info.OutputReportLength,
+                info.FeatureReportLength, InstanceIdFromPath(info.Path));
         }
 
         internal static string InstanceIdFromPath(string path)
@@ -223,21 +244,23 @@ namespace BatteryBuddy.Providers.Native
         /// Lesen/Schreiben mit Zeitlimit. "Overlapped" = asynchrones Windows-I/O: Der Aufruf kehrt sofort zurück,
         /// wir warten auf ein Event und können bei Zeitüberschreitung sauber abbrechen (sonst bliebe der Thread hängen).
         /// </summary>
-        private sealed class OverlappedStream : IHidTransport, IHidDeviceIdentity
+        private sealed class OverlappedStream : IHidTransport, IHidDeviceIdentity, IHidFeatureTransport, IHidInputQueue
         {
             private readonly SafeFileHandle _handle;
             private readonly int _inLength;
             private readonly int _outLength;
+            private readonly int _featureLength;
             private readonly IntPtr _event;
             private readonly object _lock = new object();
 
             public string DeviceInstanceId { get; }
 
-            public OverlappedStream(SafeFileHandle handle, int inLength, int outLength, string deviceInstanceId)
+            public OverlappedStream(SafeFileHandle handle, int inLength, int outLength, int featureLength, string deviceInstanceId)
             {
                 _handle = handle;
                 _inLength = inLength;
                 _outLength = outLength;
+                _featureLength = featureLength;
                 DeviceInstanceId = deviceInstanceId;
                 _event = CreateEventW(IntPtr.Zero, true, false, null);
             }
@@ -257,7 +280,39 @@ namespace BatteryBuddy.Providers.Native
                     return Transfer(new byte[_inLength], _inLength, false, timeoutMs);
             }
 
-            private byte[] Transfer(byte[] data, int length, bool write, int timeoutMs = 1000)
+            public void FlushInput()
+            {
+                lock (_lock)
+                    if (!HidD_FlushQueue(_handle))
+                        throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error(), "Unable to clear old HID input reports.");
+            }
+
+            public bool SetFeature(byte[] report, int timeoutMs)
+            {
+                if (report == null || report.Length == 0 || report.Length > _featureLength || timeoutMs <= 0)
+                    throw new ArgumentException("Invalid HID feature request.");
+                var padded = new byte[_featureLength];
+                Array.Copy(report, padded, report.Length);
+                lock (_lock)
+                    return Transfer(padded, padded.Length, true, timeoutMs, IOCTL_HID_SET_FEATURE) != null;
+            }
+
+            public byte[] GetFeature(byte reportId, int length, int timeoutMs)
+            {
+                if (length <= 0 || length > _featureLength || timeoutMs <= 0)
+                    throw new ArgumentException("Invalid HID feature response length or timeout.");
+                var report = new byte[_featureLength];
+                report[0] = reportId;
+                lock (_lock)
+                {
+                    var received = Transfer(report, report.Length, false, timeoutMs, IOCTL_HID_GET_FEATURE);
+                    if (received != null && received.Length > length)
+                        Array.Resize(ref received, length);
+                    return received;
+                }
+            }
+
+            private byte[] Transfer(byte[] data, int length, bool write, int timeoutMs = 1000, uint controlCode = 0)
             {
                 var buffer = Marshal.AllocHGlobal(length);
                 var overlapped = Marshal.AllocHGlobal(32); // OVERLAPPED hat max. 32 Byte (x64)
@@ -269,12 +324,15 @@ namespace BatteryBuddy.Providers.Native
                     Marshal.WriteIntPtr(overlapped, IntPtr.Size == 8 ? 24 : 16, _event);
                     ResetEvent(_event);
 
-                    if (write)
+                    if (write || controlCode != 0)
                         Marshal.Copy(data, 0, buffer, length);
 
-                    var ok = write
-                        ? WriteFile(_handle, buffer, (uint)length, IntPtr.Zero, overlapped)
-                        : ReadFile(_handle, buffer, (uint)length, IntPtr.Zero, overlapped);
+                    var ok = controlCode != 0
+                        ? DeviceIoControl(_handle, controlCode, buffer, (uint)length,
+                            buffer, (uint)length, IntPtr.Zero, overlapped)
+                        : write
+                            ? WriteFile(_handle, buffer, (uint)length, IntPtr.Zero, overlapped)
+                            : ReadFile(_handle, buffer, (uint)length, IntPtr.Zero, overlapped);
 
                     if (!ok && Marshal.GetLastWin32Error() != ERROR_IO_PENDING)
                         return null;
@@ -294,7 +352,11 @@ namespace BatteryBuddy.Providers.Native
                     if (write)
                         return data;
 
-                    var received = new byte[Math.Min((int)transferred, length)];
+                    var receivedLength = (int)transferred;
+                    // Windows excludes the synthetic zero report ID from feature byte counts.
+                    if (controlCode == IOCTL_HID_GET_FEATURE && data[0] == 0 && receivedLength < length)
+                        receivedLength++;
+                    var received = new byte[Math.Min(receivedLength, length)];
                     Marshal.Copy(buffer, received, 0, received.Length);
                     return received;
                 }

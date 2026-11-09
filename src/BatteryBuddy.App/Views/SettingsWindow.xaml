@@ -212,13 +212,17 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="12">
                         <TextBlock x:Name="ContribHeader" FontWeight="Bold" FontSize="14"/>
-                        <TextBlock x:Name="ContribIntro" Foreground="{DynamicResource BB.Muted}" TextWrapping="Wrap" Margin="0,4,0,10"/>
+                        <TextBlock x:Name="ContribIntro" Foreground="{DynamicResource BB.Muted}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                        <TextBlock x:Name="ContribProtocols" Foreground="{DynamicResource BB.Muted}" TextWrapping="Wrap" Margin="0,4,0,10"/>
                         <Grid x:Name="ContribGrid"/>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
             <TabItem x:Name="DeviceBuddyTab">
                 <v:DeviceBuddyView x:Name="DeviceBuddyContent"/>
+            </TabItem>
+            <TabItem x:Name="DeviceCatalogTab">
+                <v:DeviceCatalogView x:Name="DeviceCatalogContent"/>
             </TabItem>
         </TabControl>
 

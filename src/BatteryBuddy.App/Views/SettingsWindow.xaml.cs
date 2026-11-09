@@ -162,6 +162,8 @@ namespace BatteryBuddy.App.Views
             DevicesTab.Header = Loc.Get("tab.devices");
             DeviceBuddyTab.Header = Loc.Get("tab.devicebuddy");
             DeviceBuddyContent.SetTexts();
+            DeviceCatalogTab.Header = "DeviceList";
+            DeviceCatalogContent.SetTexts();
             SettingsTab.Header = Loc.Get("tab.settings");
             RefreshButton.Content = Loc.Get("devices.refresh");
             SelectHint.Text = Loc.Get("devices.select");
@@ -194,6 +196,7 @@ namespace BatteryBuddy.App.Views
             ContribTab.Header = Loc.Get("tab.contrib");
             ContribHeader.Text = Loc.Get("tab.contrib");
             ContribIntro.Text = Loc.Get("contrib.intro");
+            ContribProtocols.Text = Loc.Get("contrib.protocols");
             ContributionsView.Build(ContribGrid);
             BugReportIcon.Source = AppAssets.InfoImage("bug");
             BugReportText.Text = Loc.Get("footer.bug");
@@ -428,6 +431,7 @@ namespace BatteryBuddy.App.Views
         {
             DevicesTab.IsEnabled = enabled;
             DeviceBuddyTab.IsEnabled = enabled;
+            DeviceCatalogTab.IsEnabled = enabled;
             ContribTab.IsEnabled = enabled;
             Autostart.IsEnabled = enabled;
             StartMenu.IsEnabled = enabled;

@@ -23,10 +23,6 @@ namespace BatteryBuddy.Providers.Logitech
         private const int MaxReceiverSlots = 6;
         private const int MaxChannels = 6;
 
-        // Herstellerspezifische HID-Bereiche, in denen Logitech HID++ anbietet (Empfänger/USB bzw. Bluetooth-LE).
-        private const ushort UsagePageVendor = 0xFF00;
-        private const ushort UsagePageBluetoothLe = 0xFF43;
-
         private readonly Func<IReadOnlyList<IHidTransport>> _openChannels;
 
         public string Name => "Logitech";
@@ -233,9 +229,9 @@ namespace BatteryBuddy.Providers.Logitech
             try
             {
                 var candidates = HidNative.Enumerate(LogitechVendorId)
-                    .Where(i => (i.UsagePage == UsagePageVendor || i.UsagePage == UsagePageBluetoothLe)
-                                && i.InputReportLength == HidPp.LongLength
-                                && i.OutputReportLength == HidPp.LongLength)
+                    .Where(i => DeviceCatalog.AllowsCustomPolling(DeviceCatalog.LogitechHidpp, i.VendorId,
+                        i.ProductId, i.UsagePage, i.Usage, i.InputReportLength, i.OutputReportLength))
+                    .Where(i => !ExperimentalBatteryProviders.OwnsLogitechInterface(i))
                     .Take(MaxChannels);
 
                 foreach (var info in candidates)
