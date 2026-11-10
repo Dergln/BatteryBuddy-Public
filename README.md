@@ -17,6 +17,14 @@ Should a device not show up in the 'Devices' tab, you can check via the 'DeviceB
 
 <img width="400" height="414" alt="20261104_001212" src="https://github.com/user-attachments/assets/5c3b1776-00ea-4968-b44f-808bfc5c2363" /> <img width="400" height="414" alt="20261104_001416" src="https://github.com/user-attachments/assets/2917bceb-94c5-4b89-be2e-1c4c34a102d3" />
 
+## Specific device/protocol compatibility
+
+A bunch of devices/manufacturers use proprietary protocols/datastreams to map out their internal data.
+There's varying degrees of reverse engineered solutions out there - BatteryBuddy will try to integrate them if the solution seems feasible and somewhat verified.
+If you find a device not to be recognized -> raise it in the issuetracker. We can then check if someone already tried to decipher its data structure.
+
+<img width="600" height="620" alt="image" src="https://github.com/user-attachments/assets/77b14072-4bd9-4a36-ad0d-533c69e38a74" />
+
 [All releases](https://github.com/Dergln/BatteryBuddy-Public/releases) remain available for previous versions. GitHub's automatic **Source code** downloads are for developers, not the ready-to-run app.
 
 **Requirements:** Windows 10 or Windows 11 with .NET Framework 4.8 enabled. No administrator privileges or Logitech Options+ installation are required. Device support depends on what the device and Windows expose.
