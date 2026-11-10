@@ -87,6 +87,11 @@ dotnet build .\BatteryBuddy.sln -c Release
 
 The runnable output is in `src\BatteryBuddy.App\bin\Release\net48`. Distribute the EXE, its `.config`, and the `BatteryBuddy.Core.dll` and `BatteryBuddy.Providers.dll` files together with this README and the license/third-party notices. Images, translations and the default sound are embedded.
 
+Public CI explicitly selects SDK 10.0.402, logs its version and verifies all four
+required application files are nonempty. Only superseded runs of the same pull
+request are cancelled; branch, tag and manually dispatched builds remain
+independent. The build job has a 15-minute deadline.
+
 This repository contains curated released application source, not internal development history or test infrastructure. Its solution contains only the three product projects. Public builds omit debug symbols and revision suffixes and map local source paths to a neutral build path. Release packages are built from the corresponding public source tag.
 
 ## Feedback and translations
