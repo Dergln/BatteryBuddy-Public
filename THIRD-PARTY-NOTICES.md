@@ -65,6 +65,59 @@ Implementierung, nicht übernommener unlizenzierter Quellcode. Eine genannte
 Quelllizenz ändert nicht automatisch die Lizenz aller davon unabhängigen Dateien.
 Upstream-Hardwaretests sind keine Hardware-Verifizierung von BatteryBuddy.
 
+### Audeze Maxwell / Maxwell 2
+
+The independent native adapter uses battery-query facts from
+[Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery/blob/2251f0534a8e886c9692ead42056059b4f69d8c0/providers/audeze.py)
+and typed report framing / exact collection facts from
+[HeadsetControl (GPLv3)](https://github.com/Sapd/HeadsetControl/blob/0c8a76fa019cd02263a1c69e00e18e229b16d87f/lib/devices/audeze_maxwell_device.hpp).
+[Maxwell firmware research by kats1123 (CC BY 4.0)](https://github.com/kats1123/maxwell-firmware-research/blob/87c14d052a894d0322a209e0afb6f1697e36aed9/PROTOCOL.md)
+informed the pre-query draining/stale-input limitation; no research prose or
+firmware is redistributed. This is a new bounded C# implementation, not a copy
+of the research document or a bundled Audeze HQ application. Changes include
+explicit descriptor limits, cancellation, typed message validation and omission
+of mode/settings initialization. Correlated replies do not prove that a
+disconnected headset's receiver has sampled a new radio battery level.
+License reference: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+### OpenMouse protocol references
+
+[OpenMouse mouse-protocol b62a1cc (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0)
+is a protocol-evidence source, not a bundled dependency or transplanted driver.
+BatteryBuddy's new C# readers implement battery-only wire exchanges independently;
+configuration, clock synchronization, firmware, pairing and mode writes are omitted.
+No Bridge/Node.js runtime, upstream source files or vendor software are distributed.
+The source license is stated for provenance, not relabeled as MIT or implicitly
+applied to independent BatteryBuddy files.
+
+Where traceable, the catalog also credits original references rather than only
+OpenMouse: OpenRazer (GPL-2.0-or-later), libratbag's SinoWealth driver (MIT),
+rivalcfg (WTFPL) and the model-specific sources listed in
+[docs/protocols.md](docs/protocols.md). Vendor captures, moddoHUB-Web and mousectl
+references without an established original URL/license are not assigned invented
+licenses or claimed as copied source. See the applicable contribution labels in
+[docs/protocols.md](docs/protocols.md). Upstream hardware observations do not
+constitute BatteryBuddy hardware verification.
+
+### TEEvolution Terra Pro protocol references
+
+The independent battery-only C# adapter uses interoperability facts from
+[OpenMouse mouse-protocol (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/teevolution)
+and the publicly accessible
+[TeevoLink factory SDK](https://github.com/xilu7/teevolink/tree/26e0734589c8e09f1757f2cb6c809645fe06f61e/src/sdk).
+The latter repository states no source reuse license; public accessibility is
+not permission to copy it. No factory source, voltage table, assets, prose or
+configurator is copied or bundled. Only packet identifiers, checksum arithmetic
+and response field meanings inform the new implementation. The catalog names
+both original sources and their license status rather than granting an invented
+license to the factory material.
+
+The native adapter omits OpenMouse's host-control enable/disable wrapper and
+uses the zero-parameter online query corroborated by the factory protocol.
+Exact descriptor/report guards, exclusive Windows access, bounded reads,
+cancellation and invalid-response handling are BatteryBuddy-specific choices.
+No new hardware verification is claimed.
+
 ### Experimentelle SteelSeries-Nova-7-Protokollunterstützung
 
 Die Statusabfrage und Antwortauswertung wurden anhand von

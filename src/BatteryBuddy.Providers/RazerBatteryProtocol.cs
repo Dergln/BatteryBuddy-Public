@@ -12,6 +12,9 @@ namespace BatteryBuddy.Providers
     {
         internal static HidBatteryStatus Read(HidInterfaceInfo info, IHidTransport channel, CancellationToken ct)
         {
+            ct.ThrowIfCancellationRequested();
+            if (info.VendorId == 0x1532 && info.ProductId == 0x0083)
+                return OpenMouseLZBatteryProtocols.ReadRazerLevelOnly(info, channel, ct);
             var profile = DeviceCatalog.CustomProfiles.Single(item => item.VendorId == info.VendorId
                 && item.ProductId == info.ProductId);
             var transaction = profile.TransactionId ?? throw new InvalidOperationException("Missing Razer transaction ID.");

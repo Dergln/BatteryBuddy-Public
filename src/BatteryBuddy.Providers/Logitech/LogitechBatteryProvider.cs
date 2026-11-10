@@ -119,7 +119,7 @@ namespace BatteryBuddy.Providers.Logitech
                     if (device.Ping() >= 2)
                     {
                         var fresh = new List<Probed>();
-                        AddIfValid(fresh, device, known.Slot);
+                        AddIfValid(fresh, device, known.Slot, ct);
                         if (fresh.Count > 0)
                         {
                             fresh[0].ChannelIndex = known.ChannelIndex;
@@ -172,7 +172,7 @@ namespace BatteryBuddy.Providers.Logitech
             var directVersion = direct.Ping() ?? direct.Ping();
             if (directVersion >= 2)
             {
-                AddIfValid(result, direct, 0);
+                AddIfValid(result, direct, 0, ct);
                 return result;
             }
 
@@ -184,15 +184,15 @@ namespace BatteryBuddy.Providers.Logitech
                 var device = new HidppDevice(channel, (byte)slot, RequestTimeoutMs);
                 var version = device.Ping() ?? device.Ping();
                 if (version >= 2)
-                    AddIfValid(result, device, slot);
+                    AddIfValid(result, device, slot, ct);
             }
 
             return result;
         }
 
-        private static void AddIfValid(List<Probed> list, HidppDevice device, int slot)
+        private static void AddIfValid(List<Probed> list, HidppDevice device, int slot, CancellationToken ct)
         {
-            var battery = device.ReadBattery();
+            var battery = device.ReadBattery(ct);
             if (battery == null)
                 return; // Gerät ohne Akku-Feature (z. B. Kabeltastatur): nicht relevant
 

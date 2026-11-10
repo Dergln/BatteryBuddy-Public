@@ -57,11 +57,13 @@ namespace BatteryBuddy.Core.Providers
         public bool MinimumReportLengths { get; }
         public byte? TransactionId { get; }
         public bool ExactFeatureLength { get; }
+        public string ReaderId { get; }
+        public byte? ReportId { get; }
 
         internal CustomPollingProfile(string protocolId, ushort vendorId, ushort? productId, ushort? usagePage,
             ushort? usage, int inputLength, int outputLength, int? featureLength = null, int? interfaceNumber = null,
             string deviceName = null, bool minimumReportLengths = false, byte? transactionId = null,
-            bool exactFeatureLength = false)
+            bool exactFeatureLength = false, string readerId = null, byte? reportId = null)
         {
             ProtocolId = protocolId;
             VendorId = vendorId;
@@ -76,10 +78,13 @@ namespace BatteryBuddy.Core.Providers
             MinimumReportLengths = minimumReportLengths;
             TransactionId = transactionId;
             ExactFeatureLength = exactFeatureLength;
+            ReaderId = readerId;
+            ReportId = reportId;
         }
 
         public bool Matches(string protocolId, ushort vendorId, ushort productId, ushort usagePage, ushort usage,
-            int inputLength, int outputLength, int featureLength = 0)
+            int inputLength, int outputLength, int featureLength = 0,
+            IReadOnlyList<byte> inputReportIds = null, IReadOnlyList<byte> outputReportIds = null)
             => ProtocolId == protocolId && VendorId == vendorId && (!UsagePage.HasValue || UsagePage.Value == usagePage)
                 && (!ProductId.HasValue || ProductId.Value == productId) && (!Usage.HasValue || Usage.Value == usage)
                 && (MinimumReportLengths
@@ -88,7 +93,9 @@ namespace BatteryBuddy.Core.Providers
                     : InputReportLength == inputLength && OutputReportLength == outputLength)
                 && (!FeatureReportLength.HasValue || (MinimumReportLengths && !ExactFeatureLength
                     ? featureLength >= FeatureReportLength.Value && featureLength <= 1024
-                    : FeatureReportLength.Value == featureLength));
+                    : FeatureReportLength.Value == featureLength))
+                && (!ReportId.HasValue || (inputReportIds?.Count == 1 && inputReportIds[0] == ReportId.Value
+                    && outputReportIds?.Count == 1 && outputReportIds[0] == ReportId.Value));
     }
 
     /// <summary>Implemented battery sources, not a list of individually verified device models.</summary>
@@ -130,6 +137,8 @@ namespace BatteryBuddy.Core.Providers
         public const string MchoseA5 = "mchose-a5";
         public const string Lofree = "lofree-hyzen";
         public const string LogitechCenturion = "logitech-centurion";
+        public const string AudezeMaxwell = "audeze-maxwell";
+        public const string Teevolution = "teevolution-terra-pro";
 
         private static readonly DeviceCatalogSource BatteryBuddySource =
             new DeviceCatalogSource("BatteryBuddy", "https://github.com/Dergln/BatteryBuddy-Public", null);
@@ -160,7 +169,7 @@ namespace BatteryBuddy.Core.Providers
                     "devicelist.comment.experimental",
                     new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
                     new DeviceCatalogSource("HeadsetControl", "https://github.com/Sapd/HeadsetControl", "GPLv3")),
-                new DeviceCatalogEntry(LamzuMayaX, "LAMZU Maya X", "USB / 8K receiver",
+                new DeviceCatalogEntry(LamzuMayaX, "CompX feature mice (LAMZU and compatible models)", "USB / receiver",
                     "devicelist.comment.experimental",
                     new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
                     new DeviceCatalogSource("lamzu-battery-monitory", "https://github.com/Sheroune/lamzu-battery-monitory", "MIT")),
@@ -168,7 +177,7 @@ namespace BatteryBuddy.Core.Providers
                     "devicelist.comment.coarse",
                     new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
                     new DeviceCatalogSource("HeadsetControl", "https://github.com/Sapd/HeadsetControl", "GPLv3")),
-                new DeviceCatalogEntry(Pulsar, "Pulsar / ATK / VXE / Hitscan power reports", "USB / 2.4 GHz receiver",
+                new DeviceCatalogEntry(Pulsar, "CompX power mice (Pulsar and compatible models)", "USB / 2.4 GHz receiver",
                     "devicelist.comment.experimental",
                     new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
                     new DeviceCatalogSource("python-pulsar-mouse-tool", "https://github.com/andrewrabert/python-pulsar-mouse-tool", "MIT"),
@@ -184,7 +193,7 @@ namespace BatteryBuddy.Core.Providers
                     "devicelist.comment.experimental",
                     new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
                     new DeviceCatalogSource("OpenRazer", "https://github.com/openrazer/openrazer", "GPL-2.0-or-later")),
-                new DeviceCatalogEntry(Wlmouse, "WLmouse Beast X / Max / Mini Pro", "USB receiver",
+                new DeviceCatalogEntry(Wlmouse, "WLmouse feature-protocol mice", "USB / receiver",
                     "devicelist.comment.experimental",
                     new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
                     new DeviceCatalogSource("mouse-battery-tray / len0c", "https://github.com/incconutwo/mouse-battery-tray", "MIT")),
@@ -265,7 +274,7 @@ namespace BatteryBuddy.Core.Providers
                 new DeviceCatalogEntry(LenovoVoip, "Lenovo Wireless VoIP Headset", "USB receiver",
                     "devicelist.comment.experimental",
                     new DeviceCatalogSource("HeadsetControl", "https://github.com/Sapd/HeadsetControl", "GPLv3")),
-                new DeviceCatalogEntry(MchoseRealtek, "MCHOSE M7 / L7 / A7 RealTek status", "USB / receiver",
+                new DeviceCatalogEntry(MchoseRealtek, "MCHOSE M7 / L7 / A7 RealTek status", "USB / Bluetooth / receiver",
                     "devicelist.comment.experimental",
                     new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
                     new DeviceCatalogSource("mchose-linux / alexfrih", "https://github.com/alexfrih/mchose-linux", "MIT")),
@@ -285,8 +294,17 @@ namespace BatteryBuddy.Core.Providers
                     "devicelist.comment.experimental",
                     new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
                     new DeviceCatalogSource("HeadsetControl / iowi479 / thanosk / KarimTayie", "https://github.com/Sapd/HeadsetControl", "GPLv3"),
-                    new DeviceCatalogSource("Solaar", "https://github.com/pwr-Solaar/Solaar", "GPL-2.0-or-later"))
-            });
+                    new DeviceCatalogSource("Solaar", "https://github.com/pwr-Solaar/Solaar", "GPL-2.0-or-later")),
+                new DeviceCatalogEntry(Teevolution, "TEEvolution Terra Pro", "USB / receiver",
+                    "devicelist.comment.receiverbuffer",
+                    new DeviceCatalogSource("OpenMouse mouse-protocol", "https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/teevolution", "AGPL-3.0-or-later"),
+                    new DeviceCatalogSource("TeevoLink factory protocol reference", "https://github.com/xilu7/teevolink/tree/26e0734589c8e09f1757f2cb6c809645fe06f61e/src/sdk", "No license stated")),
+                new DeviceCatalogEntry(AudezeMaxwell, "Audeze Maxwell / Maxwell 2", "USB / receiver",
+                    "devicelist.comment.maxwell",
+                    new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
+                    new DeviceCatalogSource("HeadsetControl", "https://github.com/Sapd/HeadsetControl", "GPLv3"),
+                    new DeviceCatalogSource("Maxwell firmware research", "https://github.com/kats1123/maxwell-firmware-research", "CC BY 4.0"))
+            }.Select(OpenMouseDeviceCatalog.WithAdditionalSources).Concat(OpenMouseDeviceCatalog.Entries).ToArray());
 
         private static readonly ReadOnlyCollection<DeviceCatalogEntry> OrderedEntries =
             Array.AsReadOnly(Entries.OrderBy(entry => entry.Id == "system" ? 0
@@ -300,6 +318,14 @@ namespace BatteryBuddy.Core.Providers
         {
             var profiles = new List<CustomPollingProfile>
             {
+                new CustomPollingProfile(Teevolution, 0x3554, 0xF520, null, null, 17, 17,
+                    deviceName: "TEEvolution Terra Pro (3554:F520)", reportId: 8),
+                new CustomPollingProfile(Teevolution, 0x3554, 0xF523, null, null, 17, 17,
+                    deviceName: "TEEvolution Terra Pro (RapidSync 8K)", reportId: 8),
+                new CustomPollingProfile(Teevolution, 0x3554, 0xF5BB, null, null, 17, 17,
+                    deviceName: "TEEvolution Terra Pro (3554:F5BB)", reportId: 8),
+                new CustomPollingProfile(Teevolution, 0x3554, 0xF522, null, null, 17, 17,
+                    deviceName: "TEEvolution Terra Pro (3554:F522)", reportId: 8),
                 new CustomPollingProfile(LogitechHidpp, 0x046D, null, 0xFF00, null, 20, 20),
                 new CustomPollingProfile(LogitechHidpp, 0x046D, null, 0xFF43, null, 20, 20),
                 new CustomPollingProfile(SteelSeriesNova7, 0x1038, 0x22A1, 0xFFC0, 0x0001, 64, 64, interfaceNumber: 3),
@@ -415,6 +441,17 @@ namespace BatteryBuddy.Core.Providers
                 0x5807, 0x2708, 0x2717, 0x5408, 0x5417, 0x5407, 0x5708, 0x5717, 0x5707, 0x5908,
                 0x5917, 0x5907, 0x7204, 0x7203, 0x7708, 0x7717, 0x5804, 0x5803, 0x5404, 0x5403,
                 0x5704, 0x5703, 0x5904, 0x5903 });
+            profiles.Add(new CustomPollingProfile(AudezeMaxwell, 0x3329, 0x4B18, 0xFF13, 1, 62, 62,
+                interfaceNumber: 0, deviceName: "Audeze Maxwell (Xbox receiver)"));
+            profiles.Add(new CustomPollingProfile(AudezeMaxwell, 0x3329, 0x4B19, 0xFF13, 1, 62, 62,
+                interfaceNumber: 0, deviceName: "Audeze Maxwell (PlayStation/PC receiver)"));
+            profiles.Add(new CustomPollingProfile(AudezeMaxwell, 0x3329, 0x4B1A, 0xFF13, 1, 62, 62,
+                deviceName: "Audeze Maxwell (USB cable)"));
+            profiles.Add(new CustomPollingProfile(AudezeMaxwell, 0x3329, 0x4B28, 0xFF13, 1, 62, 62,
+                interfaceNumber: 5, deviceName: "Audeze Maxwell 2 (Xbox receiver)"));
+            profiles.Add(new CustomPollingProfile(AudezeMaxwell, 0x3329, 0x4B29, 0xFF13, 1, 62, 62,
+                interfaceNumber: 5, deviceName: "Audeze Maxwell 2 (PlayStation/PC receiver)"));
+            profiles.AddRange(OpenMouseDeviceCatalog.Profiles);
             return profiles.AsReadOnly();
 
             void Controller(string protocol, ushort vendor, ushort[] products, int input)

@@ -1,54 +1,44 @@
-# BatteryBuddy 1.0.12
+# BatteryBuddy 1.0.15
 
-## DeviceList sorting
+## Expanded experimental battery support
 
-- Standard Windows system battery, Windows Bluetooth and XInput routes appear
-  first, followed by other families A-Z.
-- Every column heading sorts the whole table A-Z or Z-A, with a visible direction
-  arrow and keyboard-accessible buttons.
-- Sorting follows the interface language and retains its column, direction and
-  selected row when the language changes. Wrapped narrow and right-to-left layouts
-  remain supported.
-- The published protocol table uses the same default order. Provider polling
-  priority and battery-reading behavior are unchanged by this sorting update.
+- Independent native battery-only implementations informed by OpenMouse and
+  original protocol sources: 35 additional families and extensions to existing
+  families, alongside the existing Windows, Bluetooth, XInput and HID++ routes.
+- Experimental Audeze Maxwell / Maxwell 2 support through five exact USB/receiver
+  profiles, with bounded assembly of typed replies. Charging state is unavailable.
+  A receiver may retain its last battery level after the headset disconnects.
+- Experimental TEEvolution Terra Pro support, including the RapidSync 8K receiver:
+  four exact product profiles, proven report-8 collections, online detection before
+  battery/charging queries and validated replies. Close the device configurator
+  before polling; exclusive access avoids competing requests.
+- No third-party executable or vendor runtime is required. These additions do
+  not initialize settings, pairing, firmware, LCD, clock or host-control modes.
+- DeviceList and the [protocol catalog](docs/protocols.md) retain source links,
+  license labels and practical limitations. The catalog now contains 76 families
+  and 573 matching profiles, not that many hardware-verified devices.
+- Relevant caveats are available in all 38 interface languages.
 
-## Device compatibility and protocol credits
+These adapters remain experimental: physical hardware validation of the new
+models is outstanding. Please report the model, connection, firmware and app
+version when sharing results, and omit personal information. Unsafe or ambiguous
+protocol paths remain disabled. Unknown readings never override a valid value,
+including real 0%.
 
-- New **DeviceList** tab: an offline, responsive table of implemented protocol
-  families, connection types, hardware-verification status, original contributions
-  with source licenses, and practical caveats.
-- Expanded experimental native battery queries for allowlisted SteelSeries,
-  Logitech, Corsair legacy, HyperX, MCHOSE, Sony INZONE, Jabra, Lenovo and Astro
-  headsets, plus Razer, ASUS, LAMZU, WLmouse, G-Wolves and other mice/keyboards.
-- Passive PlayStation, 8BitDo and Steam controller battery reports and a bounded
-  Nintendo Bluetooth device-info query; no enhanced report-mode switch.
-- Shared bounded HID input/output and feature-report exchanges, exact model
-  profiles, reply validation and cancellation ownership. No third-party
-  executable or additional installed runtime is required.
-- [Protocol catalog](docs/protocols.md) contains the same table as DeviceList and
-  the precise matching profiles. These are experimental paths, not a claim that
-  every listed model has been tested on hardware in BatteryBuddy.
+## Stream Deck category correction
 
-## Clearer receiver behavior
-
-Responsive devices are queried on each refresh. A receiver may retain a value
-when the wireless device behind it disconnects or sleeps while the receiver stays
-connected. That limitation does not mean receiver values are normally hours old.
-Logitech's last-known fallback preserves its original contact timestamp.
-
-Protocols requiring unsafe mode changes, weakly correlated replies, uncertain
-presence semantics or a different long-lived event listener remain disabled.
-Unknown/offline results never override a valid battery value, including real 0%.
+The local status pipe now publishes the effective device category, including a
+saved manual override. Resetting to automatic detection is reflected too, without
+waiting for another battery query. The separate
+[BatteryBuddy Stream Deck Plugin](https://github.com/Dergln/BatteryBuddy-Plugin-Elgato-Public)
+can therefore show the matching device category and icon.
 
 ## Install or update
 
 Windows 10 or Windows 11 with .NET Framework 4.8 enabled. Extract the entire
-`BatteryBuddy-1.0.12-windows.zip` and run `BatteryBuddy.exe`. No administrator rights
+`BatteryBuddy-1.0.15-windows.zip` and run `BatteryBuddy.exe`. No administrator rights
 are required. When updating, close BatteryBuddy and replace files in the same
 folder to preserve Windows tray visibility preferences.
-
-Existing Stream Deck integration remains available through the separate
-[BatteryBuddy Stream Deck Plugin](https://github.com/Dergln/BatteryBuddy-Plugin-Elgato-Public).
 
 The app remains unsigned. Verify `SHA256SUMS.txt`; a checksum is not a digital
 signature. Device battery support depends on what the device and Windows expose.

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using BatteryBuddy.Providers.Native;
 
 namespace BatteryBuddy.Providers.Logitech
@@ -122,8 +123,9 @@ namespace BatteryBuddy.Providers.Logitech
         }
 
         /// <summary>Probiert die Akku-Features vom neuesten zum ältesten durch. Null = Gerät meldet keinen Akkustand.</summary>
-        public BatteryReading ReadBattery()
+        public BatteryReading ReadBattery(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var unified = FeatureIndex(HidPp.FeatureUnifiedBattery);
             if (unified != null)
             {
@@ -136,6 +138,7 @@ namespace BatteryBuddy.Providers.Logitech
                 }
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
             var status = FeatureIndex(HidPp.FeatureBatteryStatus);
             if (status != null)
             {
@@ -148,15 +151,20 @@ namespace BatteryBuddy.Providers.Logitech
                 }
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
             var voltage = FeatureIndex(HidPp.FeatureBatteryVoltage);
             if (voltage != null)
             {
                 var reply = Call(voltage.Value, 0);
                 if (reply.Status == HidppStatus.Ok)
-                    return HidPp.ParseBatteryVoltage(reply.Payload);
+                {
+                    var reading = HidPp.ParseBatteryVoltage(reply.Payload);
+                    if (reading != null)
+                        return reading;
+                }
             }
 
-            return null;
+            return OpenMouseLZBatteryProtocols.ReadLogitechAdc(this, cancellationToken);
         }
     }
 }

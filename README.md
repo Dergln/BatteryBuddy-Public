@@ -26,7 +26,7 @@ The app is currently **not digitally signed**. Windows SmartScreen may show a re
 To check the ZIP in PowerShell, compare the result with the release's `SHA256SUMS.txt`:
 
 ```powershell
-Get-FileHash .\BatteryBuddy-1.0.12-windows.zip -Algorithm SHA256
+Get-FileHash .\BatteryBuddy-1.0.15-windows.zip -Algorithm SHA256
 ```
 
 ## Features
@@ -37,11 +37,12 @@ Get-FileHash .\BatteryBuddy-1.0.12-windows.zip -Algorithm SHA256
 - Last-contact indicators for inactive devices, device categories, light/dark themes and optional autostart.
 - **DeviceBuddy:** a read-only troubleshooting tab for connected peripherals without a recognized battery level. It shows Windows' reported connection and best-guess explanations, using the same nonblocking scans as battery monitoring. A wireless USB receiver may appear to Windows as a wired controller; this does not prove that the controller has no battery.
 - **DeviceList:** a wrapped, offline compatibility table with original protocol sources, license labels and caveats. Additional allowlisted headsets, mice, keyboards and controllers have experimental native status adapters, inspired by Halo Battery, HeadsetControl and their original references. No third-party executable is required. See the [protocol catalog and exact profiles](docs/protocols.md); a family entry is not a hardware test of every model.
+- **Expanded experimental protocols:** native battery-only adapters informed by OpenMouse, including Audeze Maxwell / Maxwell 2 and TEEvolution Terra Pro USB/receiver profiles. The catalog contains 76 protocol families and 573 matching profiles, not that many hardware-verified devices. Maxwell charging state is unavailable; a receiver may retain its last value after the headset disconnects. Terra Pro requires exclusive access: close its configurator before polling.
 - **DeviceList sorting:** Windows system battery, Windows Bluetooth and XInput appear first by default, followed by the other families A-Z. Activate any column heading to sort the whole table A-Z; activate it again for Z-A. Sorting changes presentation, not battery-provider priority.
 - Keyboard-friendly navigation, stable device-list focus during refresh, named controls and Windows contrast-theme colors. Version and contributor buttons open persistent, selectable information dialogs; save confirmation appears separately for five seconds without hiding the footer. Automated accessibility checks do not constitute screen-reader or voice-control certification.
 - 38 interface languages, including right-to-left layouts for Arabic and Hebrew.
 - All functionality is unlocked. There is no paid Pro version; support is optional.
-- **Stream Deck:** display device percentages and threshold colours with the separate [BatteryBuddy Stream Deck Plugin](https://github.com/Dergln/BatteryBuddy-Plugin-Elgato-Public). Status travels through a local, same-user, read-only Windows named pipe, without an HTTP server. The plugin also works with Stream Deck Mobile.
+- **Stream Deck:** display device percentages and threshold colours with the separate [BatteryBuddy Stream Deck Plugin](https://github.com/Dergln/BatteryBuddy-Plugin-Elgato-Public). Status travels through a local, same-user, read-only Windows named pipe, without an HTTP server. Saved category overrides and resets to automatic detection are reflected immediately, without waiting for another battery poll. The plugin also works with Stream Deck Mobile.
 
 Some devices do not report battery percentages, report them only while connected, or require vendor-specific support. BatteryBuddy cannot obtain information that the device does not expose.
 Responsive devices are queried on each refresh. If a wireless device sleeps or

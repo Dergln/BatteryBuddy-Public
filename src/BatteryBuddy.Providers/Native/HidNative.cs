@@ -16,6 +16,8 @@ namespace BatteryBuddy.Providers.Native
         public int InputReportLength { get; set; }
         public int OutputReportLength { get; set; }
         public int FeatureReportLength { get; set; }
+        public byte[] InputReportIds { get; set; }
+        public byte[] OutputReportIds { get; set; }
     }
 
     /// <summary>Schnittstelle für den Datenaustausch mit einem HID-Gerät. Als Interface, damit Tests ein Fake-Gerät nutzen können.</summary>
@@ -44,6 +46,11 @@ namespace BatteryBuddy.Providers.Native
         void FlushInput();
     }
 
+    internal interface IHidInputReportTransport
+    {
+        byte[] GetInputReport(byte reportId, int length, int timeoutMs);
+    }
+
     /// <summary>Windows-HID-Zugriff über hid.dll/kernel32.dll (P/Invoke).</summary>
     internal static class HidNative
     {
@@ -57,6 +64,7 @@ namespace BatteryBuddy.Providers.Native
         private const int ERROR_IO_PENDING = 997;
         private const uint IOCTL_HID_SET_FEATURE = 0x000B0191;
         private const uint IOCTL_HID_GET_FEATURE = 0x000B0192;
+        private const uint IOCTL_HID_GET_INPUT_REPORT = 0x000B01A2;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct HIDD_ATTRIBUTES
@@ -199,7 +207,7 @@ namespace BatteryBuddy.Providers.Native
                     if (HidP_GetCaps(preparsed, out var caps) < 0)
                         return null;
 
-                    return new HidInterfaceInfo
+                    var info = new HidInterfaceInfo
                     {
                         Path = path,
                         VendorId = attrs.VendorID,
@@ -210,6 +218,14 @@ namespace BatteryBuddy.Providers.Native
                         OutputReportLength = caps.OutputReportByteLength,
                         FeatureReportLength = caps.FeatureReportByteLength
                     };
+                    if (TeevolutionBatteryProtocol.HasKnownIdentity(info))
+                    {
+                        info.InputReportIds = HidReportCapabilities.Read(preparsed, 0,
+                            caps.NumberInputButtonCaps, caps.NumberInputValueCaps);
+                        info.OutputReportIds = HidReportCapabilities.Read(preparsed, 1,
+                            caps.NumberOutputButtonCaps, caps.NumberOutputValueCaps);
+                    }
+                    return info;
                 }
                 finally
                 {
@@ -221,7 +237,7 @@ namespace BatteryBuddy.Providers.Native
         /// <summary>Öffnet eine HID-Schnittstelle zum Lesen/Schreiben. Null, wenn der Zugriff verweigert wird.</summary>
         public static IHidTransport Open(HidInterfaceInfo info)
         {
-            var handle = CreateFileW(info.Path, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, IntPtr.Zero, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, IntPtr.Zero);
+            var handle = CreateFileW(info.Path, GENERIC_READ | GENERIC_WRITE, ShareMode(info), IntPtr.Zero, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, IntPtr.Zero);
             if (handle.IsInvalid)
             {
                 handle.Dispose();
@@ -229,7 +245,31 @@ namespace BatteryBuddy.Providers.Native
             }
 
             return new OverlappedStream(handle, info.InputReportLength, info.OutputReportLength,
-                info.FeatureReportLength, InstanceIdFromPath(info.Path));
+                info.FeatureReportLength, InstanceIdFromPath(info.Path), IsValkyrieBatteryInterface(info));
+        }
+
+        // Teevolution replies have no caller token; never compete with an open configurator.
+        internal static uint ShareMode(HidInterfaceInfo info)
+            => TeevolutionBatteryProtocol.IsBatteryInterface(info) ? 0 : FILE_SHARE_READ | FILE_SHARE_WRITE;
+
+        internal static bool IsValkyrieBatteryInterface(HidInterfaceInfo info)
+            => info != null
+                && ((info.VendorId == 0x249A && info.ProductId == 0x5C2F)
+                    || (info.VendorId == 0x248A && info.ProductId == 0x5D2E))
+                && info.UsagePage == 1 && info.Usage == 0
+                && HidBatteryIdentity.IsUsbInterface(info.Path, 2)
+                && (info.InputReportLength == 32 || info.InputReportLength == 33)
+                && info.OutputReportLength == 0 && info.FeatureReportLength == 0;
+
+        internal static bool RequestValkyrieIdentity(bool allowed, int timeoutMs, Func<byte[], int, bool> transfer)
+        {
+            if (!allowed)
+                throw new NotSupportedException("This HID collection is not a verified Valkyrie battery endpoint.");
+            if (timeoutMs <= 0 || timeoutMs > 1000)
+                throw new ArgumentOutOfRangeException(nameof(timeoutMs));
+            var request = new byte[33];
+            request[1] = 0x10;
+            return transfer(request, timeoutMs);
         }
 
         internal static string InstanceIdFromPath(string path)
@@ -244,23 +284,27 @@ namespace BatteryBuddy.Providers.Native
         /// Lesen/Schreiben mit Zeitlimit. "Overlapped" = asynchrones Windows-I/O: Der Aufruf kehrt sofort zurück,
         /// wir warten auf ein Event und können bei Zeitüberschreitung sauber abbrechen (sonst bliebe der Thread hängen).
         /// </summary>
-        private sealed class OverlappedStream : IHidTransport, IHidDeviceIdentity, IHidFeatureTransport, IHidInputQueue
+        private sealed class OverlappedStream : IHidTransport, IHidDeviceIdentity, IHidFeatureTransport,
+            IHidInputQueue, IHidInputReportTransport, IOpenMouseValkyrieBatteryTransport
         {
             private readonly SafeFileHandle _handle;
             private readonly int _inLength;
             private readonly int _outLength;
             private readonly int _featureLength;
+            private readonly bool _valkyrieIdentityAllowed;
             private readonly IntPtr _event;
             private readonly object _lock = new object();
 
             public string DeviceInstanceId { get; }
 
-            public OverlappedStream(SafeFileHandle handle, int inLength, int outLength, int featureLength, string deviceInstanceId)
+            public OverlappedStream(SafeFileHandle handle, int inLength, int outLength, int featureLength,
+                string deviceInstanceId, bool valkyrieIdentityAllowed)
             {
                 _handle = handle;
                 _inLength = inLength;
                 _outLength = outLength;
                 _featureLength = featureLength;
+                _valkyrieIdentityAllowed = valkyrieIdentityAllowed;
                 DeviceInstanceId = deviceInstanceId;
                 _event = CreateEventW(IntPtr.Zero, true, false, null);
             }
@@ -272,6 +316,14 @@ namespace BatteryBuddy.Providers.Native
 
                 lock (_lock)
                     return Transfer(report, report.Length, true) != null;
+            }
+
+            public bool RequestIdentity(int timeoutMs)
+            {
+                lock (_lock)
+                    // Reuse Transfer's cancel-and-drain path before releasing its native buffers.
+                    return RequestValkyrieIdentity(_valkyrieIdentityAllowed, timeoutMs,
+                        (request, timeout) => Transfer(request, request.Length, true, timeout) != null);
             }
 
             public byte[] Read(int timeoutMs)
@@ -306,6 +358,21 @@ namespace BatteryBuddy.Providers.Native
                 lock (_lock)
                 {
                     var received = Transfer(report, report.Length, false, timeoutMs, IOCTL_HID_GET_FEATURE);
+                    if (received != null && received.Length > length)
+                        Array.Resize(ref received, length);
+                    return received;
+                }
+            }
+
+            public byte[] GetInputReport(byte reportId, int length, int timeoutMs)
+            {
+                if (length <= 0 || length > _inLength || _inLength > 1024 || timeoutMs <= 0 || timeoutMs > 5000)
+                    throw new ArgumentException("Invalid HID input response length or timeout.");
+                var report = new byte[_inLength];
+                report[0] = reportId;
+                lock (_lock)
+                {
+                    var received = Transfer(report, report.Length, false, timeoutMs, IOCTL_HID_GET_INPUT_REPORT);
                     if (received != null && received.Length > length)
                         Array.Resize(ref received, length);
                     return received;
@@ -353,6 +420,9 @@ namespace BatteryBuddy.Providers.Native
                         return data;
 
                     var receivedLength = (int)transferred;
+                    // GET_INPUT_REPORT can succeed with Information == 0; its report is in the caller's buffer.
+                    if (controlCode == IOCTL_HID_GET_INPUT_REPORT)
+                        receivedLength = length;
                     // Windows excludes the synthetic zero report ID from feature byte counts.
                     if (controlCode == IOCTL_HID_GET_FEATURE && data[0] == 0 && receivedLength < length)
                         receivedLength++;

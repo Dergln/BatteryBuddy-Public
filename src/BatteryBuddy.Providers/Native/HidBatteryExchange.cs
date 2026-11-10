@@ -26,16 +26,19 @@ namespace BatteryBuddy.Providers.Native
         }
 
         internal static byte[] Receive(IHidTransport channel, Func<byte[], bool> isResponse,
-            CancellationToken cancellationToken, int timeoutMs = TimeoutMs, int maxReports = 128)
+            CancellationToken cancellationToken, int timeoutMs = TimeoutMs, int maxReports = 128,
+            Func<long> elapsedMilliseconds = null)
         {
             if (timeoutMs <= 0 || timeoutMs > 5000 || maxReports <= 0 || maxReports > 4096)
                 throw new ArgumentOutOfRangeException(nameof(timeoutMs), "Invalid HID receive budget.");
             var clock = Stopwatch.StartNew();
+            // Per-call clock injection lets transport fixtures advance time without scheduler-dependent sleeps.
+            var elapsed = elapsedMilliseconds ?? (() => clock.ElapsedMilliseconds);
             var reports = 0;
-            while (clock.ElapsedMilliseconds < timeoutMs)
+            while (elapsed() < timeoutMs)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var report = channel.Read((int)Math.Max(1, Math.Min(100, timeoutMs - clock.ElapsedMilliseconds)));
+                var report = channel.Read((int)Math.Max(1, Math.Min(100, timeoutMs - elapsed())));
                 if (report == null)
                     continue;
                 if (isResponse(report))

@@ -70,7 +70,7 @@ namespace BatteryBuddy.App.Services
                 {
                     Id = device.Id,
                     Name = DeviceNames.Display(device),
-                    Category = device.Category.ToString(),
+                    Category = ThresholdEvaluator.EffectiveCategory(device, settings.GetDevice(device.Id)).ToString(),
                     Level = device.Level,
                     IsCharging = device.IsCharging,
                     LastContactUtc = FormatUtcTimestamp(device.LastContact),

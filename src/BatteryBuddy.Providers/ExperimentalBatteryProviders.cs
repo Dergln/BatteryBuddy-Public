@@ -14,19 +14,29 @@ namespace BatteryBuddy.Providers
         public static IReadOnlyList<IBatteryProvider> Create()
             => new[]
             {
+                CreateTeevolution(),
+                Create(DeviceCatalog.AudezeMaxwell, "Audeze Maxwell", "audeze-maxwell:", AudezeMaxwellBatteryProtocol.Read),
                 Create(DeviceCatalog.MchoseHeadsets, "MCHOSE", "mchose:", ReadMchose),
                 Create(DeviceCatalog.CorsairLegacy, "Corsair legacy", "corsair-legacy:", ReadCorsairLegacy),
                 Create(DeviceCatalog.HyperXCloudII, "HyperX Cloud II", "hyperx-cloud-ii:", ReadHyperXCloudII),
-                Create(DeviceCatalog.LamzuMayaX, "LAMZU Maya X", "lamzu:", ReadLamzu, category: DeviceCategory.Mouse),
+                Create(DeviceCatalog.LamzuMayaX, "CompX feature", "lamzu:",
+                    (info, channel, ct) => OpenMouseBatteryProviders.ReadExtension(DeviceCatalog.LamzuMayaX, info, channel, ct, ReadLamzu),
+                    category: DeviceCategory.Mouse),
                 Create(DeviceCatalog.SteelSeriesNova, "SteelSeries status", "steelseries:", ReadSteelSeriesNova),
-                Create(DeviceCatalog.Pulsar, "Pulsar power", "pulsar:", ReadPulsar, category: DeviceCategory.Mouse),
+                Create(DeviceCatalog.Pulsar, "CompX power", "pulsar:",
+                    (info, channel, ct) => OpenMouseBatteryProviders.ReadExtension(DeviceCatalog.Pulsar, info, channel, ct, ReadPulsar),
+                    category: DeviceCategory.Mouse),
                 Create(DeviceCatalog.Nzxt, "NZXT Lift", "nzxt:", ReadNzxt, category: DeviceCategory.Mouse),
                 Create(DeviceCatalog.RazerMouse, "Razer mice", "razer-mouse:", RazerBatteryProtocol.Read, category: DeviceCategory.Mouse),
                 Create(DeviceCatalog.RazerKeyboard, "Razer keyboards", "razer-keyboard:", RazerBatteryProtocol.Read, category: DeviceCategory.Keyboard),
-                Create(DeviceCatalog.Wlmouse, "WLmouse", "wlmouse:", ReadLamzu, category: DeviceCategory.Mouse),
+                Create(DeviceCatalog.Wlmouse, "WLmouse", "wlmouse:",
+                    (info, channel, ct) => OpenMouseBatteryProviders.ReadExtension(DeviceCatalog.Wlmouse, info, channel, ct, ReadLamzu),
+                    category: DeviceCategory.Mouse),
                 Create(DeviceCatalog.GwolvesNew, "G-Wolves new", "gwolves-new:", ReadLamzu, category: DeviceCategory.Mouse),
                 Create(DeviceCatalog.GwolvesOld, "G-Wolves old", "gwolves-old:", ReadGwolvesOld, category: DeviceCategory.Mouse),
-                Create(DeviceCatalog.AsusMouse, "ASUS mice", "asus:", AdditionalBatteryProtocols.ReadAsus, category: DeviceCategory.Mouse),
+                Create(DeviceCatalog.AsusMouse, "ASUS mice", "asus:",
+                    (info, channel, ct) => OpenMouseBatteryProviders.ReadExtension(DeviceCatalog.AsusMouse, info, channel, ct, AdditionalBatteryProtocols.ReadAsus),
+                    category: DeviceCategory.Mouse),
                 Create(DeviceCatalog.Astro, "Astro A50 Gen 5", "astro:", AdditionalBatteryProtocols.ReadAstro),
                 Create(DeviceCatalog.Keychron, "Keychron", "keychron:", AdditionalBatteryProtocols.ReadKeychron, category: DeviceCategory.Mouse),
                 Create(DeviceCatalog.AmInfinity, "AM Infinity", "am-infinity:", AdditionalBatteryProtocols.ReadAmInfinity, category: DeviceCategory.Mouse),
@@ -49,7 +59,7 @@ namespace BatteryBuddy.Providers
                 Create(DeviceCatalog.Lofree, "Lofree Hyzen", "lofree:", MouseAndKeyboardBatteryProtocols.ReadLofree,
                     enumerate: () => LofreeCandidates(HidNative.Enumerate(0x388D)), category: DeviceCategory.Keyboard),
                 Create(DeviceCatalog.LogitechCenturion, "Logitech Centurion", "logitech-centurion:", LogitechCenturionBatteryProtocol.Read)
-            };
+            }.Concat(OpenMouseBatteryProviders.Create()).ToArray();
 
         internal static IReadOnlyList<HidInterfaceInfo> LofreeCandidates(IReadOnlyList<HidInterfaceInfo> interfaces)
             => interfaces.Any(info => info.ProductId == 0x0024) ? Array.Empty<HidInterfaceInfo>() : interfaces;
@@ -57,6 +67,11 @@ namespace BatteryBuddy.Providers
         internal static bool OwnsLogitechInterface(HidInterfaceInfo info)
             => info.VendorId == 0x046D && DeviceCatalog.CustomProfiles.Any(profile =>
                 profile.VendorId == 0x046D && profile.ProtocolId != DeviceCatalog.LogitechHidpp && Matches(profile, info));
+
+        internal static IBatteryProvider CreateTeevolution(Func<IReadOnlyList<HidInterfaceInfo>> enumerate = null,
+            Func<HidInterfaceInfo, IHidTransport> open = null)
+            => Create(DeviceCatalog.Teevolution, "TEEvolution Terra Pro", "teevolution:",
+                TeevolutionBatteryProtocol.Read, enumerate, open, DeviceCategory.Mouse);
 
         private static IBatteryProvider CreateSteamSlot(int usbInterface)
             => Create(DeviceCatalog.Steam, $"Steam slot {usbInterface - 1}", "steam:",
@@ -78,8 +93,11 @@ namespace BatteryBuddy.Providers
 
         internal static bool Matches(CustomPollingProfile profile, HidInterfaceInfo info)
             => profile.Matches(profile.ProtocolId, info.VendorId, info.ProductId, info.UsagePage, info.Usage,
-                info.InputReportLength, info.OutputReportLength, info.FeatureReportLength)
-                && (profile.UsagePage.HasValue || profile.FeatureReportLength.HasValue || info.UsagePage >= 0xFF00)
+                info.InputReportLength, info.OutputReportLength, info.FeatureReportLength,
+                info.InputReportIds, info.OutputReportIds)
+                && (profile.ProtocolId == DeviceCatalog.Teevolution
+                    ? TeevolutionBatteryProtocol.IsBatteryInterface(info)
+                    : profile.UsagePage.HasValue || profile.FeatureReportLength.HasValue || info.UsagePage >= 0xFF00)
                 && (profile.ProtocolId != DeviceCatalog.Nintendo || ControllerBatteryProtocols.IsBluetooth(info.Path))
                 && (!profile.InterfaceNumber.HasValue || HidBatteryIdentity.IsUsbInterface(info.Path, profile.InterfaceNumber.Value));
 
