@@ -11,16 +11,48 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     runs-on: windows-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: node .github/no-agent-control-files.mjs
+      - uses: actions/setup-dotnet@v6.1.0
+        id: dotnet
         with:
           dotnet-version: '10.0.402'
+      - name: Select and verify SDK
+        env:
+          SELECTED_SDK: ${{ steps.dotnet.outputs.dotnet-version }}
+        shell: pwsh
+        run: |
+          if ($env:SELECTED_SDK -ne '10.0.402') { throw "Unexpected SDK: $env:SELECTED_SDK" }
+          if (Test-Path global.json) { throw 'Do not overwrite a checked-in SDK policy.' }
+          @{ sdk = @{ version = $env:SELECTED_SDK; rollForward = 'disable'; allowPrerelease = $false } } |
+            ConvertTo-Json | Set-Content global.json -Encoding utf8NoBOM
+          $actual = dotnet --version
+          if ($LASTEXITCODE -ne 0 -or $actual -ne $env:SELECTED_SDK) { throw "SDK selection failed: $actual" }
+          dotnet --info
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Restore product dependencies
         run: dotnet restore .\BatteryBuddy.sln
       - name: Build product source
         run: dotnet build .\BatteryBuddy.sln -c Release --no-restore
+      - name: Verify application files
+        shell: pwsh
+        run: |
+          foreach ($name in 'BatteryBuddy.exe', 'BatteryBuddy.exe.config', 'BatteryBuddy.Core.dll', 'BatteryBuddy.Providers.dll') {
+            $file = Get-Item -LiteralPath "src\BatteryBuddy.App\bin\Release\net48\$name" -ErrorAction Stop
+            if ($file.Length -eq 0) { throw "Empty build artifact: $name" }
+          }
