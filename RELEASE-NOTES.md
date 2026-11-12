@@ -1,42 +1,30 @@
-# BatteryBuddy 1.0.15
+# BatteryBuddy 1.0.16
 
-## Expanded experimental battery support
+## Experimental wireless-receiver support
 
-- Independent native battery-only implementations informed by OpenMouse and
-  original protocol sources: 35 additional families and extensions to existing
-  families, alongside the existing Windows, Bluetooth, XInput and HID++ routes.
-- Experimental Audeze Maxwell / Maxwell 2 support through five exact USB/receiver
-  profiles, with bounded assembly of typed replies. Charging state is unavailable.
-  A receiver may retain its last battery level after the headset disconnects.
-- Experimental TEEvolution Terra Pro support, including the RapidSync 8K receiver:
-  four exact product profiles, proven report-8 collections, online detection before
-  battery/charging queries and validated replies. Close the device configurator
-  before polling; exclusive access avoids competing requests.
-- No third-party executable or vendor runtime is required. These additions do
-  not initialize settings, pairing, firmware, LCD, clock or host-control modes.
-- DeviceList and the [protocol catalog](docs/protocols.md) retain source links,
-  license labels and practical limitations. The catalog now contains 76 families
-  and 573 matching profiles, not that many hardware-verified devices.
-- Relevant caveats are available in all 38 interface languages.
+- Adds native, battery-only receiver adapters for Flydigi Vader 5 Pro and
+  EWEADN H2/S9, A7/A7 Pro and S9 Pro 8K. A strictly profiled EWEADN X23SE
+  candidate is also included, but still needs a successful real-device response.
+- These protocols are experimental and have not been tested on BatteryBuddy
+  hardware. Vader's seven reported levels map to approximate percentages.
+  EWEADN A5 receiver support and unverified X23 aliases remain excluded.
+- Requests are limited to battery status; no pairing, configuration, lighting,
+  firmware or vendor runtime is involved. Exact profiles, source links, license
+  labels and limitations are listed in the [protocol catalog](docs/protocols.md).
+- The catalog contains 78 protocol families and 580 matching profiles; this is
+  not a count of individually verified devices. Relevant caveats are available
+  in all 38 interface languages.
 
-These adapters remain experimental: physical hardware validation of the new
-models is outstanding. Please report the model, connection, firmware and app
-version when sharing results, and omit personal information. Unsafe or ambiguous
-protocol paths remain disabled. Unknown readings never override a valid value,
-including real 0%.
+## DeviceList hardware confirmations
 
-## Stream Deck category correction
-
-The local status pipe now publishes the effective device category, including a
-saved manual override. Resetting to automatic detection is reflected too, without
-waiting for another battery query. The separate
-[BatteryBuddy Stream Deck Plugin](https://github.com/Dergln/BatteryBuddy-Plugin-Elgato-Public)
-can therefore show the matching device category and icon.
+DeviceList now links to published BatteryBuddy success reports for the specific
+Audeze Maxwell USB-receiver and TEEvolution Terra Pro USB configurations. These
+reports do not verify other models or connections, including Maxwell 2.
 
 ## Install or update
 
 Windows 10 or Windows 11 with .NET Framework 4.8 enabled. Extract the entire
-`BatteryBuddy-1.0.15-windows.zip` and run `BatteryBuddy.exe`. No administrator rights
+`BatteryBuddy-1.0.16-windows.zip` and run `BatteryBuddy.exe`. No administrator rights
 are required. When updating, close BatteryBuddy and replace files in the same
 folder to preserve Windows tray visibility preferences.
 

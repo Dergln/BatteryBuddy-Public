@@ -58,7 +58,11 @@ namespace BatteryBuddy.Providers
                 Create(DeviceCatalog.MchoseA5, "MCHOSE A5", "mchose-a5:", ReadLamzu, category: DeviceCategory.Mouse),
                 Create(DeviceCatalog.Lofree, "Lofree Hyzen", "lofree:", MouseAndKeyboardBatteryProtocols.ReadLofree,
                     enumerate: () => LofreeCandidates(HidNative.Enumerate(0x388D)), category: DeviceCategory.Keyboard),
-                Create(DeviceCatalog.LogitechCenturion, "Logitech Centurion", "logitech-centurion:", LogitechCenturionBatteryProtocol.Read)
+                Create(DeviceCatalog.LogitechCenturion, "Logitech Centurion", "logitech-centurion:", LogitechCenturionBatteryProtocol.Read),
+                Create(DeviceCatalog.Vader5Pro, "Flydigi Vader 5 Pro", "vader5pro:", VaderBatteryProtocol.Read,
+                    category: DeviceCategory.Gamepad),
+                Create(DeviceCatalog.Eweadn, "EWEADN", "eweadn:", EweadnBatteryProtocol.Read,
+                    category: DeviceCategory.Mouse)
             }.Concat(OpenMouseBatteryProviders.Create()).ToArray();
 
         internal static IReadOnlyList<HidInterfaceInfo> LofreeCandidates(IReadOnlyList<HidInterfaceInfo> interfaces)
@@ -94,7 +98,7 @@ namespace BatteryBuddy.Providers
         internal static bool Matches(CustomPollingProfile profile, HidInterfaceInfo info)
             => profile.Matches(profile.ProtocolId, info.VendorId, info.ProductId, info.UsagePage, info.Usage,
                 info.InputReportLength, info.OutputReportLength, info.FeatureReportLength,
-                info.InputReportIds, info.OutputReportIds)
+                info.InputReportIds, info.OutputReportIds, info.ProductName, info.FeatureReportIds)
                 && (profile.ProtocolId == DeviceCatalog.Teevolution
                     ? TeevolutionBatteryProtocol.IsBatteryInterface(info)
                     : profile.UsagePage.HasValue || profile.FeatureReportLength.HasValue || info.UsagePage >= 0xFF00)

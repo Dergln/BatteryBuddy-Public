@@ -120,6 +120,28 @@ Exact descriptor/report guards, exclusive Windows access, bounded reads,
 cancellation and invalid-response handling are BatteryBuddy-specific choices.
 No new hardware verification is claimed.
 
+### Flydigi Vader 5 Pro and EWEADN receiver protocol references
+
+The independent battery-only readers use protocol facts from
+[Vader Battery Tray (MIT)](https://github.com/vermi5/VaderBatteryTray),
+[Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery/pull/352),
+[EWEADN H2 Control (GPL-3.0)](https://github.com/MuhtasimJawad/EWEADN-H2-Control),
+[USBDeviceBattery (no license stated)](https://github.com/YeLuoYuXiang/USBDeviceBattery),
+[MouseDock (MIT)](https://github.com/late-autumn-gif/MouseDock) and
+[MyFinder Device Battery (AGPL-3.0)](https://github.com/wushuai0802/myfinder-device-battery/issues/315).
+These sources establish protocol/descriptor facts and upstream observations only;
+their code, binaries, assets and prose are not copied or bundled. The A7 notes do
+not state a source-code license, so they are not treated as reuse permission.
+The EWEADN S9 Pro 8K report in MyFinder issue #315 is upstream device evidence,
+not a BatteryBuddy hardware test. X23SE remains explicitly unconfirmed on real
+hardware.
+
+The Vader reader sends only `GET_INFO` and reports the source's coarse seven-step
+scale as approximate percentages. EWEADN requests are limited to the exact
+receiver collections, product names and report descriptors documented in
+[protocols.md](docs/protocols.md); no pairing, configuration, firmware or lighting
+commands are included. EWEADN A5 receiver support remains excluded.
+
 ### Experimentelle SteelSeries-Nova-7-Protokollunterstützung
 
 Die Statusabfrage und Antwortauswertung wurden anhand von

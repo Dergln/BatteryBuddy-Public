@@ -3,8 +3,8 @@
 This table lists protocol families implemented in BatteryBuddy, not a complete list of
 compatible models. A family entry is not a hardware test of every model or connection.
 Unknown devices may still work through Windows or an implemented protocol.
-The catalog in `DeviceCatalog` is the authoritative source for DeviceList;
-the published table and exact profile list are generated from that catalog.
+The catalog in `DeviceCatalog` is the authoritative source for DeviceList; this
+published table and exact profile list are maintained to match it.
 External contribution labels include the source license in parentheses; BatteryBuddy's
 own credits have no suffix. New external sources must record their verified license
 in the catalog and retain the applicable full notices in [THIRD-PARTY-NOTICES.md](../THIRD-PARTY-NOTICES.md).
@@ -32,12 +32,14 @@ not provider polling priority. The documentation table uses the default order.
 | ASUS ROG / TUF wireless mice | USB / receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [G-Helper (GPL-3.0-only)](https://github.com/seerge/g-helper), [OpenMouse ASUS battery codec facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/asus) | Experimental; please send feedback. Battery percentage is approximate; not hardware-tested in BatteryBuddy. |
 | ATK Bitmouse battery | USB / 2.4 GHz receiver | Models not individually verified | [OpenMouse ATK Bitmouse battery facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/drivers/atk) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | Attack Shark X11 / Delux M600 Pro passive battery | 2.4 GHz receiver input telemetry | Models not individually verified | [OpenMouse Delux battery report facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src) | Experimental; not hardware-tested in BatteryBuddy. Charging state is unavailable. |
-| Audeze Maxwell / Maxwell 2 | USB / receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [HeadsetControl (GPLv3)](https://github.com/Sapd/HeadsetControl), [Maxwell firmware research (CC BY 4.0)](https://github.com/kats1123/maxwell-firmware-research) | Experimental; not hardware-tested in BatteryBuddy. A connected receiver may retain the last battery level after the headset disconnects. Charging state is unavailable. |
+| Audeze Maxwell / Maxwell 2 | USB / receiver | [Audeze Maxwell (USB receiver)](https://www.reddit.com/r/MouseReview/s/XUqP9TRg7v) | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [HeadsetControl (GPLv3)](https://github.com/Sapd/HeadsetControl), [Maxwell firmware research (CC BY 4.0)](https://github.com/kats1123/maxwell-firmware-research) | Experimental. A connected receiver may retain the last battery level after the headset disconnects. Charging state is unavailable. |
 | CompX feature mice (LAMZU and compatible models) | USB / receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [lamzu-battery-monitory (MIT)](https://github.com/Sheroune/lamzu-battery-monitory), [OpenMouse Lamzu/CRDRAKO/LunaFury/Vancer/AttackShark/RAWM facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/lamzu/index.ts) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | CompX mouse-local battery | Wired | Models not individually verified | [OpenMouse Lamzu/CompX protocol facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/lamzu) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | CompX power mice (Pulsar and compatible models) | USB / 2.4 GHz receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [python-pulsar-mouse-tool (MIT)](https://github.com/andrewrabert/python-pulsar-mouse-tool), [hitscan-battery (No license stated)](https://github.com/sopparus/hitscan-battery), [OpenMouse Atlantis/Scyrox/VGN report08 facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/lamzu/atlantis.ts) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | Corsair legacy wireless headsets | USB receiver | Models not individually verified | [HeadsetControl (GPLv3)](https://github.com/Sapd/HeadsetControl) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | Dareu report-8 battery | USB / wireless receiver | Models not individually verified | [OpenMouse Dareu report-8 facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/drivers/dareu) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
+| EWEADN wireless mice | 2.4 GHz receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery/pull/352), [EWEADN H2 Control (GPL-3.0)](https://github.com/MuhtasimJawad/EWEADN-H2-Control), [USBDeviceBattery (No license file stated)](https://github.com/YeLuoYuXiang/USBDeviceBattery), [MouseDock (MIT)](https://github.com/late-autumn-gif/MouseDock), [MyFinder Device Battery (AGPL-3.0)](https://github.com/wushuai0802/myfinder-device-battery/issues/315) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
+| Flydigi Vader 5 Pro | 2.4 GHz receiver | Models not individually verified | [Vader Battery Tray (MIT)](https://github.com/vermi5/VaderBatteryTray) | Experimental; please send feedback. Battery percentage is approximate; not hardware-tested in BatteryBuddy. |
 | G-Wolves legacy XVI battery | USB / wireless receiver | Models not individually verified | [OpenMouse G-Wolves legacy XVI protocol facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/drivers/gwolves), [G-Wolves web driver (Not stated)](https://mouse.xyz) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | G-Wolves new-protocol mice | USB / 8K receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [G-Wolves web driver (No license stated)](https://mouse.xyz), [OpenMouse G-Wolves XVI:1 protocol and descriptor fixtures (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/drivers/gwolves/xvi-new) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | G-Wolves old-protocol mice | USB / receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [G-Wolves web driver (No license stated)](https://mouse.xyz), [OpenMouse G-Wolves XVI battery protocol (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/drivers/gwolves/xvi) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
@@ -78,8 +80,8 @@ not provider polling priority. The documentation table uses the default order.
 | Orbital DMS battery | Wireless | Models not individually verified | [OpenMouse Orbital host protocol facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/drivers/orbital/host-protocol.js) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | Pulsar Pro battery | Wireless | Models not individually verified | [OpenMouse Pulsar Pro protocol (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/drivers/pulsar/pulsar-pro-hid.ts) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | Pulsar XS-1 battery | Wireless | Models not individually verified | [OpenMouse Pulsar XS-1 protocol (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/drivers/pulsar/pulsar-xs1-hid.ts) | Experimental; not hardware-tested in BatteryBuddy. Charging state is unavailable. |
-| Rapoo VT battery feature | Wireless | Models not individually verified | [OpenMouse Rapoo status collection facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/rapoo/index.ts) | Experimental; not hardware-tested in BatteryBuddy. Receiver-buffered readings can lag or remain stale while the mouse is idle; they do not prove mouse connectivity. Charging state may be unavailable. |
-| Rapoo VT battery GET_REPORT | Wireless | Models not individually verified | [OpenMouse Rapoo VT9 Pro captures and mousectl reference (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/docs/rapoo-vt9-pro-testing.md) | Experimental; not hardware-tested in BatteryBuddy. Receiver-buffered readings can lag or remain stale while the mouse is idle; they do not prove mouse connectivity. Charging state may be unavailable. |
+| Rapoo VT battery feature | Wireless | Models not individually verified | [OpenMouse Rapoo status collection facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/rapoo/index.ts) | Experimental. Receiver-buffered readings can lag or remain stale while the mouse is idle; they do not prove mouse connectivity. Charging state may be unavailable. |
+| Rapoo VT battery GET_REPORT | Wireless | Models not individually verified | [OpenMouse Rapoo VT9 Pro captures and mousectl reference (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/docs/rapoo-vt9-pro-testing.md) | Experimental. Receiver-buffered readings can lag or remain stale while the mouse is idle; they do not prove mouse connectivity. Charging state may be unavailable. |
 | Razer wireless keyboards (allowlisted models) | USB / HyperSpeed receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [OpenRazer (GPL-2.0-or-later)](https://github.com/openrazer/openrazer) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | Razer wireless mice (allowlisted models) | USB / HyperSpeed receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [OpenRazer (GPL-2.0-or-later)](https://github.com/openrazer/openrazer), [OpenMouse Razer exact device/transaction facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/razer/devices.ts) | Experimental; not hardware-tested in BatteryBuddy. Some models report approximate battery levels or no charging state. |
 | Redragon M690 PRO battery | Wireless | Models not individually verified | [OpenMouse M690 protocol and captures (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/redragon/m690-pro.ts), [libratbag driver-sinowealth (MIT)](https://github.com/libratbag/libratbag/blob/master/src/driver-sinowealth.c) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
@@ -92,7 +94,7 @@ not provider polling priority. The documentation table uses the default order.
 | SteelSeries Arctis Nova 7 (1038:22A1) | 2.4 GHz receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [HeadsetControl (GPLv3)](https://github.com/Sapd/HeadsetControl), [Linux (GPL-2.0-or-later)](https://github.com/torvalds/linux/blob/master/drivers/hid/hid-steelseries-arctis.c) | Experimental; please send feedback. A connected receiver may retain the last battery level after the headset disconnects. |
 | SteelSeries model-specific battery | Wireless | Models not individually verified | [OpenMouse model-specific SteelSeries facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/steelseries), [rivalcfg protocol reference (WTFPL)](https://github.com/flozz/rivalcfg) | Experimental; not hardware-tested in BatteryBuddy. Some models report approximate battery levels or no charging state. |
 | SteelSeries Nova / Arctis 7+ / GameBuds | 2.4 GHz receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [HeadsetControl (GPLv3)](https://github.com/Sapd/HeadsetControl) | Experimental; please send feedback. Battery percentage is approximate; not hardware-tested in BatteryBuddy. |
-| TEEvolution Terra Pro | USB / receiver | Models not individually verified | [OpenMouse mouse-protocol (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/teevolution), [TeevoLink factory protocol reference (No license stated)](https://github.com/xilu7/teevolink/tree/26e0734589c8e09f1757f2cb6c809645fe06f61e/src/sdk) | Experimental; not hardware-tested in BatteryBuddy. Receiver-buffered readings can lag or remain stale while the mouse is idle; they do not prove mouse connectivity. Charging state may be unavailable. |
+| TEEvolution Terra Pro | USB / receiver | [TEEvolution Terra Pro (USB)](https://www.reddit.com/r/MouseReview/s/XUqP9TRg7v) | [OpenMouse mouse-protocol (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/teevolution), [TeevoLink factory protocol reference (No license stated)](https://github.com/xilu7/teevolink/tree/26e0734589c8e09f1757f2cb6c809645fe06f61e/src/sdk) | Experimental. Receiver-buffered readings can lag or remain stale while the mouse is idle; they do not prove mouse connectivity. Charging state may be unavailable. |
 | Valkyrie read-only identity battery | Wireless | Models not individually verified | [OpenMouse measured Valkyrie identity protocol (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/docs/valkyrie-m3-series.md) | Experimental; not hardware-tested in BatteryBuddy. Charging state and receiver-side disconnect detection are unavailable. |
 | VAXEE battery | Wireless | Models not individually verified | [OpenMouse VAXEE Control Center v3.6 facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/vaxee/index.ts) | Experimental; please send feedback. Battery percentage is approximate; not hardware-tested in BatteryBuddy. |
 | WLmouse feature-protocol mice | USB / receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [mouse-battery-tray / len0c (MIT)](https://github.com/incconutwo/mouse-battery-tray), [OpenMouse WLmouse exact runtime table (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/drivers/vendors.ts) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
@@ -193,7 +195,8 @@ rumble, firmware, pairing, sidetone or other settings are changed.
 - The legacy Corsair `C9 64` adapter does not enable Bragi/Slipstream/Void V2.
   The suspect upstream product literal `1B1C` is excluded.
 
-The following profile list describes the same catalog used by DeviceList.
+Build Core, then run `tools\update-protocol-catalog.ps1` to regenerate the table and
+profile list. Tests enforce the table's exact parity with DeviceList.
 
 <details>
 <summary>Executable VID/PID, HID collection and length allowlists</summary>
@@ -210,6 +213,13 @@ Exact executable profiles (generated from the same catalog; `*` means not restri
 - `audeze-maxwell`: `3329:4B28,4B29`; usage `FF13:0001`; interface `5`; input/output `62/62`, feature `-` (exact).
 - `audeze-maxwell`: `3329:4B1A`; usage `FF13:0001`; interface `*`; input/output `62/62`, feature `-` (exact).
 - `corsair-legacy`: `1B1C:1B27,0A14,0A16,0A17,0A1D,0A1A,1B2A,1B23,1B29,0A55,0A51,0A52,0A38,0A4F,0A2B,0A75,0A56`; usage `FFC5:0001`; interface `3`; input/output `5/2`, feature `-` (minimum).
+- `eweadn-wireless-mice`: `372E:1026`; usage `FF00:0001`; interface `*`; input/output `0/0`, feature `64` (exact; feature length exact; single feature report ID 03).
+- `eweadn-wireless-mice`: `372E:1026`; usage `FF06:0001`; interface `*`; input/output `0/0`, feature `64` (exact; feature length exact; single feature report ID 03).
+- `eweadn-wireless-mice`: `089D:062F`; usage `FF01:0010`; interface `2`; input/output `33/33`, feature `-` (exact; single input/output report ID 00).
+- `eweadn-wireless-mice`: `A8A5:2255`; usage `FF01:0010`; interface `2`; input/output `65/65`, feature `-` (exact; product string EWEADN X23SE; unique nonzero input/output report IDs).
+- `eweadn-wireless-mice`: `A8A5:2255`; usage `FF01:0010`; interface `*`; input/output `65/65`, feature `-` (exact; single input/output report ID 00; product string EWEADN A7).
+- `eweadn-wireless-mice`: `A8A5:2255`; usage `FF01:0010`; interface `*`; input/output `65/65`, feature `-` (exact; single input/output report ID 00; product string EWEADN A7Pro).
+- `flydigi-vader-5-pro`: `37D7:2401`; usage `FFA0:0001`; interface `1`; input/output `32/32`, feature `-` (exact; single input/output report ID 00).
 - `gwolves-new`: `33E4:3854,5418,5419,5219,4718,4719,5618,5619,3619,3519,2719,4219,3808,3817,6808,6817,5608,5617,3608,3617`; usage `*:*`; interface `*`; input/output `0/0`, feature `65` (minimum; feature length exact).
 - `gwolves-old`: `33E4:3908,3917,7904,7913,3708,3717,5308,5317,7704,7713,3508,3517,7908,7917,5808,5817,5807,2708,2717,5408,5417,5407,5708,5717,5707,5908,5917,5907,7204,7203,7708,7717,5804,5803,5404,5403,5704,5703,5904,5903`; usage `*:*`; interface `*`; input/output `0/0`, feature `65` (minimum; feature length exact).
 - `hyperx-alpha-2`: `03F0:08BE`; usage `FF13:FF00`; interface `*`; input/output `7/64`, feature `-` (minimum).
@@ -231,7 +241,7 @@ Exact executable profiles (generated from the same catalog; `*` means not restri
 - `logitech-hidpp`: `046D:*`; usage `FF00:*`; interface `*`; input/output `20/20`, feature `-` (exact).
 - `logitech-hidpp`: `046D:*`; usage `FF43:*`; interface `*`; input/output `20/20`, feature `-` (exact).
 - `mchose-a5`: `2023:F013,F015,F019`; usage `*:*`; interface `*`; input/output `0/0`, feature `65` (minimum; feature length exact).
-- `mchose-g7`: `A8A5:2255`; usage `FF01:0010`; interface `*`; input/output `10/65`, feature `-` (minimum).
+- `mchose-g7`: `A8A5:2255`; usage `FF01:0010`; interface `*`; input/output `10/65`, feature `-` (minimum; product string YJX-CHIP).
 - `mchose-headsets`: `291D:385D`; usage `FF90:0001`; interface `0`; input/output `64/64`, feature `-` (minimum).
 - `mchose-headsets`: `3837:6045`; usage `FF90:0001`; interface `0`; input/output `64/64`, feature `-` (minimum).
 - `mchose-realtek`: `3837:100A,1020`; usage `FF01:0001`; interface `*`; input/output `0/0`, feature `65` (minimum; feature length exact).
@@ -314,11 +324,11 @@ Exact executable profiles (generated from the same catalog; `*` means not restri
 - `steelseries-classic`: `1038:12E0,12E5`; usage `*:*`; interface `4`; input/output `16/2`, feature `-` (minimum).
 - `steelseries-classic`: `1038:12AD,1260,1252`; usage `*:*`; interface `5`; input/output `5/2`, feature `-` (minimum).
 - `steelseries-classic`: `1038:12B3,12B6,12D7,12D5`; usage `FF43:*`; interface `3`; input/output `4/2`, feature `-` (minimum).
+- `steelseries-nova-status`: `1038:2202,227E,2206,2258,229E,22AD,22A4,22A5,223A,22A9,227A,2232,2253,220A,22A7,2298,2269,226D,220E,2212,2216,2236,230A,2317`; usage `FFC0:0001`; interface `3`; input/output `7/2`, feature `-` (minimum).
 - `steelseries-nova7-22a1`: `1038:22A1`; usage `FFC0:0001`; interface `3`; input/output `64/64`, feature `-` (exact).
 - `steelseries-nova7-22a1`: `1038:22A1`; usage `FFC0:0001`; interface `3`; input/output `64/65`, feature `-` (exact).
 - `steelseries-nova7-22a1`: `1038:22A1`; usage `FFC0:0001`; interface `3`; input/output `65/64`, feature `-` (exact).
 - `steelseries-nova7-22a1`: `1038:22A1`; usage `FFC0:0001`; interface `3`; input/output `65/65`, feature `-` (exact).
-- `steelseries-nova-status`: `1038:2202,227E,2206,2258,229E,22AD,22A4,22A5,223A,22A9,227A,2232,2253,220A,22A7,2298,2269,226D,220E,2212,2216,2236,230A,2317`; usage `FFC0:0001`; interface `3`; input/output `7/2`, feature `-` (minimum).
 - `teevolution-terra-pro`: `3554:F520,F523,F5BB,F522`; usage `*:*`; interface `*`; input/output `17/17`, feature `-` (exact; single input/output report ID 08).
 - `wlmouse-feature`: `36A7:A887,A868,A880`; usage `*:*`; interface `*`; input/output `0/0`, feature `65` (minimum; feature length exact).
 - `wlmouse-feature`: `36A7:A860,A861,A863,A864,A866,A867,A869,A870,A871,A872,A873,A874,A875,A878,A879,A881,A882,A883,A884,A885,A886`; usage `*:*`; interface `*`; input/output `0/0`, feature `65` (minimum; feature length exact; reader OpenMouseLZBatteryProtocols.ReadCompx).
@@ -350,9 +360,39 @@ report is upstream evidence only. Please report success or problems with the mod
 connection, firmware and BatteryBuddy version; omit personal information.
 
 Other Halo Battery or HeadsetControl device-list and hardware-test claims do not
-establish BatteryBuddy support.
-Before adding an adapter, trace and retain its applicable source and license notices,
-prove its requests are safe, and test the exact model and connection.
-Configuration-only drivers, unsafe mode switches, ambiguous replies and
-unproven multi-device routing are not enabled merely because an upstream
-project lists a model.
+establish BatteryBuddy support. Before adding an adapter, trace and retain its
+applicable source and license notices, prove its requests are safe, and test the
+exact model and connection. Fragile candidates remain outside this catalog until
+their descriptor and response evidence is sufficiently verified.
+
+### Flydigi Vader 5 Pro and EWEADN wireless mice
+
+The Vader 5 Pro reader is limited to `37D7:2401`, USB interface 1,
+`FFA0:0001`, 32-byte input/output reports and report ID 0. It sends only the
+documented `GET_INFO` battery request; the reply must identify device 130 and
+firmware `0x7141` or newer. The controller reports seven ordinal levels mapped to
+10, 25, 40, 55, 70, 85 and 100 percent, so those percentages are estimates rather
+than precise measurements. No dock, lighting, profile or configuration request
+is used.
+
+EWEADN receiver paths are separated by model and descriptor:
+
+- H2 / S9 uses `089D:062F`, interface 2, `FF01:0010` and 33-byte reports.
+  The `0x30` device-info reply must identify `M302` (H2) or `M156` (S9), have a
+  valid battery/charge field and report the mouse connected. An asleep or
+  disconnected mouse yields no current reading.
+- A7 / A7 Pro uses `A8A5:2255`, exact product strings `EWEADN A7` /
+  `EWEADN A7Pro`, `FF01:0010`, 65-byte reports and report ID 0. The product
+  string prevents confusion with the shared-ID MCHOSE G7 and X23SE profiles.
+- X23SE requires the exact `EWEADN X23SE` product string, interface 2,
+  `FF01:0010`, 65-byte reports and unique, descriptor-derived, nonzero report
+  IDs. Two matching battery replies are required. The source documents the
+  query layout but no successful X23SE battery response on real hardware; this
+  profile is experimental and especially needs user confirmation.
+- S9 Pro 8K uses `372E:1026`, `FF00:0001` or `FF06:0001`, and a unique
+  descriptor-proven feature report ID 3 with a 64-byte report. Only valid
+  16-byte and 64-byte replies with an online device and level 1–100 are accepted.
+
+No Vader or EWEADN model has been tested on BatteryBuddy hardware. EWEADN A5
+receiver support and other X23 aliases remain excluded for lack of a sufficiently
+verified receiver response.

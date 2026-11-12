@@ -13,15 +13,23 @@ namespace BatteryBuddy.Core.Providers
         public string SourceName { get; }
         public string SourceUrl { get; }
         public IReadOnlyList<DeviceCatalogSource> Sources { get; }
+        public IReadOnlyList<DeviceCatalogHardwareVerification> HardwareVerifications { get; }
         public string CommentsKey { get; }
 
         internal DeviceCatalogEntry(string id, string name, string connection, string commentsKey, params DeviceCatalogSource[] sources)
+            : this(id, name, connection, commentsKey, Array.Empty<DeviceCatalogHardwareVerification>(), sources)
+        {
+        }
+
+        internal DeviceCatalogEntry(string id, string name, string connection, string commentsKey,
+            DeviceCatalogHardwareVerification[] hardwareVerifications, params DeviceCatalogSource[] sources)
         {
             Id = id;
             Name = name;
             Connection = connection;
             CommentsKey = commentsKey;
             Sources = Array.AsReadOnly(sources);
+            HardwareVerifications = Array.AsReadOnly(hardwareVerifications);
             SourceName = sources[0].DisplayName;
             SourceUrl = sources[0].Url;
         }
@@ -42,6 +50,18 @@ namespace BatteryBuddy.Core.Providers
         }
     }
 
+    public sealed class DeviceCatalogHardwareVerification
+    {
+        public string Model { get; }
+        public string Url { get; }
+
+        internal DeviceCatalogHardwareVerification(string model, string url)
+        {
+            Model = model;
+            Url = url;
+        }
+    }
+
     public sealed class CustomPollingProfile
     {
         public string ProtocolId { get; }
@@ -59,11 +79,15 @@ namespace BatteryBuddy.Core.Providers
         public bool ExactFeatureLength { get; }
         public string ReaderId { get; }
         public byte? ReportId { get; }
+        public string ProductName { get; }
+        public byte? FeatureReportId { get; }
+        public bool RequireUniqueReportIds { get; }
 
         internal CustomPollingProfile(string protocolId, ushort vendorId, ushort? productId, ushort? usagePage,
             ushort? usage, int inputLength, int outputLength, int? featureLength = null, int? interfaceNumber = null,
             string deviceName = null, bool minimumReportLengths = false, byte? transactionId = null,
-            bool exactFeatureLength = false, string readerId = null, byte? reportId = null)
+            bool exactFeatureLength = false, string readerId = null, byte? reportId = null,
+            string productName = null, byte? featureReportId = null, bool requireUniqueReportIds = false)
         {
             ProtocolId = protocolId;
             VendorId = vendorId;
@@ -80,13 +104,18 @@ namespace BatteryBuddy.Core.Providers
             ExactFeatureLength = exactFeatureLength;
             ReaderId = readerId;
             ReportId = reportId;
+            ProductName = productName;
+            FeatureReportId = featureReportId;
+            RequireUniqueReportIds = requireUniqueReportIds;
         }
 
         public bool Matches(string protocolId, ushort vendorId, ushort productId, ushort usagePage, ushort usage,
             int inputLength, int outputLength, int featureLength = 0,
-            IReadOnlyList<byte> inputReportIds = null, IReadOnlyList<byte> outputReportIds = null)
+            IReadOnlyList<byte> inputReportIds = null, IReadOnlyList<byte> outputReportIds = null,
+            string productName = null, IReadOnlyList<byte> featureReportIds = null)
             => ProtocolId == protocolId && VendorId == vendorId && (!UsagePage.HasValue || UsagePage.Value == usagePage)
                 && (!ProductId.HasValue || ProductId.Value == productId) && (!Usage.HasValue || Usage.Value == usage)
+                && (ProductName == null || string.Equals(ProductName, productName?.Trim(), StringComparison.OrdinalIgnoreCase))
                 && (MinimumReportLengths
                     ? inputLength >= InputReportLength && outputLength >= OutputReportLength
                         && inputLength <= 1024 && outputLength <= 1024
@@ -95,7 +124,11 @@ namespace BatteryBuddy.Core.Providers
                     ? featureLength >= FeatureReportLength.Value && featureLength <= 1024
                     : FeatureReportLength.Value == featureLength))
                 && (!ReportId.HasValue || (inputReportIds?.Count == 1 && inputReportIds[0] == ReportId.Value
-                    && outputReportIds?.Count == 1 && outputReportIds[0] == ReportId.Value));
+                    && outputReportIds?.Count == 1 && outputReportIds[0] == ReportId.Value))
+                && (!FeatureReportId.HasValue || (featureReportIds?.Count == 1
+                    && featureReportIds[0] == FeatureReportId.Value))
+                && (!RequireUniqueReportIds || (inputReportIds?.Count == 1 && inputReportIds[0] != 0
+                    && outputReportIds?.Count == 1 && outputReportIds[0] != 0));
     }
 
     /// <summary>Implemented battery sources, not a list of individually verified device models.</summary>
@@ -139,6 +172,8 @@ namespace BatteryBuddy.Core.Providers
         public const string LogitechCenturion = "logitech-centurion";
         public const string AudezeMaxwell = "audeze-maxwell";
         public const string Teevolution = "teevolution-terra-pro";
+        public const string Vader5Pro = "flydigi-vader-5-pro";
+        public const string Eweadn = "eweadn-wireless-mice";
 
         private static readonly DeviceCatalogSource BatteryBuddySource =
             new DeviceCatalogSource("BatteryBuddy", "https://github.com/Dergln/BatteryBuddy-Public", null);
@@ -286,6 +321,16 @@ namespace BatteryBuddy.Core.Providers
                     new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
                     new DeviceCatalogSource("MCHOSE A5 web driver", "https://github.com/z750sasr/mchose-a5-pro-max-web-driver", "No license file stated"),
                     new DeviceCatalogSource("mchose-macos", "https://github.com/Klegus/mchose-macos", "MIT")),
+                new DeviceCatalogEntry(Vader5Pro, "Flydigi Vader 5 Pro", "2.4 GHz receiver",
+                    "devicelist.comment.coarse",
+                    new DeviceCatalogSource("Vader Battery Tray", "https://github.com/vermi5/VaderBatteryTray", "MIT")),
+                new DeviceCatalogEntry(Eweadn, "EWEADN wireless mice", "2.4 GHz receiver",
+                    "devicelist.comment.experimental",
+                    new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery/pull/352", "MIT"),
+                    new DeviceCatalogSource("EWEADN H2 Control", "https://github.com/MuhtasimJawad/EWEADN-H2-Control", "GPL-3.0"),
+                    new DeviceCatalogSource("USBDeviceBattery", "https://github.com/YeLuoYuXiang/USBDeviceBattery", "No license file stated"),
+                    new DeviceCatalogSource("MouseDock", "https://github.com/late-autumn-gif/MouseDock", "MIT"),
+                    new DeviceCatalogSource("MyFinder Device Battery", "https://github.com/wushuai0802/myfinder-device-battery/issues/315", "AGPL-3.0")),
                 new DeviceCatalogEntry(Lofree, "Lofree Hyzen (wireless only)", "2.4 GHz receiver",
                     "devicelist.comment.experimental",
                     new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
@@ -297,10 +342,14 @@ namespace BatteryBuddy.Core.Providers
                     new DeviceCatalogSource("Solaar", "https://github.com/pwr-Solaar/Solaar", "GPL-2.0-or-later")),
                 new DeviceCatalogEntry(Teevolution, "TEEvolution Terra Pro", "USB / receiver",
                     "devicelist.comment.receiverbuffer",
+                    new[] { new DeviceCatalogHardwareVerification("TEEvolution Terra Pro (USB)",
+                        "https://www.reddit.com/r/MouseReview/s/XUqP9TRg7v") },
                     new DeviceCatalogSource("OpenMouse mouse-protocol", "https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/teevolution", "AGPL-3.0-or-later"),
                     new DeviceCatalogSource("TeevoLink factory protocol reference", "https://github.com/xilu7/teevolink/tree/26e0734589c8e09f1757f2cb6c809645fe06f61e/src/sdk", "No license stated")),
                 new DeviceCatalogEntry(AudezeMaxwell, "Audeze Maxwell / Maxwell 2", "USB / receiver",
                     "devicelist.comment.maxwell",
+                    new[] { new DeviceCatalogHardwareVerification("Audeze Maxwell (USB receiver)",
+                        "https://www.reddit.com/r/MouseReview/s/XUqP9TRg7v") },
                     new DeviceCatalogSource("Halo Battery", "https://github.com/HeyOkay/HaloBattery", "MIT"),
                     new DeviceCatalogSource("HeadsetControl", "https://github.com/Sapd/HeadsetControl", "GPLv3"),
                     new DeviceCatalogSource("Maxwell firmware research", "https://github.com/kats1123/maxwell-firmware-research", "CC BY 4.0"))
@@ -365,7 +414,22 @@ namespace BatteryBuddy.Core.Providers
             profiles.Add(new CustomPollingProfile(MchoseRealtek, 0x3837, 0x100B, 0xFF01, 1, 0, 0, 65,
                 interfaceNumber: 2, deviceName: "MCHOSE A7 V2 Ultra", minimumReportLengths: true));
             profiles.Add(new CustomPollingProfile(MchoseG7, 0xA8A5, 0x2255, 0xFF01, 0x10, 10, 65,
-                deviceName: "MCHOSE G7", minimumReportLengths: true));
+                deviceName: "MCHOSE G7", minimumReportLengths: true, productName: "YJX-CHIP"));
+            profiles.Add(new CustomPollingProfile(Vader5Pro, 0x37D7, 0x2401, 0xFFA0, 0x0001, 32, 32,
+                interfaceNumber: 1, deviceName: "Flydigi Vader 5 Pro", reportId: 0));
+            profiles.Add(new CustomPollingProfile(Eweadn, 0x089D, 0x062F, 0xFF01, 0x0010, 33, 33,
+                interfaceNumber: 2, deviceName: "EWEADN H2 / S9 receiver", reportId: 0));
+            profiles.Add(new CustomPollingProfile(Eweadn, 0xA8A5, 0x2255, 0xFF01, 0x0010, 65, 65,
+                deviceName: "EWEADN A7", reportId: 0, productName: "EWEADN A7"));
+            profiles.Add(new CustomPollingProfile(Eweadn, 0xA8A5, 0x2255, 0xFF01, 0x0010, 65, 65,
+                deviceName: "EWEADN A7 Pro", reportId: 0, productName: "EWEADN A7Pro"));
+            profiles.Add(new CustomPollingProfile(Eweadn, 0xA8A5, 0x2255, 0xFF01, 0x0010, 65, 65,
+                interfaceNumber: 2, deviceName: "EWEADN X23SE", productName: "EWEADN X23SE",
+                requireUniqueReportIds: true));
+            profiles.Add(new CustomPollingProfile(Eweadn, 0x372E, 0x1026, 0xFF00, 0x0001, 0, 0, 64,
+                deviceName: "EWEADN S9 Pro 8K", exactFeatureLength: true, featureReportId: 3));
+            profiles.Add(new CustomPollingProfile(Eweadn, 0x372E, 0x1026, 0xFF06, 0x0001, 0, 0, 64,
+                deviceName: "EWEADN S9 Pro 8K", exactFeatureLength: true, featureReportId: 3));
             Feature(MchoseA5, 0x2023, new ushort[] { 0xF013, 0xF015, 0xF019 });
             profiles.Add(new CustomPollingProfile(Lofree, 0x388D, 0x0025, 0xFF1C, 0x92, 32, 32,
                 deviceName: "Lofree Hyzen", minimumReportLengths: true));
@@ -492,10 +556,14 @@ namespace BatteryBuddy.Core.Providers
 
         /// <summary>Matches an explicitly allowlisted protocol and HID collection.</summary>
         public static bool AllowsCustomPolling(string protocolId, ushort vendorId, ushort productId, ushort usagePage,
-            ushort usage, int inputReportLength, int outputReportLength)
+            ushort usage, int inputReportLength, int outputReportLength, int featureReportLength = 0,
+            IReadOnlyList<byte> inputReportIds = null, IReadOnlyList<byte> outputReportIds = null,
+            string productName = null, IReadOnlyList<byte> featureReportIds = null)
         {
             foreach (var profile in Profiles)
-                if (profile.Matches(protocolId, vendorId, productId, usagePage, usage, inputReportLength, outputReportLength))
+                if (profile.Matches(protocolId, vendorId, productId, usagePage, usage, inputReportLength,
+                    outputReportLength, featureReportLength, inputReportIds, outputReportIds, productName,
+                    featureReportIds))
                     return true;
             return false;
         }

@@ -18,6 +18,8 @@ namespace BatteryBuddy.Providers.Native
         public int FeatureReportLength { get; set; }
         public byte[] InputReportIds { get; set; }
         public byte[] OutputReportIds { get; set; }
+        public byte[] FeatureReportIds { get; set; }
+        public string ProductName { get; set; }
     }
 
     /// <summary>Schnittstelle für den Datenaustausch mit einem HID-Gerät. Als Interface, damit Tests ein Fake-Gerät nutzen können.</summary>
@@ -100,6 +102,8 @@ namespace BatteryBuddy.Providers.Native
         [DllImport("hid.dll", SetLastError = true)] private static extern bool HidD_GetAttributes(SafeFileHandle handle, ref HIDD_ATTRIBUTES attributes);
         [DllImport("hid.dll", SetLastError = true)] private static extern bool HidD_GetPreparsedData(SafeFileHandle handle, out IntPtr preparsedData);
         [DllImport("hid.dll", SetLastError = true)] private static extern bool HidD_FreePreparsedData(IntPtr preparsedData);
+        [DllImport("hid.dll", EntryPoint = "HidD_GetProductString", SetLastError = true)]
+        private static extern bool HidD_GetProductString(SafeFileHandle handle, IntPtr buffer, int bufferLength);
         [DllImport("hid.dll")] private static extern int HidP_GetCaps(IntPtr preparsedData, out HIDP_CAPS capabilities);
         [DllImport("hid.dll", SetLastError = true)] private static extern bool HidD_FlushQueue(SafeFileHandle handle);
 
@@ -218,6 +222,8 @@ namespace BatteryBuddy.Providers.Native
                         OutputReportLength = caps.OutputReportByteLength,
                         FeatureReportLength = caps.FeatureReportByteLength
                     };
+                    if (attrs.VendorID == 0xA8A5 && attrs.ProductID == 0x2255)
+                        info.ProductName = ReadProductString(handle);
                     if (TeevolutionBatteryProtocol.HasKnownIdentity(info))
                     {
                         info.InputReportIds = HidReportCapabilities.Read(preparsed, 0,
@@ -225,12 +231,53 @@ namespace BatteryBuddy.Providers.Native
                         info.OutputReportIds = HidReportCapabilities.Read(preparsed, 1,
                             caps.NumberOutputButtonCaps, caps.NumberOutputValueCaps);
                     }
+                    else if (NeedsBatteryReportIds(info))
+                    {
+                        info.InputReportIds = HidReportCapabilities.Read(preparsed, 0,
+                            caps.NumberInputButtonCaps, caps.NumberInputValueCaps);
+                        info.OutputReportIds = HidReportCapabilities.Read(preparsed, 1,
+                            caps.NumberOutputButtonCaps, caps.NumberOutputValueCaps);
+                        info.FeatureReportIds = HidReportCapabilities.Read(preparsed, 2,
+                            caps.NumberFeatureButtonCaps, caps.NumberFeatureValueCaps);
+                    }
                     return info;
                 }
                 finally
                 {
                     HidD_FreePreparsedData(preparsed);
                 }
+            }
+        }
+
+        private static bool NeedsBatteryReportIds(HidInterfaceInfo info)
+            => (info.VendorId == 0x37D7 && info.ProductId == 0x2401
+                    && info.UsagePage == 0xFFA0 && info.Usage == 0x0001
+                    && info.InputReportLength == 32 && info.OutputReportLength == 32)
+                || (info.VendorId == 0x089D && info.ProductId == 0x062F
+                    && info.UsagePage == 0xFF01 && info.Usage == 0x0010
+                    && info.InputReportLength == 33 && info.OutputReportLength == 33)
+                || (info.VendorId == 0xA8A5 && info.ProductId == 0x2255
+                    && info.UsagePage == 0xFF01 && info.Usage == 0x0010
+                    && info.InputReportLength == 65 && info.OutputReportLength == 65)
+                || (info.VendorId == 0x372E && info.ProductId == 0x1026
+                    && (info.UsagePage == 0xFF00 || info.UsagePage == 0xFF06)
+                    && info.Usage == 0x0001 && info.FeatureReportLength == 64);
+
+        private static string ReadProductString(SafeFileHandle handle)
+        {
+            const int bufferLength = 512;
+            var buffer = Marshal.AllocHGlobal(bufferLength);
+            try
+            {
+                for (var index = 0; index < bufferLength; index++)
+                    Marshal.WriteByte(buffer, index, 0);
+                if (!HidD_GetProductString(handle, buffer, bufferLength))
+                    return null;
+                return Marshal.PtrToStringUni(buffer)?.Trim();
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
             }
         }
 

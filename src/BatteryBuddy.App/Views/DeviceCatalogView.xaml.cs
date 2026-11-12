@@ -16,12 +16,15 @@ namespace BatteryBuddy.App.Views
         public string Name { get; set; }
         public string Connection { get; set; }
         public string Verification { get; set; }
+        public IReadOnlyList<DeviceCatalogHardwareVerification> HardwareVerifications { get; set; }
         public string SourceName { get; set; }
         public string SourceUrl { get; set; }
         public IReadOnlyList<DeviceCatalogSource> Sources { get; set; }
         public string Comments { get; set; }
         public string Contributions => string.Join(", ", Sources.Select(source => source.DisplayName));
-        public string Summary => string.Join(", ", Name, Connection, Verification,
+        public string VerificationSummary => HardwareVerifications.Count == 0
+            ? Verification : string.Join(", ", HardwareVerifications.Select(verification => verification.Model));
+        public string Summary => string.Join(", ", Name, Connection, VerificationSummary,
             Contributions, Comments);
     }
 
@@ -46,7 +49,8 @@ namespace BatteryBuddy.App.Views
             {
                 Name = e.Name,
                 Connection = e.Connection,
-                Verification = Loc.Get("devicelist.unverified"),
+                Verification = e.HardwareVerifications.Count == 0 ? Loc.Get("devicelist.unverified") : string.Empty,
+                HardwareVerifications = e.HardwareVerifications,
                 SourceName = e.SourceName,
                 SourceUrl = e.SourceUrl,
                 Sources = e.Sources,
@@ -97,7 +101,7 @@ namespace BatteryBuddy.App.Views
             {
                 case nameof(DeviceCatalogRow.Name): return row.Name;
                 case nameof(DeviceCatalogRow.Connection): return row.Connection;
-                case nameof(DeviceCatalogRow.Verification): return row.Verification;
+                case nameof(DeviceCatalogRow.Verification): return row.VerificationSummary;
                 case nameof(DeviceCatalogRow.Contributions): return row.Contributions;
                 case nameof(DeviceCatalogRow.Comments): return row.Comments;
                 default: throw new InvalidOperationException("Unknown DeviceList sort column.");
