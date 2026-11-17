@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Riċevitur mingħajr fili (dongle USB) jista' j
 devicebuddy.reason.UnknownXInputBattery=Windows jagħraf dan il-kontrollur, iżda l-interfaċċa XInput tiegħu ma tipprovdix informazzjoni utli dwar il-batterija. Ipprova mod ieħor ta' konnessjoni appoġġjat jew iċċekkja l-gwida tal-manifattur dwar id-drajvers u l-firmware. It-tip ta' konnessjoni mhux dejjem jista' jiġi ddeterminat minn XInput biss.
 devicebuddy.reason.BatteryQueryFailed=Windows jagħraf dan il-kontrollur, iżda t-talba għall-informazzjoni tal-batterija falliet. Dan ma jfissirx li l-kontrollur m'għandux batterija. Ipprova Aġġorna waqt li l-kontrollur ikun attiv, erġa' qabbdu, jew ipprova mod ieħor ta' konnessjoni appoġġjat.
 
-devicelist.intro=Il-lista turi familji ta' protokolli appoġġjati, mhux mudelli verifikati individwalment. Apparati kompatibbli oħra jistgħu jaħdmu wkoll.
+devicelist.intro=Protokoli appoġġjati u dispożittivi testjati mingħajr dejta tal-batterija. Iċċekkja l-istatus u l-kummenti ta' kull ringiela; dispożittivi kompatibbli mhux elenkati jistgħu jaħdmu wkoll.
 devicelist.connection=Konnessjoni
 devicelist.verified=Ivverifikat fuq il-ħardwer
 devicelist.unverified=Mudelli mhux ivverifikati individwalment
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Esperimentali; mhux ittestjat fuq apparat reali f
 devicelist.comment.maxwell=Esperimentali. Ir-riċevitur konness jista' jżomm l-aħħar livell tal-batterija wara li l-headset jinqata'. L-istat ta' ċċarġjar mhux disponibbli.
 devicelist.comment.mixed=Esperimentali; mhux ittestjat fuq apparat reali f'BatteryBuddy. Xi mudelli jirrapportaw livelli approssimattivi tal-batterija jew l-ebda stat ta' ċċarġjar.
 devicelist.comment.logitechvoltage=Xi mudelli jistmaw il-perċentwal tal-batterija mill-vultaġġ. Jekk l-apparat jieqaf jirrispondi (pereżempju, jidħol fil-modalità ta' rqad jew jinqata' waqt li r-riċevitur jibqa' konness), l-aħħar qari tiegħu jinżamm sa tliet sigħat.
+devicelist.noBatteryData=Testjat: l-ebda dejta tal-batterija
+devicelist.comment.cherryStream=M'hemmx talba appoġġjata għall-istat tal-batterija. Twissija ta' batterija baxxa permezz tal-LEDs tad-dispożittiv.

@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Một bộ thu phát không dây (USB dongle) c
 devicebuddy.reason.UnknownXInputBattery=Windows phát hiện bộ điều khiển này, nhưng giao diện XInput của nó không cung cấp thông tin pin hợp lệ. Hãy thử chế độ kết nối được hỗ trợ khác, hoặc kiểm tra hướng dẫn về trình điều khiển và firmware của nhà sản xuất. Loại kết nối không phải lúc nào cũng có thể xác định chỉ từ XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows phát hiện thiết bị này, nhưng việc truy vấn pin đã thất bại. Điều này không có nghĩa là thiết bị không có pin. Hãy thử Làm mới khi thiết bị đang hoạt động, kết nối lại nó, hoặc thử chế độ kết nối được hỗ trợ khác.
 
-devicelist.intro=Danh sách này hiển thị các nhóm giao thức được hỗ trợ, không phải từng mẫu đã được kiểm chứng. Các thiết bị tương thích khác cũng có thể hoạt động.
+devicelist.intro=Các giao thức được hỗ trợ và thiết bị đã kiểm tra không có dữ liệu pin. Kiểm tra trạng thái và ghi chú của từng dòng; các thiết bị tương thích không được liệt kê cũng có thể hoạt động.
 devicelist.connection=Kết nối
 devicelist.verified=Đã kiểm chứng trên phần cứng
 devicelist.unverified=Chưa kiểm chứng từng mẫu
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Thử nghiệm; chưa được kiểm tra phần 
 devicelist.comment.maxwell=Thử nghiệm. Một bộ thu nhận được kết nối có thể giữ mức pin cuối cùng sau khi tai nghe ngắt kết nối. Trạng thái sạc không khả dụng.
 devicelist.comment.mixed=Thử nghiệm; chưa được kiểm tra phần cứng trong BatteryBuddy. Một số mẫu báo cáo mức pin gần đúng hoặc không có trạng thái sạc.
 devicelist.comment.logitechvoltage=Một số mẫu ước tính phần trăm pin từ điện áp. Nếu thiết bị ngừng phản hồi (ví dụ: ngủ hoặc ngắt kết nối trong khi bộ thu nhận của nó vẫn được kết nối), lần đọc cuối cùng của nó được giữ trong tối đa ba giờ.
+devicelist.noBatteryData=Đã kiểm tra: không có dữ liệu pin
+devicelist.comment.cherryStream=Không hỗ trợ truy vấn pin. Cảnh báo pin yếu qua đèn LED thiết bị.

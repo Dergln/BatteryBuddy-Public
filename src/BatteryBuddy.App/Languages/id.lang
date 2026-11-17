@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Penerima nirkabel (dongle USB) dapat muncul di 
 devicebuddy.reason.UnknownXInputBattery=Windows mendeteksi pengontrol ini, tetapi antarmuka XInput tidak menyediakan informasi baterai yang dapat digunakan. Coba mode koneksi lain yang didukung, atau periksa panduan driver dan firmware dari produsen. Jenis koneksi tidak selalu dapat ditentukan hanya dari XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows mendeteksi pengontrol ini, tetapi permintaan informasi baterai gagal. Ini tidak berarti pengontrol tidak memiliki baterai. Coba klik Segarkan saat pengontrol aktif, sambungkan ulang, atau gunakan mode koneksi lain yang didukung.
 
-devicelist.intro=Daftar ini menunjukkan keluarga protokol yang didukung, bukan model yang diverifikasi satu per satu. Perangkat kompatibel lain juga mungkin berfungsi.
+devicelist.intro=Protokol yang didukung dan perangkat yang diuji tanpa data baterai. Periksa status dan komentar setiap baris; perangkat kompatibel yang tidak tercantum mungkin juga berfungsi.
 devicelist.connection=Koneksi
 devicelist.verified=Diverifikasi pada perangkat
 devicelist.unverified=Model belum diverifikasi satu per satu
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Eksperimental; belum diuji secara perangkat keras
 devicelist.comment.maxwell=Eksperimental. Penerima yang terhubung mungkin mempertahankan tingkat baterai terakhir setelah headset terputus. Status pengisian daya tidak tersedia.
 devicelist.comment.mixed=Eksperimental; belum diuji secara perangkat keras di BatteryBuddy. Beberapa model melaporkan tingkat baterai perkiraan atau tidak memiliki status pengisian daya.
 devicelist.comment.logitechvoltage=Beberapa model memperkirakan persentase baterai dari tegangan. Jika perangkat berhenti merespons (misalnya, tertidur atau terputus sementara penerima tetap terhubung), pembacaan terakhirnya disimpan hingga tiga jam.
+devicelist.noBatteryData=Diuji: tidak ada data baterai
+devicelist.comment.cherryStream=Tidak ada kueri baterai yang didukung. Peringatan baterai rendah melalui LED perangkat.

@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Un ricevitore wireless (dongle USB) può presen
 devicebuddy.reason.UnknownXInputBattery=Windows rileva questo controller, ma la sua interfaccia XInput non fornisce informazioni sulla batteria utilizzabili. Prova un'altra modalità di connessione supportata o consulta le indicazioni del produttore su driver e firmware. Il tipo di connessione non può sempre essere determinato solo tramite XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows rileva questo controller, ma la richiesta di stato della batteria è fallita. Ciò non significa che il controller sia privo di batteria. Prova ad Aggiornare mentre il controller è attivo, riconnettilo o prova un'altra modalità di connessione supportata.
 
-devicelist.intro=L'elenco mostra le famiglie di protocolli supportate, non modelli verificati singolarmente. Anche altri dispositivi compatibili potrebbero funzionare.
+devicelist.intro=Protocolli supportati e dispositivi testati senza dati sulla batteria. Controlla lo stato e i commenti di ogni riga; anche i dispositivi compatibili non elencati potrebbero funzionare.
 devicelist.connection=Connessione
 devicelist.verified=Verificato su hardware
 devicelist.unverified=Modelli non verificati singolarmente
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Sperimentale; non testato con l'hardware in Batte
 devicelist.comment.maxwell=Sperimentale. Un ricevitore connesso può mantenere l'ultimo livello della batteria dopo che le cuffie si disconnettono. Lo stato di carica non è disponibile.
 devicelist.comment.mixed=Sperimentale; non testato con l'hardware in BatteryBuddy. Alcuni modelli riportano livelli di batteria approssimativi o nessun stato di carica.
 devicelist.comment.logitechvoltage=Alcuni modelli stimano la percentuale della batteria dalla tensione. Se il dispositivo smette di rispondere (ad esempio, in modalità di sospensione o disconnesso mentre il suo ricevitore rimane connesso), l'ultima lettura viene mantenuta per fino a tre ore.
+devicelist.noBatteryData=Testato: nessun dato sulla batteria
+devicelist.comment.cherryStream=Nessuna query della batteria supportata. Avviso di batteria scarica tramite LED del dispositivo.

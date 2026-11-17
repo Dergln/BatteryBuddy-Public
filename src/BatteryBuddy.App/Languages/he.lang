@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=מקלט אלחוטי (USB dongle) עשוי ל�
 devicebuddy.reason.UnknownXInputBattery=Windows מזהה את הבקר, אך ממשק XInput אינו מספק מידע סוללה ניתן לשימוש. נסה מצב חיבור נתמך אחר, או בדוק את הנחיות היצרן לדרייבר ולfirmware. סוג החיבור לא תמיד ניתן לקביעה מ-XInput בלבד.
 devicebuddy.reason.BatteryQueryFailed=Windows מזהה את הבקר, אך שאילתת הסוללה נכשלה. זה לא אומר שהבקר חסר סוללה. נסה ללחוץ על רענן כשהבקר ער, חבר אותו מחדש, או נסה מצב חיבור נתמך אחר.
 
-devicelist.intro=רשימה זו מציגה משפחות פרוטוקולים נתמכות, ולא דגמים שנבדקו בנפרד. ייתכן שגם התקנים תואמים אחרים יעבדו.
+devicelist.intro=פרוטוקולים נתמכים ומכשירים שנבדקו ללא נתוני סוללה. בדוק את המצב וההערות בכל שורה; גם מכשירים תואמים שאינם מופיעים ברשימה עשויים לפעול.
 devicelist.connection=חיבור
 devicelist.verified=נבדק בחומרה
 devicelist.unverified=הדגמים לא נבדקו בנפרד
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=ניסויי; לא נבדק באמצעות חומ
 devicelist.comment.maxwell=ניסויי. קולט מחובר עשוי לשמור על רמת הסוללה האחרונה לאחר ניתוק האוזניות. מצב הטעינה אינו זמין.
 devicelist.comment.mixed=ניסויי; לא נבדק באמצעות חומרה ב-BatteryBuddy. דגמים מסוימים מדווחים על רמות סוללה משוערות או ללא מצב טעינה.
 devicelist.comment.logitechvoltage=דגמים מסוימים מעריכים את אחוז הסוללה על סמך המתח. אם המכשיר מפסיק להגיב (למשל, במצב שינה או מנותק בעוד הקולט נשאר מחובר), הקריאה האחרונה שלו נשמרת עד שלוש שעות.
+devicelist.noBatteryData=נבדק: אין נתוני סוללה
+devicelist.comment.cherryStream=אין שאילתת סוללה נתמכת. התראה על סוללה חלשה באמצעות נורות LED במכשיר.

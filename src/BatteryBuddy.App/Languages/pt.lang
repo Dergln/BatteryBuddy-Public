@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Um receptor sem fio (dongle USB) pode se aprese
 devicebuddy.reason.UnknownXInputBattery=O Windows detecta este controle, mas sua interface XInput não fornece informações de bateria utilizáveis. Tente outro modo de conexão suportado ou verifique o guia do driver e firmware do fabricante. O tipo de conexão nem sempre pode ser determinado apenas pelo XInput.
 devicebuddy.reason.BatteryQueryFailed=O Windows detecta este controle, mas a consulta da bateria falhou. Isso não significa que o controle não tenha bateria. Tente Atualizar enquanto o controle estiver ligado, reconecte-o ou tente outro modo de conexão suportado.
 
-devicelist.intro=Esta lista mostra famílias de protocolos suportadas, não modelos verificados individualmente. Outros dispositivos compatíveis também podem funcionar.
+devicelist.intro=Protocolos suportados e dispositivos testados sem dados de bateria. Verifique o status e os comentários de cada linha; dispositivos compatíveis não listados também podem funcionar.
 devicelist.connection=Ligação
 devicelist.verified=Verificado no hardware
 devicelist.unverified=Modelos não verificados individualmente
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Experimental; não testado em hardware no Battery
 devicelist.comment.maxwell=Experimental. Um receptor conectado pode reter o último nível de bateria após o headset se desconectar. O estado de carregamento está indisponível.
 devicelist.comment.mixed=Experimental; não testado em hardware no BatteryBuddy. Alguns modelos reportam níveis de bateria aproximados ou nenhum estado de carregamento.
 devicelist.comment.logitechvoltage=Alguns modelos estimam a porcentagem da bateria a partir da voltagem. Se o dispositivo parar de responder (por exemplo, em modo de suspensão ou desconectado enquanto seu receptor permanece conectado), sua última leitura é mantida por até três horas.
+devicelist.noBatteryData=Testado: sem dados de bateria
+devicelist.comment.cherryStream=Sem consulta de bateria suportada. Aviso de bateria fraca via LEDs do dispositivo.

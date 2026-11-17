@@ -49,7 +49,8 @@ namespace BatteryBuddy.App.Views
             {
                 Name = e.Name,
                 Connection = e.Connection,
-                Verification = e.HardwareVerifications.Count == 0 ? Loc.Get("devicelist.unverified") : string.Empty,
+                Verification = e.IsDiagnosticOnly ? Loc.Get("devicelist.noBatteryData")
+                    : e.HardwareVerifications.Count == 0 ? Loc.Get("devicelist.unverified") : string.Empty,
                 HardwareVerifications = e.HardwareVerifications,
                 SourceName = e.SourceName,
                 SourceUrl = e.SourceUrl,

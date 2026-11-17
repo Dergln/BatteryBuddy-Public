@@ -11,6 +11,7 @@ using System.Windows.Automation;
 using System.Windows.Media;
 using System.Windows.Threading;
 using System.Windows.Input;
+using System.Windows.Interop;
 using BatteryBuddy.App.Services;
 using BatteryBuddy.Core.Logic;
 using BatteryBuddy.Core.Models;
@@ -67,6 +68,8 @@ namespace BatteryBuddy.App.Views
         public SettingsWindow(AppHost host, Action languageChanged)
         {
             InitializeComponent();
+            SourceInitialized += (s, e) => FitToCurrentWorkArea();
+            Loaded += (s, e) => FitToCurrentWorkArea();
             _savedStatusTimer.Tick += (s, e) => ShowStatus(string.Empty);
             ThemeService.StyleTitleBar(this);
             // Four numeric parts match the executable's file-version field shown in Windows properties.
@@ -117,6 +120,38 @@ namespace BatteryBuddy.App.Views
         }
 
         private void OnSnapshot(object sender, EventArgs e) => ReloadRows();
+
+        protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
+        {
+            base.OnDpiChanged(oldDpi, newDpi);
+            // WPF applies the suggested native bounds after this callback.
+            if (IsLoaded)
+                Dispatcher.BeginInvoke(new Action(FitToCurrentWorkArea), DispatcherPriority.Loaded);
+        }
+
+        private void FitToCurrentWorkArea()
+        {
+            var handle = new WindowInteropHelper(this).Handle;
+            var source = HwndSource.FromHwnd(handle);
+            if (source?.CompositionTarget == null)
+                return; // A queued DPI callback can outlive the window.
+            var area = System.Windows.Forms.Screen.FromHandle(handle).WorkingArea;
+            FitToWorkArea(new MatrixTransform(source.CompositionTarget.TransformFromDevice).TransformBounds(
+                new Rect(area.X, area.Y, area.Width, area.Height)));
+        }
+
+        internal void FitToWorkArea(Rect area)
+        {
+            // Window dimensions include the title bar; monitor bounds arrive in physical pixels.
+            MinWidth = Math.Min(600, area.Width);
+            MinHeight = Math.Min(560, area.Height);
+            Width = Math.Max(MinWidth, Math.Min(Width, area.Width));
+            Height = Math.Max(MinHeight, Math.Min(Height, area.Height));
+            var left = double.IsNaN(Left) ? area.Left + (area.Width - Width) / 2 : Left;
+            var top = double.IsNaN(Top) ? area.Top + (area.Height - Height) / 2 : Top;
+            Left = Math.Max(area.Left, Math.Min(left, area.Right - Width));
+            Top = Math.Max(area.Top, Math.Min(top, area.Bottom - Height));
+        }
 
         private void OnThemeChanged(object sender, EventArgs e)
         {

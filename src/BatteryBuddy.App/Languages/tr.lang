@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Kablosuz bir alıcı (USB dongle), Windows'a sa
 devicebuddy.reason.UnknownXInputBattery=Windows bu kontrolörü algılıyor, ancak XInput arayüzü kullanılabilir pil bilgisi sağlamıyor. Başka bir desteklenen bağlantı modunu deneyin veya üreticinin sürücü ve donanım yazılımı rehberine bakın. Bağlantı türü her zaman yalnızca XInput'tan belirlenemez.
 devicebuddy.reason.BatteryQueryFailed=Windows bu kontrolörü algılıyor, ancak pil sorgusu başarısız oldu. Bu, kontrolörün pili olmadığı anlamına gelmez. Kontrolör uyandığı sırada Yenile'ye basın, yeniden bağlayın veya başka bir desteklenen bağlantı modunu deneyin.
 
-devicelist.intro=Bu liste, tek tek doğrulanmış modelleri değil, desteklenen protokol ailelerini gösterir. Diğer uyumlu cihazlar da çalışabilir.
+devicelist.intro=Desteklenen protokoller ve pil verisi olmayan test edilmiş cihazlar. Her satırın durumunu ve yorumlarını kontrol edin; listelenmeyen uyumlu cihazlar da çalışabilir.
 devicelist.connection=Bağlantı
 devicelist.verified=Donanımda doğrulandı
 devicelist.unverified=Modeller tek tek doğrulanmadı
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Deneysel; BatteryBuddy'de donanım testi yapılma
 devicelist.comment.maxwell=Deneysel. Bağlı bir alıcı, kulaklık bağlantısı kesildikten sonra son pil seviyesini tutabilir. Şarj durumu kullanılamaz.
 devicelist.comment.mixed=Deneysel; BatteryBuddy'de donanım testi yapılmamıştır. Bazı modeller yaklaşık pil seviyeleri bildirir veya şarj durumunu bildirmez.
 devicelist.comment.logitechvoltage=Bazı modeller pil yüzdesini voltajdan tahmin eder. Cihaz yanıt vermeyi durdurursa (örneğin, uykuya dalarsa veya alıcısı bağlıyken bağlantısı kesilirse), son okuması üç saate kadar tutulur.
+devicelist.noBatteryData=Test edildi: pil verisi yok
+devicelist.comment.cherryStream=Desteklenen pil sorgusu yok. Düşük pil uyarısı cihaz LED'leri aracılığıyla verilir.

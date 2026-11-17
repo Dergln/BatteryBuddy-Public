@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Langaton USB-vastaanotin voi näkyä Windowsill
 devicebuddy.reason.UnknownXInputBattery=Windows tunnistaa tämän ohjaimen, mutta sen XInput-liitäntä ei tarjoa käyttökelpoista akkutietoa. Kokeile toista tuettua yhteystapaa tai tarkista valmistajan ohjain- ja laiteohjelmistoneuvot. Yhteystyyppiä ei aina voida määrittää pelkän XInputin perusteella.
 devicebuddy.reason.BatteryQueryFailed=Windows tunnistaa tämän ohjaimen, mutta akun tilan kysely epäonnistui. Tämä ei tarkoita, että laitteessa ei olisi akkua. Kokeile painaa Päivitä, kun ohjain on hereillä, yhdistä se uudelleen tai kokeile toista tuettua yhteystapaa.
 
-devicelist.intro=Luettelo näyttää tuetut protokollaperheet, ei erikseen testattuja malleja. Myös muut yhteensopivat laitteet voivat toimia.
+devicelist.intro=Tuetut protokollat ja testatut laitteet, joilta ei saatu akkutietoja. Tarkista kunkin rivin tila ja kommentit; myös listalla mainitsemattomat yhteensopivat laitteet voivat toimia.
 devicelist.connection=Yhteys
 devicelist.verified=Testattu laitteella
 devicelist.unverified=Malleja ei ole testattu erikseen
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Kokeellinen; ei laitetestattu BatteryBuddyssa. La
 devicelist.comment.maxwell=Kokeellinen. Yhdistetty vastaanotin voi säilyttää viimeisen akun tason, kun kuulokkeet irtoavat. Lataustila ei ole saatavilla.
 devicelist.comment.mixed=Kokeellinen; ei laitetestattu BatteryBuddyssa. Jotkut mallit raportoivat likimääräisiä akun tasoa tai lataustila ei ole saatavilla.
 devicelist.comment.logitechvoltage=Jotkut mallit arvioivat akun prosenttiosuuden jännitteen perusteella. Jos laite lakkaa vastaamasta (esim. unetila tai irrotettu, kun vastaanotin on edelleen yhdistetty), sen viimeisin lukema säilytetään enintään kolme tuntia.
+devicelist.noBatteryData=Testattu: ei akkutietoja
+devicelist.comment.cherryStream=Ei tuettua akun tilan kyselyä. Matalan akun varoitus laitteen LED-valoilla.

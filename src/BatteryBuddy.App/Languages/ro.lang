@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Un receptor wireless (dongle USB) se poate prez
 devicebuddy.reason.UnknownXInputBattery=Windows detectează acest controller, dar interfața sa XInput nu oferă informații utilizabile despre baterie. Încearcă un alt mod de conexiune suportat sau verifică ghidul producătorului pentru drivere și firmware. Tipul de conexiune nu poate fi întotdeauna determinat doar din XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows detectează acest controller, dar interogarea bateriei a eșuat. Acest lucru nu înseamnă că controllerul nu are baterie. Încearcă Actualizează când controllerul este activ, reconectează-l sau încearcă un alt mod de conexiune suportat.
 
-devicelist.intro=Lista arată familiile de protocoale acceptate, nu modele verificate individual. Pot funcționa și alte dispozitive compatibile.
+devicelist.intro=Protocoale suportate și dispozitive testate fără date despre baterie. Verificați starea și comentariile fiecărui rând; dispozitivele compatibile neenumerate ar putea funcționa, de asemenea.
 devicelist.connection=Conexiune
 devicelist.verified=Verificat pe dispozitiv
 devicelist.unverified=Modelele nu sunt verificate individual
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Experimental; netestat pe hardware în BatteryBud
 devicelist.comment.maxwell=Experimental. Un receptor conectat poate păstra ultimul nivel al bateriei după deconectarea căștilor. Informațiile despre starea de încărcare nu sunt disponibile.
 devicelist.comment.mixed=Experimental; netestat pe hardware în BatteryBuddy. Unele modele raportează niveluri aproximative ale bateriei sau nu raportează starea de încărcare.
 devicelist.comment.logitechvoltage=Unele modele estimează procentul bateriei pe baza tensiunii. Dacă dispozitivul nu mai răspunde (de exemplu, este în repaus sau deconectat în timp ce receptorul rămâne conectat), ultima valoare este păstrată până la trei ore.
+devicelist.noBatteryData=Testat: fără date despre baterie
+devicelist.comment.cherryStream=Nicio interogare de baterie suportată. Avertisment de baterie slabă prin LED-urile dispozitivului.

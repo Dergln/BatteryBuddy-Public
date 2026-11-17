@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Brezžični sprejemnik (USB ključek) se lahko 
 devicebuddy.reason.UnknownXInputBattery=Windows zazna ta krmilnik, vendar njegov vmesnik XInput ne zagotavlja uporabnih podatkov o bateriji. Poskusite drug podprt način povezave ali preverite navodila proizvajalca za gonilnike in vdelano programsko opremo. Vrste povezave ni vedno mogoče določiti samo na podlagi XInputa.
 devicebuddy.reason.BatteryQueryFailed=Windows zazna ta krmilnik, vendar poizvedba o bateriji ni uspela. To ne pomeni, da krmilnik nima baterije. Poskusite z gumbom Osveži, ko je krmilnik aktiven, ga ponovno povežite ali poskusite z drugim podprtim načinom povezave.
 
-devicelist.intro=Seznam prikazuje podprte družine protokolov, ne posamezno preverjenih modelov. Delujejo lahko tudi druge združljive naprave.
+devicelist.intro=Podprti protokoli in preizkušene naprave brez podatkov o bateriji. Preverite stanje in opombe v vsaki vrstici; delujejo lahko tudi združljive naprave, ki niso na seznamu.
 devicelist.connection=Povezava
 devicelist.verified=Preverjeno na napravi
 devicelist.unverified=Modeli niso preverjeni posamično
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Eksperimentalno; ni strojno preizkušeno v Batter
 devicelist.comment.maxwell=Eksperimentalno. Povezani sprejemnik lahko po prekinitvi povezave slušalke ohrani zadnjo raven baterije. Stanje polnjenja ni na voljo.
 devicelist.comment.mixed=Eksperimentalno; ni strojno preizkušeno v BatteryBuddy. Nekateri modeli poročajo o približnih ravneh baterije ali nimajo stanja polnjenja.
 devicelist.comment.logitechvoltage=Nekateri modeli ocenjujejo odstotek baterije na podlagi napetosti. Če naprava preneha odzivati (npr. zaradi spanja ali prekinjene povezave, medtem ko je njen sprejemnik še vedno povezan), se njeno zadnje branje ohrani do treh ur.
+devicelist.noBatteryData=Preizkušeno: brez podatkov o bateriji
+devicelist.comment.cherryStream=Ni podprane poizvedbe o bateriji. Opozorilo o nizki bateriji prek LED lučk naprave.

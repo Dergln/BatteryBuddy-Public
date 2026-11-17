@@ -1,30 +1,28 @@
-# BatteryBuddy 1.0.16
+# BatteryBuddy 1.0.18
 
-## Experimental wireless-receiver support
+## High-DPI settings window
 
-- Adds native, battery-only receiver adapters for Flydigi Vader 5 Pro and
-  EWEADN H2/S9, A7/A7 Pro and S9 Pro 8K. A strictly profiled EWEADN X23SE
-  candidate is also included, but still needs a successful real-device response.
-- These protocols are experimental and have not been tested on BatteryBuddy
-  hardware. Vader's seven reported levels map to approximate percentages.
-  EWEADN A5 receiver support and unverified X23 aliases remain excluded.
-- Requests are limited to battery status; no pairing, configuration, lighting,
-  firmware or vendor runtime is involved. Exact profiles, source links, license
-  labels and limitations are listed in the [protocol catalog](docs/protocols.md).
-- The catalog contains 78 protocol families and 580 matching profiles; this is
-  not a count of individually verified devices. Relevant caveats are available
-  in all 38 interface languages.
+- Settings now fit the available monitor work area when opened and after DPI
+  changes, keeping the title bar, tabs and footer reachable.
+- Verified on a 3840 x 2160 display at 300% Windows scaling. The taskbar's
+  reserved space is respected.
 
-## DeviceList hardware confirmations
+## CHERRY STREAM DESKTOP diagnostic entry
 
-DeviceList now links to published BatteryBuddy success reports for the specific
-Audeze Maxwell USB-receiver and TEEvolution Terra Pro USB configurations. These
-reports do not verify other models or connections, including Maxwell 2.
+- DeviceList includes keyboard JD-85K, mouse JD-85M and receiver JD-85R,
+  USB ID **046A:0115**, clearly marked **Tested: no battery data**.
+- The devices provide local low-battery LED warnings. No supported battery
+  query is implemented; no guessed commands or fabricated readings are added.
+- This records the observed test result, not proof that proprietary battery
+  reporting is impossible. The compact status and notes are available in all
+  38 interface languages.
+- Existing supported protocols and polling profiles are unchanged. See the
+  [protocol catalog](docs/protocols.md) for sources and limitations.
 
 ## Install or update
 
 Windows 10 or Windows 11 with .NET Framework 4.8 enabled. Extract the entire
-`BatteryBuddy-1.0.16-windows.zip` and run `BatteryBuddy.exe`. No administrator rights
+`BatteryBuddy-1.0.18-windows.zip` and run `BatteryBuddy.exe`. No administrator rights
 are required. When updating, close BatteryBuddy and replace files in the same
 folder to preserve Windows tray visibility preferences.
 

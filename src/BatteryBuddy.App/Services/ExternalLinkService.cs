@@ -12,8 +12,8 @@ namespace BatteryBuddy.App.Services
         private static readonly string[] AllowedHosts =
         {
             "freesound.org", "www.flaticon.com", "creativecommons.org",
-            "github.com", "www.gnu.org", "commons.wikimedia.org", "www.heise.de", "www.youtube.com", "www.reddit.com", "www.paypal.com",
-            "mouse.xyz", "hyzen.lofree.tech", "support.amkette.com", "nacodex.yjx2012.com", "x1a11.yjx2012.com"
+            "github.com", "www.gnu.org", "commons.wikimedia.org", "www.heise.de", "www.youtube.com", "www.paypal.com",
+            "www.reddit.com", "mouse.xyz", "hyzen.lofree.tech", "support.amkette.com", "nacodex.yjx2012.com", "x1a11.yjx2012.com"
         };
 
         internal static bool IsAllowed(Uri uri)
