@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Bezvadu uztvērējs (USB adapteris) var Windows
 devicebuddy.reason.UnknownXInputBattery=Windows atpazīst šo kontrolieri, taču tā XInput saskarne nepiedāvā izmantojamu baterijas informāciju. Mēģiniet citu atbalstīto savienojuma režīmu vai pārbaudiet ražotāja draiveru un programmatūras norādījumus. Savienojuma veidu ne vienmēr var noteikt, izmantojot tikai XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows atpazīst šo kontrolieri, bet baterijas vaicājums neizdevās. Tas nenozīmē, ka kontrolierim nav baterijas. Mēģiniet nospiest pogu Atsvaidzināt, kamēr kontrolieris ir aktīvs, pārsavienojiet to vai izmēģiniet citu atbalstīto savienojuma režīmu.
 
-devicelist.intro=Sarakstā ir atbalstītās protokolu saimes, nevis atsevišķi pārbaudīti modeļi. Var darboties arī citas saderīgas ierīces.
+devicelist.intro=Atbalstītie protokoli un pārbaudītās ierīces bez baterijas datiem. Pārbaudiet katras rindas statusu un komentārus; sarakstā neiekļautas saderīgas ierīces var arī darboties.
 devicelist.connection=Savienojums
 devicelist.verified=Pārbaudīts ar ierīci
 devicelist.unverified=Modeļi nav pārbaudīti atsevišķi
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Eksperimentāls; nav testēts ar reālu ierīci B
 devicelist.comment.maxwell=Eksperimentāls. Savienots uztvērējs var saglabāt pēdējo baterijas līmeni pēc austiņu atvienošanas. Uzlādes stāvoklis nav pieejams.
 devicelist.comment.mixed=Eksperimentāls; nav testēts ar reālu ierīci BatteryBuddy. Daži modeļi ziņo aptuvenus baterijas līmeņus vai neziņo uzlādes stāvokli.
 devicelist.comment.logitechvoltage=Daži modeļi aprēķina baterijas procentuālo līmeni pēc sprieguma. Ja ierīce pārtrauc atbildēt (piemēram, ir miega režīmā vai atvienota, kamēr tās uztvērējs paliek savienots), tās pēdējais lasījums tiek saglabāts līdz trim stundām.
+devicelist.noBatteryData=Pārbaudīts: nav baterijas datu
+devicelist.comment.cherryStream=Nav atbalstīts baterijas līmeņa vaicājums. Zema baterijas līmeņa brīdinājums tiek rādīts ierīces LED indikatoros.

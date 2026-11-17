@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=무선 수신기(USB 동글)는 USB 케이블�
 devicebuddy.reason.UnknownXInputBattery=Windows가 이 컨트롤러를 감지했지만, XInput 인터페이스에서 사용 가능한 배터리 정보를 제공하지 않습니다. 다른 지원되는 연결 모드를 시도하거나, 제조사 드라이버 및 펌웨어 지침을 확인해 보세요. 연결 유형은 XInput만으로는 항상 파악할 수 없습니다.
 devicebuddy.reason.BatteryQueryFailed=Windows가 이 컨트롤러를 감지했지만 배터리 조회가 실패했습니다. 이것이 컨트롤러에 배터리가 없다는 의미는 아닙니다. 컨트롤러가 켜진 상태에서 새로 고침을 시도하거나, 다시 연결하거나, 다른 지원되는 연결 모드를 시도해 보세요.
 
-devicelist.intro=이 목록은 지원되는 프로토콜 계열을 표시하며, 개별 검증된 모델 목록이 아닙니다. 다른 호환 장치도 작동할 수 있습니다.
+devicelist.intro=지원되는 프로토콜 및 배터리 데이터가 없는 테스트된 장치. 각 행의 상태 및 주석을 확인하십시오. 목록에 없는 호환 장치도 작동할 수 있습니다.
 devicelist.connection=연결
 devicelist.verified=실제 장치에서 검증
 devicelist.unverified=모델별 검증 안 됨
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=실험적; BatteryBuddy에서 하드웨어 테스
 devicelist.comment.maxwell=실험적. 연결된 수신기는 헤드셋이 연결 해제된 후에도 마지막 배터리 수준을 유지할 수 있습니다. 충전 상태는 사용할 수 없습니다.
 devicelist.comment.mixed=실험적; BatteryBuddy에서 하드웨어 테스트를 거치지 않음. 일부 모델은 근사치 배터리 수준을 보고하거나 충전 상태가 없습니다.
 devicelist.comment.logitechvoltage=일부 모델은 전압으로부터 배터리 백분율을 추정합니다. 장치가 응답을 멈추면(예: 절전 모드 또는 수신기가 연결된 상태에서 연결 해제됨), 마지막 판독값이 최대 세 시간 동안 유지됩니다.
+devicelist.noBatteryData=테스트됨: 배터리 데이터 없음
+devicelist.comment.cherryStream=지원되는 배터리 쿼리가 없습니다. 저전력 경고는 장치 LED를 통해 표시됩니다.

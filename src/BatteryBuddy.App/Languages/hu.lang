@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Egy vezeték nélküli fogadó (USB dongle) úg
 devicebuddy.reason.UnknownXInputBattery=A Windows észleli ezt a vezérlőt, de az XInput-felülete nem szolgáltat használható akkumulátorinformációt. Próbáljon meg egy másik támogatott csatlakozási módot, vagy ellenőrizze a gyártó illesztőprogram- és firmware-útmutatását. A csatlakozás típusa nem mindig határozható meg kizárólag az XInput alapján.
 devicebuddy.reason.BatteryQueryFailed=A Windows észleli ezt a vezérlőt, de az akkumulátor-állapot lekérdezése sikertelen volt. Ez nem jelenti azt, hogy a vezérlőben nincs akkumulátor. Próbálja meg a Frissítés gombot, miközben a vezérlő ébren van, csatlakoztassa újra, vagy próbálkozzon egy másik támogatott csatlakozási móddal.
 
-devicelist.intro=A lista támogatott protokollcsaládokat mutat, nem egyenként ellenőrzött modelleket. Más kompatibilis eszközök is működhetnek.
+devicelist.intro=Támogatott protokollok és az akkumulátor-adatok nélküli tesztelt eszközök. Ellenőrizze az egyes sorok állapotát és megjegyzéseit; a nem felsorolt kompatibilis eszközök is működhetnek.
 devicelist.connection=Kapcsolat
 devicelist.verified=Hardveren ellenőrizve
 devicelist.unverified=A modellek nincsenek egyenként ellenőrizve
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Kísérleti; nem lett hardveresen tesztelve a Bat
 devicelist.comment.maxwell=Kísérleti. Egy csatlakoztatott vevőegység megőrizheti az utolsó akkumulátor-szintet, miután a fejhallgató levált. A töltési állapot nem elérhető.
 devicelist.comment.mixed=Kísérleti; nem lett hardveresen tesztelve a BatteryBuddy-ben. Egyes modellek csak hozzávetőleges akkumulátorszintet jeleznek, vagy nem jelzik a töltési állapotot.
 devicelist.comment.logitechvoltage=Egyes modellek az akkumulátor százalékát a feszültségből becsülik meg. Ha az eszköz nem válaszol (pl. alvó állapotban van vagy levált, miközben a vevőegység csatlakoztatva marad), az utolsó olvasatát legfeljebb három órán keresztül megőrzi.
+devicelist.noBatteryData=Tesztelve: nincs akkumulátor-adat
+devicelist.comment.cherryStream=Nincs támogatott akkumulátor-állapot lekérdezés. Alacsony töltöttségi szint figyelmeztetése az eszköz LED-jein keresztül.

@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Un récepteur sans fil (dongle USB) peut se pr�
 devicebuddy.reason.UnknownXInputBattery=Windows détecte ce contrôleur, mais son interface XInput ne fournit pas d'informations de batterie exploitables. Essayez un autre mode de connexion pris en charge ou consultez les conseils du fabricant concernant les pilotes et le micrologiciel. Le type de connexion ne peut pas toujours être déterminé uniquement par XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows détecte ce contrôleur, mais la requête de batterie a échoué. Cela ne signifie pas que le contrôleur n'a pas de batterie. Essayez d'Actualiser pendant que le contrôleur est éveillé, reconnectez-le ou essayez un autre mode de connexion pris en charge.
 
-devicelist.intro=Cette liste présente les familles de protocoles prises en charge, pas des modèles vérifiés individuellement. D'autres appareils compatibles peuvent aussi fonctionner.
+devicelist.intro=Protocoles pris en charge et appareils testés sans données de batterie. Consultez le statut et les commentaires de chaque ligne ; les appareils compatibles non répertoriés peuvent également fonctionner.
 devicelist.connection=Connexion
 devicelist.verified=Vérifié sur le matériel
 devicelist.unverified=Modèles non vérifiés individuellement
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Expérimental ; non testé matériellement dans B
 devicelist.comment.maxwell=Expérimental. Un récepteur connecté peut conserver le dernier niveau de batterie après la déconnexion du casque. L'état de charge n'est pas disponible.
 devicelist.comment.mixed=Expérimental ; non testé matériellement dans BatteryBuddy. Certains modèles indiquent des niveaux de batterie approximatifs ou aucun état de charge.
 devicelist.comment.logitechvoltage=Certains modèles estiment le pourcentage de batterie à partir de la tension. Si l'appareil cesse de répondre (par exemple, en veille ou déconnecté tandis que son récepteur reste connecté), sa dernière lecture est conservée pendant jusqu'à trois heures.
+devicelist.noBatteryData=Testé : aucune donnée de batterie
+devicelist.comment.cherryStream=Aucune requête de batterie prise en charge. Avertissement de batterie faible via les LEDs de l'appareil.

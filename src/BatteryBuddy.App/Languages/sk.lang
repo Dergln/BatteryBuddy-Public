@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Bezdrôtový prijímač (USB dongle) sa môže 
 devicebuddy.reason.UnknownXInputBattery=Windows detekoval tento ovládač, ale jeho rozhranie XInput neposkytuje použiteľné informácie o batérii. Skúste iný podporovaný režim pripojenia alebo si overte pokyny výrobcu k ovládačom a firmvéru. Typ pripojenia nie je vždy možné určiť len z XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows detekoval tento ovládač, ale dopyt na stav batérie zlyhal. Neznamená to, že by ovládač nemal batériu. Skúste Aktualizovať, keď je ovládač aktívny, znova ho pripojiť alebo vyskúšať iný podporovaný režim pripojenia.
 
-devicelist.intro=Zoznam uvádza podporované rodiny protokolov, nie jednotlivo overené modely. Fungovať môžu aj ďalšie kompatibilné zariadenia.
+devicelist.intro=Podporované protokoly a otestované zariadenia bez údajov o batérii. Skontrolujte stav a komentáre v jednotlivých riadkoch; aj neuvedené kompatibilné zariadenia môžu fungovať.
 devicelist.connection=Pripojenie
 devicelist.verified=Overené na zariadení
 devicelist.unverified=Modely nie sú jednotlivo overené
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Experimentálne; neoverené hardvérom v BatteryB
 devicelist.comment.maxwell=Experimentálne. Pripojený prijímač môže po odpojení slúchadiel uchovávať poslednú úroveň batérie. Stav nabíjania nie je dostupný.
 devicelist.comment.mixed=Experimentálne; neoverené hardvérom v BatteryBuddy. Niektoré modely hlásia približnú úroveň batérie alebo nemajú dostupný stav nabíjania.
 devicelist.comment.logitechvoltage=Niektoré modely odhadujú percentuálnu úroveň batérie na základe napätia. Ak zariadenie prestane reagovať (napr. je v režime spánku alebo odpojené, zatiaľ čo jeho prijímač zostáva pripojený), jeho posledné meranie sa uchováva až tri hodiny.
+devicelist.noBatteryData=Otestované: žiadne údaje o batérii
+devicelist.comment.cherryStream=Nie je podporovaný žiadny dopyt na stav batérie. Upozornenie na nízky stav batérie cez LED diódy zariadenia.

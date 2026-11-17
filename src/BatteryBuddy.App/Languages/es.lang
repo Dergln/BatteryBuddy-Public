@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Un receptor inalámbrico (dongle USB) puede pre
 devicebuddy.reason.UnknownXInputBattery=Windows detecta este controlador, pero su interfaz XInput no proporciona información de batería utilizable. Intenta otro modo de conexión compatible o consulta la guía del controlador y firmware del fabricante. El tipo de conexión no siempre se puede determinar solo con XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows detecta este controlador, pero la consulta de batería falló. Esto no significa que el controlador no tenga batería. Intenta Actualizar mientras el controlador esté activo, reconéctalo o prueba otro modo de conexión compatible.
 
-devicelist.intro=Esta lista muestra familias de protocolos compatibles, no modelos verificados individualmente. Otros dispositivos compatibles también pueden funcionar.
+devicelist.intro=Protocolos compatibles y dispositivos probados sin datos de batería. Consulte el estado y los comentarios de cada fila; los dispositivos compatibles no listados también pueden funcionar.
 devicelist.connection=Conexión
 devicelist.verified=Verificado en hardware
 devicelist.unverified=Modelos no verificados individualmente
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Experimental; no probado en hardware en BatteryBu
 devicelist.comment.maxwell=Experimental. Un receptor conectado puede retener el último nivel de batería después de que se desconecte el auricular. El estado de carga no está disponible.
 devicelist.comment.mixed=Experimental; no probado en hardware en BatteryBuddy. Algunos modelos informan niveles de batería aproximados o ningún estado de carga.
 devicelist.comment.logitechvoltage=Algunos modelos estiman el porcentaje de batería a partir del voltaje. Si el dispositivo deja de responder (por ejemplo, en reposo o desconectado mientras su receptor permanece conectado), se conserva su última lectura hasta por tres horas.
+devicelist.noBatteryData=Probado: sin datos de batería
+devicelist.comment.cherryStream=Sin consulta de batería compatible. Advertencia de batería baja vía LEDs del dispositivo.

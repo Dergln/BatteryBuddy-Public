@@ -1,7 +1,9 @@
 # Battery protocol catalog
 
-This table lists protocol families implemented in BatteryBuddy, not a complete list of
-compatible models. A family entry is not a hardware test of every model or connection.
+This table lists implemented protocol families and explicitly marked diagnostic-only
+devices with no battery data obtained, not a complete list of compatible models.
+Diagnostic-only entries do not enable battery polling or claim successful battery support.
+A family entry is not a hardware test of every model or connection.
 Unknown devices may still work through Windows or an implemented protocol.
 The catalog in `DeviceCatalog` is the authoritative source for DeviceList; this
 published table and exact profile list are maintained to match it.
@@ -33,6 +35,7 @@ not provider polling priority. The documentation table uses the default order.
 | ATK Bitmouse battery | USB / 2.4 GHz receiver | Models not individually verified | [OpenMouse ATK Bitmouse battery facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/drivers/atk) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | Attack Shark X11 / Delux M600 Pro passive battery | 2.4 GHz receiver input telemetry | Models not individually verified | [OpenMouse Delux battery report facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src) | Experimental; not hardware-tested in BatteryBuddy. Charging state is unavailable. |
 | Audeze Maxwell / Maxwell 2 | USB / receiver | [Audeze Maxwell (USB receiver)](https://www.reddit.com/r/MouseReview/s/XUqP9TRg7v) | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [HeadsetControl (GPLv3)](https://github.com/Sapd/HeadsetControl), [Maxwell firmware research (CC BY 4.0)](https://github.com/kats1123/maxwell-firmware-research) | Experimental. A connected receiver may retain the last battery level after the headset disconnects. Charging state is unavailable. |
+| CHERRY STREAM DESKTOP (JD-85K / JD-85M) | 2.4 GHz / JD-85R (046A:0115) | Tested: no battery data | [BatteryBuddy](https://github.com/Dergln/BatteryBuddy-Public) | No supported battery query. Low-battery warning via device LEDs. |
 | CompX feature mice (LAMZU and compatible models) | USB / receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [lamzu-battery-monitory (MIT)](https://github.com/Sheroune/lamzu-battery-monitory), [OpenMouse Lamzu/CRDRAKO/LunaFury/Vancer/AttackShark/RAWM facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/lamzu/index.ts) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | CompX mouse-local battery | Wired | Models not individually verified | [OpenMouse Lamzu/CompX protocol facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/tree/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/lamzu) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |
 | CompX power mice (Pulsar and compatible models) | USB / 2.4 GHz receiver | Models not individually verified | [Halo Battery (MIT)](https://github.com/HeyOkay/HaloBattery), [python-pulsar-mouse-tool (MIT)](https://github.com/andrewrabert/python-pulsar-mouse-tool), [hitscan-battery (No license stated)](https://github.com/sopparus/hitscan-battery), [OpenMouse Atlantis/Scyrox/VGN report08 facts (AGPL-3.0-or-later)](https://github.com/OpenMouse-Project/mouse-protocol/blob/b62a1cce2b63698ac00595efdb0067ecd54e34a0/src/lamzu/atlantis.ts) | Experimental; please send feedback. Not hardware-tested in BatteryBuddy. |

@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Is féidir le glacadóir gan sreang (dongle USB
 devicebuddy.reason.UnknownXInputBattery=Aithníonn Windows an rialtóir seo, ach ní sholáthraíonn a chomhéadan XInput eolas inúsáidte faoin gceallra. Bain triail as modh naisc eile a dtacaítear leis, nó féach ar threoracha an mhonaróra maidir le tiománaithe agus dochtearraí. Ní féidir an cineál naisc a aithint i gcónaí ó XInput amháin.
 devicebuddy.reason.BatteryQueryFailed=Aithníonn Windows an rialtóir seo, ach theip ar an bhfiosrú faoin gceallra. Ní chiallaíonn sé sin nach bhfuil ceallra ann. Bain triail as Athnuaigh agus an rialtóir gníomhach, athcheangail é, nó bain triail as modh naisc eile a dtacaítear leis.
 
-devicelist.intro=Taispeánann an liosta seo teaghlaigh prótacal tacaithe, ní samhlacha a fíoraíodh ina n-aonar. Seans go n-oibreoidh gléasanna comhoiriúnacha eile freisin.
+devicelist.intro=Prótacail a dtacaítear leo agus feistí a tástáladh gan sonraí ceallraí a fháil. Seiceáil stádas agus nótaí gach ró; d'fhéadfadh feistí comhoiriúnacha nach bhfuil ar an liosta oibriú freisin.
 devicelist.connection=Ceangal
 devicelist.verified=Fíoraithe ar chrua-earraí
 devicelist.unverified=Samhlacha gan fíorú aonair
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Turgnamhach; níor tástáladh ar chrua-earraí i
 devicelist.comment.maxwell=Turgnamhach. Féadfaidh glacadóir atá ceangailte an leibhéal ceallraí deireanach a choinneáil tar éis don tacar cluasán dícheangal. Níl stádas luchtaithe ar fáil.
 devicelist.comment.mixed=Turgnamhach; níor tástáladh ar chrua-earraí i BatteryBuddy. Tuairiscíonn roinnt samhlacha leibhéil cheallraí neasacha, nó ní thuairiscíonn siad stádas luchtaithe.
 devicelist.comment.logitechvoltage=Déanann roinnt samhlacha céatadán na ceallraí a mheas ón voltas. Má stopann an gléas ag freagairt (m.sh. agus é ina chodladh nó dícheangailte agus a ghlacadóir fós ceangailte), coinnítear an léamh deireanach ar feadh suas le trí huaire an chloig.
+devicelist.noBatteryData=Tástáilte: gan sonraí ceallraí
+devicelist.comment.cherryStream=Ní thacaítear le fiosrú faoi stádas na gceallraí. Tugann soilse LED na bhfeistí rabhadh faoi cheallraí laga.

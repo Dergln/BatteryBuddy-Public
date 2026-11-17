@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=ワイヤレスレシーバー（USB ドング�
 devicebuddy.reason.UnknownXInputBattery=Windows はこのコントローラーを検出していますが、XInput インターフェースから使用可能なバッテリー情報を取得できません。サポートされている他の接続モードを試すか、メーカーのドライバーおよびファームウェアのガイドラインを確認してください。XInput だけでは接続タイプを常に特定できるわけではありません。
 devicebuddy.reason.BatteryQueryFailed=Windows はこのコントローラーを検出していますが、バッテリーの照会に失敗しました。これはコントローラーにバッテリーがないことを意味するものではありません。コントローラーが起動している間に「更新」を試すか、再接続するか、サポートされている他の接続モードを試してください。
 
-devicelist.intro=この一覧は対応するプロトコルの種類を示し、個別に検証したモデルの一覧ではありません。他の互換デバイスも動作する場合があります。
+devicelist.intro=対応プロトコルとバッテリーデータなしでテストされたデバイス。各行のステータスとコメントを確認してください。リストされていない互換デバイスも動作する場合があります。
 devicelist.connection=接続
 devicelist.verified=実機で検証
 devicelist.unverified=モデルごとの検証なし
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=実験的; BatteryBuddyでハードウェアテ�
 devicelist.comment.maxwell=実験的。 接続されたレシーバーは、ヘッドセットが切断された後も最後のバッテリーレベルを保持する場合があります。充電状態は利用できません。
 devicelist.comment.mixed=実験的; BatteryBuddyでハードウェアテストされていません。一部のモデルはバッテリー残量を概算値で報告するか、充電状態を報告しません。
 devicelist.comment.logitechvoltage=一部のモデルは電圧からバッテリーパーセンテージを推定します。デバイスが応答を停止した場合（例：スリープ中またはレシーバーが接続されたままデバイスが切断された場合）、最後の読み取り値は最大3時間保持されます。
+devicelist.noBatteryData=テスト済み：バッテリーデータなし
+devicelist.comment.cherryStream=対応するバッテリークエリなし。デバイスのLEDで低バッテリー警告。

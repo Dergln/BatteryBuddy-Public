@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=无线接收器（USB 适配器）可能向 Win
 devicebuddy.reason.UnknownXInputBattery=Windows 检测到该控制器，但其 XInput 接口未提供可用的电池信息。请尝试其他支持的连接模式，或查阅制造商的驱动和固件指南。仅凭 XInput 不一定能确定连接类型。
 devicebuddy.reason.BatteryQueryFailed=Windows 检测到该控制器，但电池查询失败。这并不意味着控制器没有电池。请在控制器唤醒时尝试“刷新”，重新连接设备，或尝试其他支持的连接模式。
 
-devicelist.intro=此列表显示支持的协议系列，并非逐一验证的型号。其他兼容设备也可能正常工作。
+devicelist.intro=支持的协议及已测试但无电量数据的设备。请查看每行的状态和备注；未列出的兼容设备也可能正常工作。
 devicelist.connection=连接
 devicelist.verified=已在硬件上验证
 devicelist.unverified=型号未逐一验证
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=实验性功能；未在 BatteryBuddy 中进行�
 devicelist.comment.maxwell=实验性功能。 当耳机断开连接后，已连接的接收器可能会保留最后的电池电量。充电状态不可用。
 devicelist.comment.mixed=实验性功能；未在 BatteryBuddy 中进行硬件测试。部分型号报告的是近似电池电量或无充电状态。
 devicelist.comment.logitechvoltage=部分型号根据电压估算电池百分比。如果设备停止响应（例如处于睡眠状态或在接收器保持连接的情况下断开连接），其最后的读数将保留长达三小时。
+devicelist.noBatteryData=已测试：无电量数据
+devicelist.comment.cherryStream=无支持的电量查询。通过设备指示灯提示低电量。

@@ -15,10 +15,18 @@ namespace BatteryBuddy.Core.Providers
         public IReadOnlyList<DeviceCatalogSource> Sources { get; }
         public IReadOnlyList<DeviceCatalogHardwareVerification> HardwareVerifications { get; }
         public string CommentsKey { get; }
+        public bool IsDiagnosticOnly { get; }
 
         internal DeviceCatalogEntry(string id, string name, string connection, string commentsKey, params DeviceCatalogSource[] sources)
             : this(id, name, connection, commentsKey, Array.Empty<DeviceCatalogHardwareVerification>(), sources)
         {
+        }
+
+        internal DeviceCatalogEntry(string id, string name, string connection, string commentsKey,
+            bool isDiagnosticOnly, params DeviceCatalogSource[] sources)
+            : this(id, name, connection, commentsKey, sources)
+        {
+            IsDiagnosticOnly = isDiagnosticOnly;
         }
 
         internal DeviceCatalogEntry(string id, string name, string connection, string commentsKey,
@@ -131,7 +139,7 @@ namespace BatteryBuddy.Core.Providers
                     && outputReportIds?.Count == 1 && outputReportIds[0] != 0));
     }
 
-    /// <summary>Implemented battery sources, not a list of individually verified device models.</summary>
+    /// <summary>Implemented battery sources and explicitly marked diagnostic-only devices.</summary>
     public static class DeviceCatalog
     {
         public const string LogitechHidpp = "logitech-hidpp";
@@ -174,6 +182,7 @@ namespace BatteryBuddy.Core.Providers
         public const string Teevolution = "teevolution-terra-pro";
         public const string Vader5Pro = "flydigi-vader-5-pro";
         public const string Eweadn = "eweadn-wireless-mice";
+        public const string CherryStreamDesktop = "cherry-stream-desktop";
 
         private static readonly DeviceCatalogSource BatteryBuddySource =
             new DeviceCatalogSource("BatteryBuddy", "https://github.com/Dergln/BatteryBuddy-Public", null);
@@ -187,6 +196,8 @@ namespace BatteryBuddy.Core.Providers
                     null, BatteryBuddySource),
                 new DeviceCatalogEntry("xinput", "XInput", "XInput",
                     null, BatteryBuddySource),
+                new DeviceCatalogEntry(CherryStreamDesktop, "CHERRY STREAM DESKTOP (JD-85K / JD-85M)",
+                    "2.4 GHz / JD-85R (046A:0115)", "devicelist.comment.cherryStream", true, BatteryBuddySource),
                 new DeviceCatalogEntry(LogitechHidpp, "Logitech HID++ 2.0", "USB / Bluetooth",
                     "devicelist.comment.logitech", BatteryBuddySource),
                 new DeviceCatalogEntry(SteelSeriesNova7, "SteelSeries Arctis Nova 7 (1038:22A1)", "2.4 GHz receiver",

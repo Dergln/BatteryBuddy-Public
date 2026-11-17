@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=無線接收器（USB 轉接器）可能會向 
 devicebuddy.reason.UnknownXInputBattery=Windows 偵測到此控制器，但其 XInput 介面未提供可用的電池資訊。請嘗試其他支援的連線模式，或查閱製造商的驅動程式與韌體指南。僅憑 XInput 未必能判斷連線類型。
 devicebuddy.reason.BatteryQueryFailed=Windows 偵測到此控制器，但電池查詢失敗。這並不表示控制器沒有電池。請在控制器喚醒時嘗試「重新整理」、重新連接，或改用其他支援的連線模式。
 
-devicelist.intro=此清單顯示支援的協定系列，並非逐一驗證的型號。其他相容裝置也可能正常運作。
+devicelist.intro=支援的通訊協定與已測試但無電池資料的裝置。請查看各列的狀態與註解；未列出的相容裝置也可能正常運作。
 devicelist.connection=連線
 devicelist.verified=已在硬體上驗證
 devicelist.unverified=型號未逐一驗證
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=實驗性功能；未在 BatteryBuddy 中進行�
 devicelist.comment.maxwell=實驗性功能。 當耳機斷開連接時，已連接的接收器可能會保留最後的電池電量。充電狀態不可用。
 devicelist.comment.mixed=實驗性功能；未在 BatteryBuddy 中進行硬體測試。部分型號回報的電池電量為近似值，或無法提供充電狀態。
 devicelist.comment.logitechvoltage=部分型號會根據電壓估算電池百分比。如果裝置停止回應（例如進入睡眠模式或已斷開連接，但其接收器仍保持連接），其最後的讀數將保留長達三小時。
+devicelist.noBatteryData=已測試：無電池資料
+devicelist.comment.cherryStream=不支援電池查詢。低電量警示由裝置 LED 指示。

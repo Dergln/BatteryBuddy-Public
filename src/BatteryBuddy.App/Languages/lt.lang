@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Belaidis imtuvas (USB dongle) gali Windows rody
 devicebuddy.reason.UnknownXInputBattery=Windows aptinka šį valdiklį, tačiau jo XInput sąsaja nepateikia naudingos baterijos informacijos. Išbandykite kitą palaikomą prijungimo būdą arba pasitikrinkite gamintojo tvarkyklių ir programinės įrangos nurodymus. Prijungimo tipo ne visada galima nustatyti tik pagal XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows aptinka šį valdiklį, tačiau baterijos užklausa nepavyko. Tai nereiškia, kad valdiklis neturi baterijos. Pabandykite paspausti „Atnaujinti“, kol valdiklis aktyvus, prijunkite jį iš naujo arba išbandykite kitą palaikomą prijungimo būdą.
 
-devicelist.intro=Sąraše pateikiamos palaikomos protokolų grupės, o ne atskirai patikrinti modeliai. Gali veikti ir kiti suderinami įrenginiai.
+devicelist.intro=Palaikomi protokolai ir išbandyti įrenginiai be baterijos duomenų. Patikrinkite kiekvienos eilutės būseną ir pastabas; nepaminėti suderinami įrenginiai taip pat gali veikti.
 devicelist.connection=Ryšys
 devicelist.verified=Patikrinta su įrenginiu
 devicelist.unverified=Modeliai atskirai netikrinti
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Eksperimentinis; BatteryBuddy programoje nebuvo a
 devicelist.comment.maxwell=Eksperimentinis. Prijungtas imtuvas gali išlaikyti paskutinį ausinių baterijos lygį, kai ausinės atsijungia. Įkrovimo būsena nepasiekiama.
 devicelist.comment.mixed=Eksperimentinis; BatteryBuddy programoje nebuvo atlikta aparatinės įrangos patikra. Kai kurios modeliai praneša apie apytikslį baterijos lygį arba neturi įkrovimo būsenos.
 devicelist.comment.logitechvoltage=Kai kurie modeliai įvertina baterijos procentą pagal įtampą. Jei įrenginys nustoja reaguoti (pvz., miego režimu arba atsijungia, o jo imtuvas lieka prijungtas), paskutinis rodiklis išlieka iki trijų valandų.
+devicelist.noBatteryData=Išbandyta: nėra baterijos duomenų
+devicelist.comment.cherryStream=Nėra palaikomos baterijos lygio užklausos. Žemo baterijos lygio įspėjimas rodomas per įrenginio LED indikatorius.

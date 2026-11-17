@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=Odbiornik bezprzewodowy (dongle USB) może zgł
 devicebuddy.reason.UnknownXInputBattery=Windows wykrywa ten kontroler, ale jego interfejs XInput nie dostarcza użytecznych informacji o baterii. Spróbuj innego obsługiwanego trybu połączenia lub sprawdź instrukcje producenta dotyczące sterowników i oprogramowania układowego. Typ połączenia nie zawsze można ustalić tylko na podstawie XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows wykrywa ten kontroler, ale zapytanie o baterię nie powiodło się. Nie oznacza to, że kontroler nie ma baterii. Spróbuj kliknąć Odśwież, gdy kontroler jest aktywny, podłącz go ponownie lub spróbuj innego obsługiwanego trybu połączenia.
 
-devicelist.intro=Lista pokazuje obsługiwane rodziny protokołów, a nie osobno sprawdzone modele. Inne zgodne urządzenia również mogą działać.
+devicelist.intro=Obsługiwane protokoły i urządzenia przetestowane bez danych o baterii. Sprawdź status i komentarze każdej linii; nieujęte kompatybilne urządzenia mogą również działać.
 devicelist.connection=Połączenie
 devicelist.verified=Sprawdzono na urządzeniu
 devicelist.unverified=Modeli nie sprawdzono osobno
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Eksperymentalne; nie przetestowane sprzętowo w B
 devicelist.comment.maxwell=Eksperymentalne. Po odłączeniu zestawu słuchawkowego podłączony odbiornik może zachować ostatni poziom baterii. Stan ładowania jest niedostępny.
 devicelist.comment.mixed=Eksperymentalne; nie przetestowane sprzętowo w BatteryBuddy. Niektóre modele zgłaszają przybliżone poziomy baterii lub brak stanu ładowania.
 devicelist.comment.logitechvoltage=Niektóre modele szacują procent baterii na podstawie napięcia. Jeśli urządzenie przestanie odpowiadać (np. przejdzie w stan uśpienia lub zostanie odłączone, podczas gdy jego odbiornik pozostaje podłączony), ostatnie odczytane dane są przechowywane przez okres do trzech godzin.
+devicelist.noBatteryData=Przetestowano: brak danych o baterii
+devicelist.comment.cherryStream=Brak obsługi zapytania o baterię. Ostrzeżenie o niskim stanie baterii za pomocą diod urządzenia.

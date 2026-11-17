@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=En trådlös mottagare (USB-dongel) kan present
 devicebuddy.reason.UnknownXInputBattery=Windows upptäcker den här kontrollern, men dess XInput-gränssnitt ger ingen användbar batteriinformation. Prova ett annat anslutningsläge som stöds eller kontrollera tillverkarens anvisningar för drivrutiner och inbyggd programvara. Anslutningstypen kan inte alltid avgöras enbart från XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows upptäcker den här kontrollern, men förfrågan om batterinivå misslyckades. Det betyder inte att kontrollern saknar batteri. Försök med Uppdatera medan kontrollern är aktiv, anslut den igen eller prova ett annat anslutningsläge som stöds.
 
-devicelist.intro=Listan visar protokollfamiljer som stöds, inte individuellt testade modeller. Även andra kompatibla enheter kan fungera.
+devicelist.intro=Stödda protokoll och testade enheter utan batteridata. Kontrollera status och kommentarer för varje rad; kompatibla enheter som inte listas kan också fungera.
 devicelist.connection=Anslutning
 devicelist.verified=Testad på hårdvara
 devicelist.unverified=Modeller inte testade var för sig
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Experimentell; inte hårdvarutestad i BatteryBudd
 devicelist.comment.maxwell=Experimentell. En ansluten mottagare kan behålla den sista batterinivån efter att headsetet har kopplats bort. Laddningsstatus är inte tillgänglig.
 devicelist.comment.mixed=Experimentell; inte hårdvarutestad i BatteryBuddy. Vissa modeller rapporterar ungefärliga batterinivåer eller ingen laddningsstatus.
 devicelist.comment.logitechvoltage=Vissa modeller uppskattar batteriprocenten från spänningen. Om enheten slutar svara (t.ex. sover eller är frånkopplad medan dess mottagare förblir ansluten) behålls dess sista avläsning i upp till tre timmar.
+devicelist.noBatteryData=Testad: ingen batteridata
+devicelist.comment.cherryStream=Ingen stödd batterifråga. Låg batterinivå varnas via enhetens LED-lampor.

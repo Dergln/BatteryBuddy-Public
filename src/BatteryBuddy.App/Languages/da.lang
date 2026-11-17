@@ -269,7 +269,7 @@ devicebuddy.reason.ReportedWired=En trådløs modtager (USB-dongle) kan optræde
 devicebuddy.reason.UnknownXInputBattery=Windows registrerer denne controller, men dens XInput-grænseflade giver ikke brugbar batteriinformation. Prøv en anden understøttet tilslutningstype, eller tjek producentens vejledning til drivere og firmware. Tilslutningstypen kan ikke altid fastslås udelukkende ud fra XInput.
 devicebuddy.reason.BatteryQueryFailed=Windows registrerer denne controller, men forespørgslen om batteristatus mislykkedes. Det betyder ikke, at controlleren ikke har et batteri. Prøv at klikke på Opdater, mens controlleren er vågen, genopret forbindelsen, eller prøv en anden understøttet tilslutningstype.
 
-devicelist.intro=Listen viser understøttede protokolfamilier, ikke individuelt testede modeller. Andre kompatible enheder kan også virke.
+devicelist.intro=Understøttede protokoller og testede enheder uden batteridata. Tjek status og kommentarer for hver række; kompatible enheder, der ikke er på listen, kan også virke.
 devicelist.connection=Forbindelse
 devicelist.verified=Testet på hardware
 devicelist.unverified=Modeller er ikke testet enkeltvis
@@ -284,3 +284,5 @@ devicelist.comment.linkunknown=Eksperimentel; ikke hardware-testet i BatteryBudd
 devicelist.comment.maxwell=Eksperimentel. En tilsluttet modtager kan beholde det sidste batteriniveau, efter hovedtelefonen er frakoblet. Opladningstilstand er ikke tilgængelig.
 devicelist.comment.mixed=Eksperimentel; ikke hardware-testet i BatteryBuddy. Nogle modeller rapporterer omtrentlige batteriniveauer eller ingen opladningstilstand.
 devicelist.comment.logitechvoltage=Nogle modeller estimerer batteriprocenten ud fra spændingen. Hvis enheden holder op med at svare (f.eks. hvis den er i dvale eller frakoblet, mens modtageren forbliver tilsluttet), beholdes den sidste måling i op til tre timer.
+devicelist.noBatteryData=Testet: ingen batteridata
+devicelist.comment.cherryStream=Ingen understøttet batteriforespørgsel. Advarsel om lavt batteri via enhedens LED-pærer.
